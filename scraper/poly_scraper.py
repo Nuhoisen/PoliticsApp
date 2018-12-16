@@ -87,11 +87,7 @@ class PolyScraper:
             
             i+=1
                 
-                
-                
-                
-                
-                
+
                 
                 
                 
