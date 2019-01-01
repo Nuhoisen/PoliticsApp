@@ -1,4 +1,4 @@
-###BACK END
+### BACK END
 ## CONDA INSTRUCTIONS
 # This environement was created using conda:
 conda create --name poly_scraper
@@ -13,17 +13,17 @@ conda activate poly_scraper
 
 
 
-###FRONT END
+### FRONT END
 ## CORDOVA INSTRUCTIONS
-#To create Cordova environment
+# To create Cordova environment
 cordova create poly_frontend
 
 #Add supported platforms
 cordova add ios
 cordova add android
 
-#Now copy  PoliticsApp/FrontEnd/www/* over to PoliticsApp/FrontEnd/poly_frontend/www
+# Now copy  PoliticsApp/FrontEnd/www/* over to PoliticsApp/FrontEnd/poly_frontend/www
 
-#To run
+# To run
 cordova run android
 cordova run ios
