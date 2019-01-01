@@ -18,7 +18,7 @@ conda activate poly_scraper
 # To create Cordova environment
 cordova create poly_frontend
 
-#Add supported platforms
+# Add supported platforms
 cordova add ios
 cordova add android
 
