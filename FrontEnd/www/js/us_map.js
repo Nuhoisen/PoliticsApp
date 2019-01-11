@@ -1,18 +1,21 @@
+var selected_elem = 0
 var states_function = function(us){    
-    return us.objects.states;
+    return us.objects.us_states;
 }
 
 var state_senate_map_function = function(us){
-    var temp_json = {
-        "geometries": [],
-        "type": "GeometryCollection"
-    }    
-    for(var key in us.objects){
-        var temp = us.objects[key]['geometries'];   
-        temp_json['geometries'].push(temp['0']);
-    }
-    return temp_json;
+    // var temp_json = {
+        // "geometries": [],
+        // "type": "GeometryCollection"
+    // }    
+    // for(var key in us.objects){
+        // var temp = us.objects[key]['geometries'];   
+        // temp_json['geometries'].push(temp['0']);
+    // }
+    return us.objects.combined;
 }
+
+
 
 
 class MapTemplate {
@@ -121,7 +124,7 @@ class MapTemplate {
             .translate([self.w / 2, self.h / 2]) // ensure centred in group
             ;
 
-        this.path = d3.geoPath().projection(null);
+        this.path = d3.geoPath().projection(self.projection);
       
         
         // Define map zoom behaviour
@@ -150,10 +153,24 @@ class MapTemplate {
                 .enter().append("path")
                 .attr("d", self.path)
                 .attr("id", function(d, i) {
-                    return d.id;
+                    return d.properties.NAME;
                 })
                 .on("click", function(d, i){
+                    var id = d.properties.NAME;
+                    selected_elem = $("#"+d.properties.NAME);
+                    
                     self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20);
+                    var file_name = "map_data/districts-gh-pages/states/OR/sldl/topo_simple.json";
+                    d3.json(file_name, function(error, state_sel){
+                        if (error) throw error;
+                            var remove_state = self.countriesGroup.select("#"+ id)
+                                .data(topojson.feature( state_sel, state_sel.objects.combined).features);
+                            remove_state.exit().remove();
+                                
+                            remove_state.enter().append("path")
+                                .attr("d", self.path);
+                      
+                    });
                     
                 });
                  
@@ -164,7 +181,7 @@ class MapTemplate {
                 .attr("d", self.path(topojson.mesh(us, self.access_hook(us), function(a, b) { return a !== b; })))
                 .call(self.zoom);
                   
-            self.initiateZoom()
+           self.initiateZoom()
           
         });
         
@@ -183,14 +200,14 @@ class MapTemplate {
 
 
 var map_features_1 = {
-    "file_name" : "json/us-topo.json",
+    "file_name" : "json/new_us_topo.json",
     "border_class_name" :"state-borders",
     "feature_access_hook": states_function
 }
 
 
 var map_features_2 = {
-    "file_name" : "map_data/districts-gh-pages/states/AK/state_house/output.json",
+    "file_name" : "map_data/districts-gh-pages/states/TX/sldl/topo_simple.json",
     "border_class_name" :"state-senate-borders",
     "feature_access_hook": state_senate_map_function
 }
