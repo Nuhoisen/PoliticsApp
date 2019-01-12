@@ -28,8 +28,8 @@ class MapTemplate {
         var t = d3
             .event
             .transform;
-        
-        map_2.countriesGroup
+        var countriesGroup = d3.select("g.states");
+        countriesGroup
             .attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");
                         map_2.bordersGroup
             .attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");
@@ -178,10 +178,10 @@ class MapTemplate {
                     var id = d.properties.NAME;
                     var file_name = "map_data/districts-gh-pages/states/OR/sldl/topo_simple.json";
                     
-                    d3.json(file_name, function(error, state_sel){
-                        if (error) throw error;
+                    d3.json( file_name, function( error, state_sel ){
+                        if ( error ) throw error;
                         var old_d  = d;
-                        d = topojson.feature( state_sel, state_sel.objects.combined).features;
+                        d = topojson.feature( state_sel, state_sel.objects.combined ).features;
                         
                         d3.select("#"+ id).remove();    // remove old state
                         
@@ -190,8 +190,8 @@ class MapTemplate {
                             .attr("class", (id + " Congressional Districts"))
                             .attr("d", self.path)
                             .call(self.zoom);
-                        var congressional_districts = d3.selectAll("path." + (id + " Congressional Districts"))
-                        self.initiateStateZoom(congressional_districts);
+                        self.countriesGroup = self.svg.select("g.states");
+                        
                         //self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20);
                     });
                     
@@ -214,11 +214,11 @@ class MapTemplate {
         
         // On window resize
         $(window).resize(function() {
-            svg
+            self.svg
               .attr("width", $("#map-holder").width())
               .attr("height", $("#map-holder").height())
             ;
-        initiateZoom();
+        self.initiateZoom();
     });
     }
     
