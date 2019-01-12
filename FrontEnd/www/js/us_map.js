@@ -35,7 +35,26 @@ class MapTemplate {
             .attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");
     }
 
-   
+    initiateStateZoom(passed_states){
+       var self = this;
+        // Define a "minzoom" whereby the "Countries" is as small possible without leaving white space at top/bottom or sides
+        self.minZoom = Math.min($("#map-holder").width() / (self.w), $("#map-holder").height() / (self.h));
+        // set max zoom to a suitable factor of this value
+        self.maxZoom = 20 * self.minZoom;
+        // set extent of zoom to chosen values
+        // set translate extent so that panning can't cause map to move out of viewport
+        self.zoom
+          .scaleExtent([self.minZoom, self.maxZoom])
+          .translateExtent([[0, 0], [self.w, self.h]])
+        ;
+        // define X and Y offset for centre of map to be shown in centre of holder
+        var midX = ($("#map-holder").width() - self.minZoom * self.w) / 2;
+        var midY = ($("#map-holder").height() - self.minZoom * self.h) / 2;
+        // change zoom transform to min zoom and centre offsets
+        passed_states.call(self.zoom.transform, d3.zoomIdentity.translate(midX, midY).scale(self.minZoom));
+        
+        
+    }
 
      // Function that calculates zoom/pan limits and sets zoom to default value 
     initiateZoom() {
@@ -157,20 +176,27 @@ class MapTemplate {
                 })
                 .on("click", function(d, i){
                     var id = d.properties.NAME;
-                    selected_elem = $("#"+d.properties.NAME);
-                    
-                    self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20);
                     var file_name = "map_data/districts-gh-pages/states/OR/sldl/topo_simple.json";
+                    
                     d3.json(file_name, function(error, state_sel){
                         if (error) throw error;
-                            var remove_state = self.countriesGroup.select("#"+ id)
-                                .data(topojson.feature( state_sel, state_sel.objects.combined).features);
-                            remove_state.exit().remove();
-                                
-                            remove_state.enter().append("path")
-                                .attr("d", self.path);
-                      
+                        var old_d  = d;
+                        d = topojson.feature( state_sel, state_sel.objects.combined).features;
+                        
+                        d3.select("#"+ id).remove();    // remove old state
+                        
+                        var new_state = self.countriesGroup.select("#"+ id);
+                        new_state.data(d).enter().append("path")
+                            .attr("class", (id + " Congressional Districts"))
+                            .attr("d", self.path)
+                            .call(self.zoom);
+                        var congressional_districts = d3.selectAll("path." + (id + " Congressional Districts"))
+                        self.initiateStateZoom(congressional_districts);
+                        //self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20);
                     });
+                    
+                    //selected_elem = $("#"+d.properties.NAME);
+                    
                     
                 });
                  
@@ -181,7 +207,7 @@ class MapTemplate {
                 .attr("d", self.path(topojson.mesh(us, self.access_hook(us), function(a, b) { return a !== b; })))
                 .call(self.zoom);
                   
-           self.initiateZoom()
+            self.initiateZoom();
           
         });
         
@@ -207,7 +233,7 @@ var map_features_1 = {
 
 
 var map_features_2 = {
-    "file_name" : "map_data/districts-gh-pages/states/TX/sldl/topo_simple.json",
+    "file_name" : "map_data/districts-gh-pages/states/OR/sldl/topo_simple.json",
     "border_class_name" :"state-senate-borders",
     "feature_access_hook": state_senate_map_function
 }
