@@ -5,20 +5,64 @@
 	<title></title>
     <!-- css -->
     <link rel="stylesheet" href="css/us_map.css"/>
-    
+    <link rel="stylesheet" href="css/congressional_map.css"/>
+    <link rel="stylesheet" href="css/state_ui.css"/>
     <!-- js libraries -->
     <script type="text/javascript" src="js/d3/d3.v4.min.js"></script>
     <script type="text/javascript" src="js/d3/topojson.v2.min.js"></script>
     <script type="text/javascript" src="./js/jquery/jquery.min.js"></script>
     
-</head>
+    <style>
+        
+
+        .middle {
+          transition: .5s ease;
+          opacity: 0;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          -ms-transform: translate(-50%, -50%);
+          text-align: center;
+          z-index: -1;
+        }
+
+      
+
+    
+
+        .text {
+          background-color: #4CAF50;
+          color: white;
+          font-size: 16px;
+          padding: 16px 32px;
+        }
+    </style>
+    
+    </head>
 
 <body>
-	<div id="map-holder" ></div>
+	<div id="map-holder" class="container" >
+        
+        <div class="state-ui state-label">Text</div>
+        
+        <div class="state-button-container">
+            <a id="state-left-button" class="state-ui state-buttons">State Senate</a>
+            <a id="state-right-button" class="state-ui state-buttons">State House</a>
+        </div>
+        
     
-    <!-- map template -->
+        
+        
+    </div>
+    
+    
+    
+    
+    <!-- Local Scripts -->
+    <script type="text/javascript" src="js/state_ui.js"></script>
     <script type="text/javascript" src="js/us_map.js"></script>
-    
+    <script type="text/javascript" src="js/congressional_map.js"></script>
 </body>
 
 </html>

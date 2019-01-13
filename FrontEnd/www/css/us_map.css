@@ -55,12 +55,15 @@ svg rect {
   stroke-linecap: round;
   pointer-events: none;
 }
-
-   
-
    
 /* Selected State UI */
 
 #house-map-button{
     position: relative;
 }
+
+
+
+
+
+

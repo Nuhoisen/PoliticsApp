@@ -11,23 +11,21 @@ var state_senate_map_function = function(us){
 class MapTemplate {
     
     // Create function to apply zoom to countriesGroup
-    zoomed() {
-        
+    zoomed(self) {
         var t = d3
             .event
             .transform;
-        if( map_2.previous_scale > t.k )
+            
+        if( self.previous_scale > t.k )
         {
-            map_2.removeStateSelection();
-            map_2.removeStateUI();
-            map_2.previous_scale;
+            self.removeStateSelection();
+            self.state_ui.removeStateUI();    //interface screen
+            self.previous_scale = 0;
         }    
         
         //save previous scale
-        
-        map_2.countriesGroup.attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");
-        
-        map_2.bordersGroup.attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");
+        self.countriesGroup.attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");
+        self.bordersGroup.attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");
     }
     
      // Function that calculates zoom/pan limits and sets zoom to default value 
@@ -101,8 +99,8 @@ class MapTemplate {
               self.previous_scale = zoomScale;
           });
         
-        self.applyStateSelection(id);
-        self.applyStateUI(id);
+      
+       
     }
 
     
@@ -135,67 +133,16 @@ class MapTemplate {
         self.selected_state = id;
     }
     
-    removeStateUI(){
+   
+    generateMap(){
         var self = this;
-        
-        $(".state-ui").css("z-index", -1);
-        d3.selectAll(".state-ui")
-            .transition()
-            .style("opacity", 0);
-    }
- 
-    applyStateUI(id){
-        var self = this;
-        d3.select(".state-label")
-            .html(id);
-        
-        $(".state-ui").css("z-index", 1);
-        
-        d3.selectAll(".state-ui")
-            .transition()
-            .style("opacity", 1);
-            
-            
-    }
-    
-    constructor(passed_map_features)
-    {
-        this.feature_map = passed_map_features;
-        this.map_border_class =  this.feature_map['border_class_name'];
-        this.access_hook = this.feature_map['feature_access_hook'];
-        this.map_file_name = this.feature_map['file_name'];
-        this.svg;
-        this.minZoom=0;
-        this.maxZoom=0;
-        this.w = 999;
-        this.h = 634.5; 
-        this.selected_state = "none";
-        this.previous_scale  = 0;
-        var self = this;
-        
-        // DEFINE FUNCTIONS/OBJECTS
-        // Define map projection
-        this.projection = d3
-            .geoAlbersUsa()
-            .scale([self.w]) // scale to fit group width
-            .translate([self.w / 2, self.h / 2]) // ensure centred in group
-            ;
-
-        this.path = d3.geoPath().projection(self.projection);
-      
-        
-        // Define map zoom behaviour
-        this.zoom = d3
-            .zoom()
-            .on("zoom", self.zoomed);
-        
-        
-        d3.json(this.map_file_name, function(error, us) {
+         d3.json(this.map_file_name, function(error, us) {
           if (error) throw error;
 
             self.svg = d3
                 .select("#map-holder")
                 .append("svg")
+                .attr("class", "states-svg")
                 .attr("width", $("#map-holder").width())
                 .attr("height", $("#map-holder").height())
                 .call(self.zoom);
@@ -216,6 +163,8 @@ class MapTemplate {
                 .on("click", function(d, i){
                     var id = d.properties.NAME.split(" ").join("-");
                     self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20, id);
+                    self.applyStateSelection(id);
+                    self.state_ui.applyStateUI(id, self);
                 });
 
               // Draw state border paths
@@ -236,7 +185,42 @@ class MapTemplate {
               .attr("height", $("#map-holder").height())
             ;
         self.initiateZoom();
-    });
+        });
+    }
+   
+    constructor(passed_map_features)
+    {
+        this.feature_map = passed_map_features;
+        this.map_border_class =  this.feature_map['border_class_name'];
+        this.access_hook = this.feature_map['feature_access_hook'];
+        this.map_file_name = this.feature_map['file_name'];
+        this.svg;
+        this.minZoom=0;
+        this.maxZoom=0;
+        this.w = 999;
+        this.h = 634.5; 
+        this.selected_state = "none";
+        this.previous_scale  = 0;
+        this.state_ui = new StateUI();
+        var self = this;
+        
+        // DEFINE FUNCTIONS/OBJECTS
+        // Define map projection
+        this.projection = d3
+            .geoAlbersUsa()
+            .scale([self.w]) // scale to fit group width
+            .translate([self.w / 2, self.h / 2]) // ensure centred in group
+            ;
+
+        this.path = d3.geoPath().projection(self.projection);
+      
+        
+        // Define map zoom behaviour
+        this.zoom = d3
+            .zoom()
+            .on("zoom", function(){
+                self.zoomed(self);
+            });           
     }
     
 };
@@ -251,12 +235,12 @@ var map_features_1 = {
 
 var map_features_2 = {
     "file_name" : "map_data/us-topo.json", //
-    "border_class_name" :"state-borders",
+    "border_class_name" :"state-senate-borders",
     "feature_access_hook": state_senate_map_function
 }
 
 var map_2 = new MapTemplate(map_features_1);
-
+map_2.generateMap(); 
 
 
 

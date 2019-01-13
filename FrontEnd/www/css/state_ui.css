@@ -1,11 +1,8 @@
-
-
 .state-ui{
     opacity: 0;
     z-index: -1;
-    color: red;
+    
     text-decoration: none;
-    background-color: #212121;
     
    
     
@@ -14,10 +11,13 @@
 .state-label{
     padding: 2px 4px;
     position: fixed;
-    top:25%;
+    top:20%;
     left:45%;
     border-style: solid;
     border-width: .5px;
+    color: red;
+    background-color: #212121;
+    font-size: 12px;
 }
 
 .state-button-container{
@@ -28,9 +28,8 @@
     left: 42.5%;
     margin: auto;
     text-align: center;
-    border-radius: 25px;
-    border-style: solid;
-    border-width: .5px;
+  
+   
 }
 
 .state-buttons{
@@ -39,5 +38,22 @@
     width: 50%;
     height:5%;
     padding: 1px 1px;
+    background-color: #fff;
 }
+
+
+
+#state-left-button{
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border: 1px solid #ddd;
+    
+}
+
+#state-right-button{
+     border: 1px solid #ddd;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
 
