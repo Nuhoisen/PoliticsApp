@@ -19,6 +19,7 @@ class MapTemplate {
         if( map_2.previous_scale > t.k )
         {
             map_2.removeStateSelection();
+            map_2.removeStateUI();
             map_2.previous_scale;
         }    
         
@@ -49,6 +50,9 @@ class MapTemplate {
         self.svg.call(self.zoom.transform, d3.zoomIdentity.translate(midX, midY).scale(self.minZoom));
         self.previous_scale = self.minZoom;
     }
+    
+    
+  
         
     // Define map zoom behaviour
     // zoom to show a bounding box, with optional additional padding as percentage of box size
@@ -93,11 +97,12 @@ class MapTemplate {
             self.zoom.transform,
             d3.zoomIdentity.translate(dleft, dtop).scale(zoomScale)
           )
-          
           .on("end", function(){
               self.previous_scale = zoomScale;
           });
-         self.applyStateSelection(id);
+        
+        self.applyStateSelection(id);
+        self.applyStateUI(id);
     }
 
     
@@ -108,7 +113,6 @@ class MapTemplate {
             .transition()
             .style("opacity", 1)
             .attr("class", null);
-        
     }
     
     
@@ -131,8 +135,28 @@ class MapTemplate {
         self.selected_state = id;
     }
     
+    removeStateUI(){
+        var self = this;
+        
+        $(".state-ui").css("z-index", -1);
+        d3.selectAll(".state-ui")
+            .transition()
+            .style("opacity", 0);
+    }
  
-    
+    applyStateUI(id){
+        var self = this;
+        d3.select(".state-label")
+            .html(id);
+        
+        $(".state-ui").css("z-index", 1);
+        
+        d3.selectAll(".state-ui")
+            .transition()
+            .style("opacity", 1);
+            
+            
+    }
     
     constructor(passed_map_features)
     {
