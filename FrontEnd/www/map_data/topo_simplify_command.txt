@@ -1,0 +1,1 @@
+topo_simplify command: toposimplify -p .001 < new_us_topo.json > new_simpler_us_topo.json

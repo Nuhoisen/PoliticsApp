@@ -4,58 +4,31 @@ var states_function = function(us){
 }
 
 var state_senate_map_function = function(us){
-    // var temp_json = {
-        // "geometries": [],
-        // "type": "GeometryCollection"
-    // }    
-    // for(var key in us.objects){
-        // var temp = us.objects[key]['geometries'];   
-        // temp_json['geometries'].push(temp['0']);
-    // }
-    return us.objects.combined;
+    return us.objects.states;//us_states;
 }
 
 
-
-
 class MapTemplate {
-
-     
-         
+    
     // Create function to apply zoom to countriesGroup
     zoomed() {
-        var self = this;
+        
         var t = d3
             .event
             .transform;
-        var countriesGroup = d3.select("g.states");
-        countriesGroup
-            .attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");
-                        map_2.bordersGroup
-            .attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");
-    }
-
-    initiateStateZoom(passed_states){
-       var self = this;
-        // Define a "minzoom" whereby the "Countries" is as small possible without leaving white space at top/bottom or sides
-        self.minZoom = Math.min($("#map-holder").width() / (self.w), $("#map-holder").height() / (self.h));
-        // set max zoom to a suitable factor of this value
-        self.maxZoom = 20 * self.minZoom;
-        // set extent of zoom to chosen values
-        // set translate extent so that panning can't cause map to move out of viewport
-        self.zoom
-          .scaleExtent([self.minZoom, self.maxZoom])
-          .translateExtent([[0, 0], [self.w, self.h]])
-        ;
-        // define X and Y offset for centre of map to be shown in centre of holder
-        var midX = ($("#map-holder").width() - self.minZoom * self.w) / 2;
-        var midY = ($("#map-holder").height() - self.minZoom * self.h) / 2;
-        // change zoom transform to min zoom and centre offsets
-        passed_states.call(self.zoom.transform, d3.zoomIdentity.translate(midX, midY).scale(self.minZoom));
+        if( map_2.previous_scale > t.k )
+        {
+            map_2.removeStateSelection();
+            map_2.previous_scale;
+        }    
         
+        //save previous scale
         
+        map_2.countriesGroup.attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");
+        
+        map_2.bordersGroup.attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");
     }
-
+    
      // Function that calculates zoom/pan limits and sets zoom to default value 
     initiateZoom() {
         var self = this;
@@ -67,18 +40,19 @@ class MapTemplate {
         // set translate extent so that panning can't cause map to move out of viewport
         self.zoom
           .scaleExtent([self.minZoom, self.maxZoom])
-          .translateExtent([[0, 0], [self.w, self.h]])
-        ;
+          .translateExtent([[0, 0], [self.w, self.h]]);
+          
         // define X and Y offset for centre of map to be shown in centre of holder
         var midX = ($("#map-holder").width() - self.minZoom * self.w) / 2;
         var midY = ($("#map-holder").height() - self.minZoom * self.h) / 2;
         // change zoom transform to min zoom and centre offsets
         self.svg.call(self.zoom.transform, d3.zoomIdentity.translate(midX, midY).scale(self.minZoom));
+        self.previous_scale = self.minZoom;
     }
         
     // Define map zoom behaviour
     // zoom to show a bounding box, with optional additional padding as percentage of box size
-    boxZoom(box, centroid, paddingPerc) {
+    boxZoom(box, centroid, paddingPerc, id) {
         var self = this;
         var minXY = box[0];
         var maxXY = box[1];
@@ -109,18 +83,56 @@ class MapTemplate {
         // Make sure no gap at bottom or right of holder
         dleft = Math.max($("svg").width() - self.w * zoomScale, dleft);
         dtop = Math.max($("svg").height() - self.h * zoomScale, dtop);
-        // set zoom
+        
+        self.previous_scale = 0;
+        // Set zoom
         self.svg
           .transition()
-          .duration(500)    
+          .duration(500)   
           .call(
             self.zoom.transform,
             d3.zoomIdentity.translate(dleft, dtop).scale(zoomScale)
-          );
+          )
+          
+          .on("end", function(){
+              self.previous_scale = zoomScale;
+          });
+         self.applyStateSelection(id);
     }
 
     
-     
+    // Removes selected effects of states
+    removeStateSelection(){
+        
+        d3.select("g.states").selectAll("path")
+            .transition()
+            .style("opacity", 1)
+            .attr("class", null);
+        
+    }
+    
+    
+    applyStateSelection(id){
+        var self = this;
+        // Select all states initially, default: unselected
+        var all_paths = d3.select("g.states").selectAll("path")
+            .attr("class", "state-unselected");
+        
+        // Select clicked state. Set opacity: 1
+        d3.select("#"+ id)
+            .attr("class", "state-selected")
+            .style("opacity", 1);
+            
+        // Change opacity of the other states
+        d3.selectAll(".state-unselected")
+            .transition()
+            .style("opacity", .5);
+        
+        self.selected_state = id;
+    }
+    
+ 
+    
     
     constructor(passed_map_features)
     {
@@ -133,8 +145,10 @@ class MapTemplate {
         this.maxZoom=0;
         this.w = 999;
         this.h = 634.5; 
-        
+        this.selected_state = "none";
+        this.previous_scale  = 0;
         var self = this;
+        
         // DEFINE FUNCTIONS/OBJECTS
         // Define map projection
         this.projection = d3
@@ -171,35 +185,14 @@ class MapTemplate {
                 .data(topojson.feature(us, self.access_hook(us)).features)
                 .enter().append("path")
                 .attr("d", self.path)
+                .attr("class", "state-neutral")
                 .attr("id", function(d, i) {
-                    return d.properties.NAME;
+                    return d.properties.NAME.split(" ").join("-");
                 })
                 .on("click", function(d, i){
-                    var id = d.properties.NAME;
-                    var file_name = "map_data/districts-gh-pages/states/OR/sldl/topo_simple.json";
-                    
-                    d3.json( file_name, function( error, state_sel ){
-                        if ( error ) throw error;
-                        var old_d  = d;
-                        d = topojson.feature( state_sel, state_sel.objects.combined ).features;
-                        
-                        d3.select("#"+ id).remove();    // remove old state
-                        
-                        var new_state = self.countriesGroup.select("#"+ id);
-                        new_state.data(d).enter().append("path")
-                            .attr("class", (id + " Congressional Districts"))
-                            .attr("d", self.path)
-                            .call(self.zoom);
-                        self.countriesGroup = self.svg.select("g.states");
-                        
-                        //self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20);
-                    });
-                    
-                    //selected_elem = $("#"+d.properties.NAME);
-                    
-                    
+                    var id = d.properties.NAME.split(" ").join("-");
+                    self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20, id);
                 });
-                 
 
               // Draw state border paths
             self.bordersGroup = self.svg.append("path")
@@ -226,15 +219,15 @@ class MapTemplate {
 
 
 var map_features_1 = {
-    "file_name" : "json/new_us_topo.json",
+    "file_name" : "map_data/new_simpler_us_topo.json",
     "border_class_name" :"state-borders",
     "feature_access_hook": states_function
 }
 
 
 var map_features_2 = {
-    "file_name" : "map_data/districts-gh-pages/states/OR/sldl/topo_simple.json",
-    "border_class_name" :"state-senate-borders",
+    "file_name" : "map_data/us-topo.json", //
+    "border_class_name" :"state-borders",
     "feature_access_hook": state_senate_map_function
 }
 

@@ -13,9 +13,6 @@ svg rect {
     fill: #fff;   /* map background colour */
 }
  
-        svg rect {
-            fill: #fff;   /* map background colour */
-        }
 .country{
     fill: #d1c097;   /* country colour */
     stroke: #2A2C39; /* country border colour */
@@ -34,9 +31,21 @@ svg rect {
     fill: #30BCED;   /* country label background colour */
 }
       
-.states :hover {
+/* .states :hover {
   fill: red;
+} */
+
+
+
+.state-selected{
+    fill: blue;
 }
+
+/* .state-unselected{   
+    transition: .5s ease;
+    opacity: .5;
+
+} */
 
 .state-borders {
   fill: none;
@@ -48,3 +57,10 @@ svg rect {
 }
 
    
+
+   
+/* Selected State UI */
+
+#house-map-button{
+    position: relative;
+}
