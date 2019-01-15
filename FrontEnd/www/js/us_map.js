@@ -4,7 +4,7 @@ var states_function = function(us){
 }
 
 var state_senate_map_function = function(us){
-    return us.objects.states;//us_states;
+    return us.objects.combined;//us_states;
 }
 
 
@@ -16,12 +16,12 @@ class MapTemplate {
             .event
             .transform;
             
-        if( self.previous_scale > t.k )
-        {
-            self.removeStateSelection();
-            self.state_ui.removeStateUI();    //interface screen
-            self.previous_scale = 0;
-        }    
+        // if( self.previous_scale > t.k )
+        // {
+            // self.removeStateSelection();
+            // self.state_ui.removeStateUI();    //interface screen
+            // self.previous_scale = 0;
+        // }    
         
         //save previous scale
         self.countriesGroup.attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");
@@ -54,7 +54,7 @@ class MapTemplate {
         
     // Define map zoom behaviour
     // zoom to show a bounding box, with optional additional padding as percentage of box size
-    boxZoom(box, centroid, paddingPerc, id) {
+    boxZoom(box, centroid, paddingPerc) {
         var self = this;
         var minXY = box[0];
         var maxXY = box[1];
@@ -98,9 +98,6 @@ class MapTemplate {
           .on("end", function(){
               self.previous_scale = zoomScale;
           });
-        
-      
-       
     }
 
     
@@ -139,7 +136,7 @@ class MapTemplate {
          d3.json(this.map_file_name, function(error, us) {
           if (error) throw error;
 
-            self.svg = d3
+           self.svg = d3
                 .select("#map-holder")
                 .append("svg")
                 .attr("class", "states-svg")
@@ -158,11 +155,11 @@ class MapTemplate {
                 .attr("d", self.path)
                 .attr("class", "state-neutral")
                 .attr("id", function(d, i) {
-                    return d.properties.NAME.split(" ").join("-");
+                   return d.properties.NAME.split(" ").join("-"); // return d.properties.NAMELSAD.split(" ").join("-");//
                 })
                 .on("click", function(d, i){
                     var id = d.properties.NAME.split(" ").join("-");
-                    self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20, id);
+                    self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20);
                     self.applyStateSelection(id);
                     self.state_ui.applyStateUI(id, self);
                 });
@@ -220,7 +217,9 @@ class MapTemplate {
             .zoom()
             .on("zoom", function(){
                 self.zoomed(self);
-            });           
+            });     
+
+        
     }
     
 };
@@ -234,7 +233,7 @@ var map_features_1 = {
 
 
 var map_features_2 = {
-    "file_name" : "map_data/us-topo.json", //
+    "file_name" : "map_data/congressional_borders/Oregon/state_house/topo_simple.json", //
     "border_class_name" :"state-senate-borders",
     "feature_access_hook": state_senate_map_function
 }

@@ -15,30 +15,8 @@ class StateUI {
             "border_class_name" : "state-senate-borders",
             "feature_access_hook": state_senate_map_function
         }
-        
         this.state_congressional_map = new CongressionalMapTemplate(new_map_features);
         this.state_congressional_map.appendToParentMap(id);
-        // d3.json(file_name, function(error, state_sel) {
-            
-            
-            
-            // if (error) throw error;
-          
-            
-            
-            // var d = topojson.feature( state_sel, state_sel.objects.combined ).features;
-            
-            // selected.remove();
-            // var new_mapping = d3.select("g.states").select("#"+id);
-            
-            // new_mapping
-                // .data(d).enter()
-                // .append("path")
-                // .attr("class", (id + "-Congressional-Districts"))
-                // .attr("d", parent.path)
-                // .call(parent.zoom);
-          
-        // });
         
     }
     
