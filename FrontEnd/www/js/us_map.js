@@ -16,12 +16,12 @@ class MapTemplate {
             .event
             .transform;
             
-        // if( self.previous_scale > t.k )
-        // {
-            // self.removeStateSelection();
-            // self.state_ui.removeStateUI();    //interface screen
-            // self.previous_scale = 0;
-        // }    
+        if( self.previous_scale > t.k )
+        {
+            self.removeStateSelection();
+            self.state_ui.removeStateUI();    //interface screen
+            self.previous_scale = 0;
+        }    
         
         //save previous scale
         self.countriesGroup.attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");

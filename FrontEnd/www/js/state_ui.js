@@ -5,6 +5,25 @@ class StateUI {
     stateSenateListener(id, parent){
         var self = this;
         
+        var file_name = "map_data/congressional_borders/" + id + "/state_senate/topo_simple.json";
+
+        var selected = d3.select("#"+id);
+        this.old_states_data = selected.data();
+        
+        var new_map_features = {
+            "file_name" : file_name, //
+            "border_class_name" : "state-senate-borders",
+            "feature_access_hook": state_senate_map_function
+        }
+        this.state_congressional_map = new CongressionalMapTemplate(new_map_features);
+        this.removeStateUI();
+        this.state_congressional_map.appendToParentMap(id);
+        
+    }
+    
+    stateHouseListener(id, parent){
+         var self = this;
+        
         var file_name = "map_data/congressional_borders/" + id + "/state_house/topo_simple.json";
 
         var selected = d3.select("#"+id);
@@ -16,13 +35,10 @@ class StateUI {
             "feature_access_hook": state_senate_map_function
         }
         this.state_congressional_map = new CongressionalMapTemplate(new_map_features);
+        this.removeStateUI();
         this.state_congressional_map.appendToParentMap(id);
         
-    }
-    
-    stateHouseListener(id, parent){
         
-        console.log(id);
     }
     
     removeStateUI(){
