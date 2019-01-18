@@ -1,0 +1,94 @@
+
+body { 
+	background-color: #f0f0f0; 
+	color: white;
+	font-family:'Open Sans';
+	line-height: 1;
+	margin: 0;
+}
+
+html {box-sizing: border-box;}
+
+*, *:before, *:after {box-sizing: inherit;}
+
+svg {display: block;}
+
+.heading {
+	background: #282828;
+	text-align: center;
+}
+
+.heading h1 {
+	font-size: 28px;
+	font-weight: 600;
+	margin: 0;
+	padding: 24px 0 6px;
+}
+
+.heading h2 {
+	font-size: 16px;
+	font-weight: 300;
+	margin: 0;
+	padding: 6px 0 30px;
+}
+
+.main {
+	background: #00A287;
+	padding: 20px 20px 20px;
+	position: relative;
+	text-align: right;
+}
+
+.cart-drawer-push {
+	overflow-x: hidden;
+	position: relative;
+	right: 0;
+}
+
+/* default */
+.cart-drawer {
+	background: #444;
+  	height: 10%;
+  	position: fixed;
+	text-align: center;
+	bottom: 0;
+	width: 100%;
+	padding: 20px;
+}
+
+/* hidden */
+.cart-drawer-bottom { bottom: 0; }   
+
+/* shown */
+.cart-drawer-bottom.cart-drawer-open { 
+    bottom: 0;
+    height: 60%;
+}
+
+.cart-drawer-pushtoleft { bottom: 300px; }
+
+.cart-drawer, .cart-drawer-push {
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+}
+
+.cart-btn {
+	cursor: pointer;
+	display: inline-block;
+	font-size: 30px;
+}
+
+.close-btn {
+	cursor: pointer;
+	position: absolute;
+	top: 10px;
+	right: 50%;
+    
+}
+
+.arrow-icon {
+    position: absolute;
+    right: 58px;
+    top: 25px;
+}
