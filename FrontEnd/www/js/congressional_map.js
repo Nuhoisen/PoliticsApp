@@ -8,9 +8,27 @@ var state_senate_map_function = function(us){
 }
 
 
-class CongressionalMapTemplate extends MapTemplate{
-    
-   // Removes selected effects of states
+
+class CongressionalMapTemplate extends MapTemplate{    
+    // Create function to apply zoom to countriesGroup
+    zoomed(self) {
+        var t = d3
+            .event
+            .transform;
+            
+        if( self.previous_scale > t.k )
+        {
+            self.removeStateSelection();
+            self.previous_scale = 0;
+            cong_ui.removeUI();    //interface screen
+        }    
+        
+        //save previous scale
+        self.countriesGroup.attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");
+        self.bordersGroup.attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");
+    }
+   
+    // Removes selected effects of states
     initiateZoom() {
         var self = this;
         // Define a "minzoom" whereby the "Countries" is as small possible without leaving white space at top/bottom or sides
@@ -85,97 +103,71 @@ class CongressionalMapTemplate extends MapTemplate{
     }
     
   
-    
-    
-    
-    appendToParentMap(parent_id){
+    // Sets opacity to zero before removing congressional district paths
+    removeMapPaths()
+    {
         var self = this;
-        d3.json(this.map_file_name, function(error, us) {
-          if (error) throw error;             
-            var old_d = topojson.feature( us, us.objects.combined ).features;
-
-              
-            // Draw states
-            self.selected_state = d3.select("#"+parent_id);
-            self.selected_state_data = self.selected_state.data()['0'];
-            
-            
-            self.countriesGroup = d3.select("g.states");
-            var country_data = self.countriesGroup.selectAll("path").data();    
-            
-            // var new_d = {};
-            // for (var key in old_d)
-            // {
-                // key = parseInt(key);
-                // var new_key = key + country_data['length'];
-                // new_d[new_key.toString()] = old_d[key.toString()];
-            // }
-            // var final_d = Object.assign({},new_d, country_data);
-            
-            self.svg = d3
-                        .select("svg.states-svg")
-                        .attr("width", $("#map-holder").width())
-                        .attr("height", $("#map-holder").height())
-                        .call(self.zoom);;
-            
-            self.svg
-                .transition()
-                .style("opacity", "0")
-                .on("end", function(){
-                    self.countriesGroup.selectAll("path").remove();
-                    self.countriesGroup.selectAll("path")
-                        .data(old_d)
-                        .enter().append("path")
-                        .attr("d", self.path)
-                        .attr("class", (parent_id + "-Congressional-Districts"))
-                        .attr("id", function(d, i) {
-                            return d.properties.NAMELSAD.split(" ").join("-");
-                        })
-                        .on("click", function(d, i){
-                            var id = d.properties.NAMELSAD.split(" ").join("-");
+        self.svg
+            .transition()
+            .style("opacity", "0")
+            .on("end", function(){
+                self.countriesGroup.select("g.states").remove();
+            });
+        self.svg.style("opacity", 1);
+    }
+    
+    selectedClickListener(d, i){
+       var self = this;
+       var id = self.selectedExtractID(d).split(" ").join("-");
                             self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20);
                             self.applyStateSelection(id);
-                            self.state_ui.applyStateUI(id, self);
-                        });
-                    
-
-                    
-                 
-                    
-                      // Draw state border paths
-                    self.bordersGroup = self.svg.append("path")
-                        .attr("class", self.map_border_class)
-                        .attr("d", self.path(topojson.mesh(us, us.objects.combined, function(a, b) {return a !== b; })))
-                        .call(self.zoom);
-                          
-                    self.svg.select("path.state-borders").remove();
-                    self.initiateZoom();
-                     self.svg
-                        .style("opacity", "1")
-                });
-                 
+                            cong_ui.applyUI(id, self);
+                            state_ui.removeUI();
+    }
+    
+    selectedExtractID(d){
+        return d.properties.NAMELSAD;
+    }
+    
+    
+    // Takes existing map, removes state & border paths
+    // and adds congressional district paths
+    appendToParentMap(parent_id){
+        var self = this;
+        self.selected_state_id = parent_id;
+            
+        // Draw states
+        self.selected_state = d3.select("#"+self.selected_state_id);
+        self.selected_state_data = self.selected_state.data()['0'];
+        
+        
+        // Set SVG handle
+        self.svg = d3.select("svg.states-svg")
+                    .call(self.zoom);
+        
+        // Set g handle
+        self.countriesGroup = d3.select("g.states");
+        
+        // Make State map fade out, add congressional paths & and borders
+        self.svg
+            .transition()
+            .style("opacity", "0")
+            .on("end", function(){
                 
-           
-           // self.boxZoom(self.path.bounds(self.selected_state_data), self.path.centroid(self.selected_state_data), 20);
-        });
-        
-        
-        // On window resize
-        $(window).resize(function() {
-            self.svg
-              .attr("width", $("#map-holder").width())
-              .attr("height", $("#map-holder").height())
-            ;
-            self.initiateZoom();
-        });
+                self.countriesGroup.selectAll("path").remove();
+                self.generateMapPaths(self.map_file_name);
+                self.svg.select("path.state-borders").remove();
+                self.svg
+                    .style("opacity", "1")
+            });
     }
     
    
-    constructor(passed_map_features)
-    {
+    constructor(passed_map_features){
         super(passed_map_features);
         self.selected_state = null;
         self.selected_state_data = null;
+        self.selected_state_id = null;
     }
     
 };
@@ -194,4 +186,4 @@ var map_features_2 = {
     "feature_access_hook": state_senate_map_function
 }
 
-// var map_2 = new CongressionalMapTemplate(map_features_2);
+var congr_map = new CongressionalMapTemplate(map_features_2);

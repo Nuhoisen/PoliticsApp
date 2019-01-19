@@ -1,4 +1,6 @@
-var selected_elem = 0
+
+
+var selected_elem = 0;
 var states_function = function(us){    
     return us.objects.us_states;
 }
@@ -19,8 +21,8 @@ class MapTemplate {
         if( self.previous_scale > t.k )
         {
             self.removeStateSelection();
-            self.state_ui.removeStateUI();    //interface screen
             self.previous_scale = 0;
+            state_ui.removeUI();    //interface screen
         }    
         
         //save previous scale
@@ -45,11 +47,23 @@ class MapTemplate {
         var midX = ($("#map-holder").width() - self.minZoom * self.w) / 2;
         var midY = ($("#map-holder").height() - self.minZoom * self.h) / 2;
         // change zoom transform to min zoom and centre offsets
-        self.svg.call(self.zoom.transform, d3.zoomIdentity.translate(midX, midY).scale(self.minZoom));
+        self.svg
+            .call(self.zoom.transform, d3.zoomIdentity.translate(midX, midY).scale(self.minZoom));
         self.previous_scale = self.minZoom;
     }
     
-    
+    // Resets map while performing half-second transition
+    zoomOut(){
+        var self = this;
+        self.minZoom = Math.min($("#map-holder").width() / (self.w), $("#map-holder").height() / (self.h));
+        var midX = ($("#map-holder").width() - self.minZoom * self.w) / 2;
+        var midY = ($("#map-holder").height() - self.minZoom * self.h) / 2;
+        // change zoom transform to min zoom and centre offsets
+        self.svg
+            .transition()
+            .duration(500)    
+            .call(self.zoom.transform, d3.zoomIdentity.translate(midX, midY).scale(self.minZoom));
+    }
   
         
     // Define map zoom behaviour
@@ -100,10 +114,10 @@ class MapTemplate {
           });
     }
 
+  
     
     // Removes selected effects of states
     removeStateSelection(){
-        
         d3.select("g.states").selectAll("path")
             .transition()
             .style("opacity", 1)
@@ -130,63 +144,87 @@ class MapTemplate {
         self.selected_state = id;
     }
     
-   
-    generateMap(){
+    selectedClickListener(d, i){
         var self = this;
-         d3.json(this.map_file_name, function(error, us) {
-          if (error) throw error;
-
-           self.svg = d3
-                .select("#map-holder")
-                .append("svg")
-                .attr("class", "states-svg")
-                .attr("width", $("#map-holder").width())
-                .attr("height", $("#map-holder").height())
-                .call(self.zoom);
-             
-                    
-              
+        var id = self.selectedExtractID(d).split(" ").join("-");
+                    state_ui.applyUI(id, self);
+                    self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20);
+                    self.applyStateSelection(id);
+    }
+    
+    selectedExtractID(d){
+        return d.properties.NAME;
+    }
+    
+    
+    generateMapPaths(file_name){
+        var self = this;
+        this.map_file_name = file_name;
+        d3.json(this.map_file_name, function(error, us) {
+            if (error) throw error;
+            
             // Draw states
-            self.countriesGroup = self.svg.append("g")
-                .attr("class", "states")
-                .selectAll("path")
+            self.countriesGroup.selectAll("path")
                 .data(topojson.feature(us, self.access_hook(us)).features)
                 .enter().append("path")
                 .attr("d", self.path)
                 .attr("class", "state-neutral")
                 .attr("id", function(d, i) {
-                   return d.properties.NAME.split(" ").join("-"); // return d.properties.NAMELSAD.split(" ").join("-");//
+                   return self.selectedExtractID(d).split(" ").join("-"); // return d.properties.NAMELSAD.split(" ").join("-");//
                 })
                 .on("click", function(d, i){
-                    var id = d.properties.NAME.split(" ").join("-");
-                    self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20);
-                    self.applyStateSelection(id);
-                    self.state_ui.applyStateUI(id, self);
+                    self.selectedClickListener(d, i);
                 });
-
+                
               // Draw state border paths
             self.bordersGroup = self.svg.append("path")
                 .attr("class", self.map_border_class)
                 .attr("d", self.path(topojson.mesh(us, self.access_hook(us), function(a, b) { return a !== b; })))
                 .call(self.zoom);
-                  
+                
+                
             self.initiateZoom();
-          
-        });
         
         
-        // On window resize
-        $(window).resize(function() {
-            self.svg
-              .attr("width", $("#map-holder").width())
-              .attr("height", $("#map-holder").height())
-            ;
-        self.initiateZoom();
+            // On window resize
+            $(window).resize(function() {
+                self.svg
+                  .attr("width", $("#map-holder").width())
+                  .attr("height", $("#map-holder").height())
+                ;
+                self.initiateZoom();
+            });
         });
     }
+
    
-    constructor(passed_map_features)
-    {
+    generateMapSVG(){
+        var self = this;
+        self.svg = d3
+            .select("#map-holder")
+            .append("svg")
+            .attr("class", "states-svg")
+            .attr("width", $("#map-holder").width())
+            .attr("height", $("#map-holder").height())
+            .call(self.zoom);
+    }
+   
+    generateMapG(){
+        var self = this;
+         self.countriesGroup = self.svg.append("g")
+            .attr("class", "states");
+    }
+    
+   
+    generateMap(){
+        var self = this;
+
+        self.generateMapSVG();
+        self.generateMapG();
+        self.generateMapPaths(this.map_file_name);
+    }
+   
+    constructor(passed_map_features){
         this.feature_map = passed_map_features;
         this.map_border_class =  this.feature_map['border_class_name'];
         this.access_hook = this.feature_map['feature_access_hook'];
@@ -198,7 +236,7 @@ class MapTemplate {
         this.h = 634.5; 
         this.selected_state = "none";
         this.previous_scale  = 0;
-        this.state_ui = new StateUI();
+       
         var self = this;
         
         // DEFINE FUNCTIONS/OBJECTS
@@ -238,8 +276,8 @@ var map_features_2 = {
     "feature_access_hook": state_senate_map_function
 }
 
-var map_2 = new MapTemplate(map_features_1);
-map_2.generateMap(); 
+var us_state_map = new MapTemplate(map_features_1);
+us_state_map.generateMap(); 
 
 
 
