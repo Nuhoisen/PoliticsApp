@@ -155,7 +155,13 @@ class MapTemplate {
         return d.properties.NAME;
     }
     
+    selectPathByID(id){
+        var self = this;
+        
+        return self.countriesGroup.select("#"+id);
+    }
     
+ 
     generateMapPaths(file_name){
         var self = this;
         this.map_file_name = file_name;
@@ -169,7 +175,9 @@ class MapTemplate {
                 .attr("d", self.path)
                 .attr("class", "state-neutral")
                 .attr("id", function(d, i) {
-                   return self.selectedExtractID(d).split(" ").join("-"); // return d.properties.NAMELSAD.split(" ").join("-");//
+                    var path_id = self.selectedExtractID(d).split(" ").join("-"); // return d.properties.NAMELSAD.split(" ").join("-");//
+                    self.path_ids.push(path_id);
+                    return path_id;
                 })
                 .on("click", function(d, i){
                     self.selectedClickListener(d, i);
@@ -233,7 +241,7 @@ class MapTemplate {
         this.h = 634.5; 
         this.selected_state = "none";
         this.previous_scale  = 0;
-       
+        this.path_ids = [];
         var self = this;
         
         // DEFINE FUNCTIONS/OBJECTS

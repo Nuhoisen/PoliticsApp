@@ -92,3 +92,33 @@ class CongressionalUI extends StateUI {
 
 
 var cong_ui = new CongressionalUI();
+
+
+
+d3.select(".close-btn")
+                .on("click", function(){
+                    profile_ui.generateHTML();
+                    var drawer = d3.select(".cart-drawer");
+                    // drawer.classed("cart-drawer-active", !drawer.classed("cart-drawer-active"));
+                    if(!drawer.classed("cart-drawer-active")){
+                        drawer
+                            .transition()
+                            .style("height", "60%")
+                            .on('end', function(){
+                                d3.select(".close-btn")
+                                    .style("height", "10%");
+                            });
+                        drawer.classed("cart-drawer-active", true);
+                    }
+                    else{
+                        drawer
+                            .transition()
+                            .style("height", "10%")
+                            .on('end', function(){
+                                d3.select(".close-btn")
+                                    .style("height", "100%");
+                            });
+                        drawer.classed("cart-drawer-active", false);
+                    }
+                    
+                });
