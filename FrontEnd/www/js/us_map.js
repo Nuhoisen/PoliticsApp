@@ -18,8 +18,7 @@ class MapTemplate {
             .event
             .transform;
             
-        if( self.previous_scale > t.k )
-        {
+        if( self.previous_scale > t.k ){
             self.removeStateSelection();
             self.previous_scale = 0;
             state_ui.removeUI();    //interface screen
@@ -179,13 +178,11 @@ class MapTemplate {
               // Draw state border paths
             self.bordersGroup = self.svg.append("path")
                 .attr("class", self.map_border_class)
-                .attr("d", self.path(topojson.mesh(us, self.access_hook(us), function(a, b) { return a !== b; })))
-                .call(self.zoom);
+                .attr("d", self.path(topojson.mesh(us, self.access_hook(us), function(a, b) { return a !== b; })));
                 
                 
+            self.svg.call(self.zoom);
             self.initiateZoom();
-        
-        
             // On window resize
             $(window).resize(function() {
                 self.svg

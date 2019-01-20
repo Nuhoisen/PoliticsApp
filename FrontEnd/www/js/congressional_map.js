@@ -21,6 +21,7 @@ class CongressionalMapTemplate extends MapTemplate{
             self.removeStateSelection();
             self.previous_scale = 0;
             cong_ui.removeUI();    //interface screen
+            state_ui.applyUI(self.selected_state_id);  
         }    
         
         //save previous scale
@@ -107,22 +108,28 @@ class CongressionalMapTemplate extends MapTemplate{
     removeMapPaths()
     {
         var self = this;
-        self.svg
-            .transition()
-            .style("opacity", "0")
-            .on("end", function(){
-                self.countriesGroup.select("g.states").remove();
-            });
-        self.svg.style("opacity", 1);
+        d3.select("g.states").selectAll("path").remove();
+        d3.select("svg.states-svg").select("path.state-senate-borders").remove();
+        reg_flag.destroy();
+        
+        
+        self.svg.on("mousedown.zoom", null);
+        self.svg.on("mousemove.zoom", null);
+        self.svg.on("dblclick.zoom", null);
+        self.svg.on("touchstart.zoom", null);
+        self.svg.on("wheel.zoom", null);
+        self.svg.on("mousewheel.zoom", null);
+        self.svg.on("MozMousePixelScroll.zoom", null);
     }
     
+    // Activates when a congressional district is clicked
     selectedClickListener(d, i){
-       var self = this;
-       var id = self.selectedExtractID(d).split(" ").join("-");
-                            self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20);
-                            self.applyStateSelection(id);
-                            cong_ui.applyUI(id, self);
-                            state_ui.removeUI();
+        var self = this;
+        var id = self.selectedExtractID(d).split(" ").join("-");
+        self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20);
+        self.applyStateSelection(id);
+        state_ui.removeUI();
+        cong_ui.applyUI(id, self);
     }
     
     selectedExtractID(d){
@@ -130,16 +137,20 @@ class CongressionalMapTemplate extends MapTemplate{
     }
     
     
+    
+    
     // Takes existing map, removes state & border paths
     // and adds congressional district paths
     appendToParentMap(parent_id){
         var self = this;
-        self.selected_state_id = parent_id;
             
         // Draw states
-        self.selected_state = d3.select("#"+self.selected_state_id);
-        self.selected_state_data = self.selected_state.data()['0'];
-        
+        if(!reg_flag.exists()){
+            reg_flag.create();
+            self.selected_state_id = parent_id;
+            self.selected_state = d3.select("#"+self.selected_state_id);
+            self.selected_state_data = self.selected_state.data()['0'];            
+        }
         
         // Set SVG handle
         self.svg = d3.select("svg.states-svg")
@@ -155,8 +166,9 @@ class CongressionalMapTemplate extends MapTemplate{
             .on("end", function(){
                 
                 self.countriesGroup.selectAll("path").remove();
-                self.generateMapPaths(self.map_file_name);
                 self.svg.select("path.state-borders").remove();
+                self.svg.select("path.state-senate-borders").remove();
+                self.generateMapPaths(self.map_file_name);
                 self.svg
                     .style("opacity", "1")
             });
