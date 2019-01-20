@@ -164,7 +164,8 @@ class MapTemplate {
  
     generateMapPaths(file_name){
         var self = this;
-        this.map_file_name = file_name;
+        self.map_file_name = file_name;
+        self.path_ids = [];
         d3.json(this.map_file_name, function(error, us) {
             if (error) throw error;
             

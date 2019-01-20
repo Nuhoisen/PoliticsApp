@@ -48,7 +48,8 @@ class StateUI {
     
     // Cause UI fadeout
     opaqueUI(){
-        d3.selectAll(".state-ui")
+        var self = this;
+        d3.selectAll("." + self.ui_class_name)
             .transition()
             .style("opacity", 0);
     }
@@ -57,7 +58,7 @@ class StateUI {
     // Resets the ui_generated flag
     removeUI(){
         var self = this;
-        d3.selectAll(".state-ui").remove();
+        d3.selectAll("."+ self.ui_class_name).remove();
         
         self.ui_generated = false;
     }
@@ -106,7 +107,7 @@ class StateUI {
             d3.select(".state-label")
                 .html( self.selected_state_id );
             
-            d3.selectAll(".state-ui")
+            d3.selectAll("." + self.ui_class_name)
                 .style("opacity", 1);
         }
         else{
@@ -139,13 +140,14 @@ class StateUI {
     }
     
     
-    constructor(){
+    constructor(ui_class_name){
         this.state_congressional_map = null;
         this.old_states_data;
         this.ui_generated = false;
         this.selected_state_id = null;
+        this.ui_class_name = ui_class_name;
     }
 }
 
-var state_ui = new StateUI();
+var state_ui = new StateUI("state-ui");
     
