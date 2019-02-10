@@ -2,15 +2,18 @@ import urllib3
 from bs4 import BeautifulSoup # To get everything
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-
+import time
 
 class PolyScraper:
 
     c_url = ""
     c_soup = None
     c_driver = None
-    def __init__(self):
+    def __init__(self, url=None):
         self.set_up_selenium()
+        if(url!=None):
+            self.retrieve_webpage(url)
+            
         
     def set_up_selenium(self):
         chrome_opt = webdriver.ChromeOptions()
@@ -22,11 +25,16 @@ class PolyScraper:
     def retrieve_webpage(self,url):
         self.c_url = url
         self.c_driver.get(self.c_url)
-
-        self.c_soup = BeautifulSoup(self.c_driver.page_source, "html.parser")
+        self.c_soup = BeautifulSoup(self.c_driver.page_source, "lxml")
 
         
-
+    def perform_click_by_id(self, x_path):
+        selected_elem = self.c_driver.find_element_by_xpath(x_path)
+        selected_elem.click()
+        self.c_soup = BeautifulSoup(self.c_driver.page_source, "lxml")
+        
+        
+        
     def retrieve_legislastion(self):
     
         legislation_bulk = self.c_soup.find(id='BT50Widget')
