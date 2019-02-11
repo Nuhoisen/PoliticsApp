@@ -87,7 +87,11 @@ svg {display: block;}
     top: 25px;
 }
 
-
+.vertical-menu{
+	overflow:hidden; 
+	overflow-y:scroll;
+	
+}
 .vertical-menu-item{
 	display:block;
 }
