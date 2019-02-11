@@ -282,8 +282,8 @@ var map_features_2 = {
     "feature_access_hook": state_senate_map_function
 }
 
-var us_state_map = new MapTemplate(map_features_1);
-us_state_map.generateMap(); 
+// var us_state_map = new MapTemplate(map_features_1);
+// us_state_map.generateMap(); 
 
 
 
