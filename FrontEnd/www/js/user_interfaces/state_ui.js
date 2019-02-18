@@ -1,7 +1,7 @@
 
 
 class StateUI extends UI{
-    
+    // Congressional Map
     generateCongressionalMap(file_name){
         var self = this;
         var selected = d3.select("#"+self.selected_state_id);

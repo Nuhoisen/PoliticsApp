@@ -129,8 +129,8 @@ class CongressionalMapTemplate extends MapTemplate{
         var id = self.selectedExtractID(d).split(" ").join("-");
         self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20);
         self.applyStateSelection(id);
-        self.ui.removeUI();
-        self.ui.applyUI(id);
+        // self.ui.removeUI();
+        self.ui.addLabel(id);
     }
     
     selectedExtractID(d){

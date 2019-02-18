@@ -1,6 +1,17 @@
 
 class UI {
 
+    generateCongressionalMap(file_name){
+        var self = this;
+        var selected = d3.select("#"+self.selected_state_id);
+        this.old_states_data = selected.data();
+        
+        self.removeUI();
+        self.state_congressional_map.map_file_name  = file_name;
+        self.state_congressional_map.appendToParentMap(self.selected_state_id);
+    }
+
+
     applyUI(id, parent){} 
     generateHTML(){}
     

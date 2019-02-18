@@ -2,14 +2,23 @@
 
 class CongressionalUI extends UI{//extends StateUI {
     
-    
+    // Congressional Map
+    generateCongressionalMap(file_name){
+        var self = this;
+        var selected = d3.select("#"+self.selected_state_id);
+        this.old_states_data = selected.data();
+        
+        self.removeUI();
+        self.creator.map_file_name  = file_name;
+        self.creator.appendToParentMap(self.selected_state_id);
+    }
     
     // Pulls senate geo filename and calls generate function
     stateSenateListener(){
         var self = this;
         var file_name = "map_data/congressional_borders/" + self.selected_state_id + "/state_senate/topo_simple.json";
         self.generateCongressionalMap(file_name);
-        self.applyExitListener();   
+        // self.applyExitListener();   
     }
     
     // Pulls house geo filename and calls generate function
@@ -17,16 +26,16 @@ class CongressionalUI extends UI{//extends StateUI {
         var self = this;
         var file_name = "map_data/congressional_borders/" + self.selected_state_id + "/state_house/topo_simple.json";
         self.generateCongressionalMap(file_name);
-        self.applyExitListener();
+        // self.applyExitListener();
     }
   
     
      // Modifies the title label. Saves it
     addLabel(id){
         var self = this;
-        self.selected_state_id = id;
+        // self.selected_state_id = id;
         d3.select(".congressional-label")
-            .html( self.selected_state_id );
+            .html( id );
     }
     
     
@@ -35,7 +44,7 @@ class CongressionalUI extends UI{//extends StateUI {
         var self = this;
         super.generateHTML();
         
-        var html = "<div class='congressional-ui congressional-label'>Text</div> \
+        var html = "    <div class='congressional-ui congressional-label'>Text</div> \
                         <div class='congressional-ui congressional-button-container'> \
                             <a class='congressional-ui congressional-buttons' id='congressional-left-button' >State Senate</a> \
                             <a class='congressional-ui congressional-buttons' id='congressional-right-button' >State House</a> \
@@ -51,19 +60,19 @@ class CongressionalUI extends UI{//extends StateUI {
         $(".congressional-ui").css("z-index", 1);
         
         d3.selectAll(".congressional-ui")
-            .style("opacity", 1)
+            .style("opacity", 1);
     }
     
     addListeners(){
         var self = this;
         
-        d3.select("#state-left-button")
+        d3.select("#congressional-left-button")
                 .on("click", function(){
                     self.stateSenateListener();
                 });
                        
             
-        d3.select("#state-right-button")
+        d3.select("#congressional-right-button")
             .on("click", function(){
                 self.stateHouseListener();
             });
