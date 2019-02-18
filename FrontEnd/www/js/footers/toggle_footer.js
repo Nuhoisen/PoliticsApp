@@ -15,9 +15,10 @@ class ToggleFooter extends Footer {
             .attr("id", function(d, i){return d;})
             .on("click", function(id, i){
                 var data = self.creator.creator.selectPathByID(id).data()[0];   //congress_map.selectPathsByID
+                // self.creator.removeUI();
                 self.creator.creator.boxZoom(self.creator.creator.path.bounds(data), self.creator.creator.path.centroid(data), 20); //congress_map.bounds ...
                 self.creator.creator.applyStateSelection(id); // congress_map.applyStateSelection
-                self.creator.applyUI(id);   // congress_ui.applyUI
+                self.creator.addLabel(id);   // congress_ui.applyUI
             });
     } 
 

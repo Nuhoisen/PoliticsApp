@@ -20,27 +20,38 @@ class CongressionalUI extends UI{//extends StateUI {
         self.applyExitListener();
     }
   
-     
+    
+     // Modifies the title label. Saves it
+    addLabel(id){
+        var self = this;
+        self.selected_state_id = id;
+        d3.select(".congressional-label")
+            .html( self.selected_state_id );
+    }
+    
+    
+    // Generates HTML, for UI, and footer
     generateHTML(){
         var self = this;
         super.generateHTML();
         
         var html = "<div class='congressional-ui congressional-label'>Text</div> \
-                        <div class='congressional-button-container'> \
-                            <a  id='congressional-left-button' class='congressional-ui congressional-buttons'>State Senate</a> \
-                            <a id='congressional-right-button' class='congressional-ui congressional-buttons'>State House</a> \
+                        <div class='congressional-ui congressional-button-container'> \
+                            <a class='congressional-ui congressional-buttons' id='congressional-left-button' >State Senate</a> \
+                            <a class='congressional-ui congressional-buttons' id='congressional-right-button' >State House</a> \
                         </div> \
                         <a class='congressional-exit-button congressional-ui'>Back</a>";
         
         $(".ui-body").addClass("congressional-ui");
+        $(".ui-body").append(html);
         
-        d3.select(".congressional-label")
-                .html(self.selected_state_id);
+        self.addLabel(self.selected_state_id)
         
         self.footer.generateHTML();
-        $(".state-ui").css("z-index", 1);
+        $(".congressional-ui").css("z-index", 1);
         
-        
+        d3.selectAll(".congressional-ui")
+            .style("opacity", 1)
     }
     
     addListeners(){
@@ -60,10 +71,11 @@ class CongressionalUI extends UI{//extends StateUI {
                 
         d3.select(".congressional-exit-button")
             .on("click", function(){
-                self.state_congressional_map.removeMapPaths();
-                self.creator.generateMapPaths("map_data/new_simpler_us_topo.json")
+                // self.state_congressional_map.removeMapPaths();
                 self.removeUI();
                 self.creator.zoomOut();
+                self.creator.removeMapPaths();
+                self.creator.creator.creator.generateMapPaths("map_data/new_simpler_us_topo.json"); //us_map.generateMapPaths
             });
          
         
@@ -78,10 +90,6 @@ class CongressionalUI extends UI{//extends StateUI {
         
             
        self.addListeners();
-       
-            // $(".congressional-ui").css("z-index", 1);
-        // }
-        
     }
     
     

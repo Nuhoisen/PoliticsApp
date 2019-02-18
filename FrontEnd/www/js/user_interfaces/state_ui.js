@@ -3,11 +3,11 @@
 class StateUI extends UI{
     
     generateCongressionalMap(file_name){
-       // Possibly Remove
         var self = this;
         var selected = d3.select("#"+self.selected_state_id);
         this.old_states_data = selected.data();
         
+        self.removeUI();
         self.state_congressional_map.map_file_name  = file_name;
         self.state_congressional_map.appendToParentMap(self.selected_state_id);
     }
@@ -28,13 +28,27 @@ class StateUI extends UI{
         
         $(".ui-body").append(html);
         
-        d3.select(".state-label")
-            .html( self.selected_state_id );
+        self.addLabel(self.selected_state_id);
         self.footer.generateHTML();
         
        $(".state-ui").css("z-index", 1);
+       
+       d3.selectAll(".state-ui")
+            .style("opacity", 1);
+    }
+      
+    // Modifies the Title Label
+    addLabel(id){
+        var self = this;
+        self.selected_state_id = id;
+        d3.select(".state-label")
+            .html( self.selected_state_id );
     }
     
+    
+    // Adds the district listener,
+    // the back listener, 
+    // and the footer listeners
     addListeners(){
         var self = this;
         
@@ -55,16 +69,15 @@ class StateUI extends UI{
     }
     
     
+    // Generates HTML
+    // Saves the selected state
+    // Calls addListeners
     applyUI(id){
         var self = this;
         self.selected_state_id = id;
         self.generateHTML();
         
-        d3.selectAll(".state-ui")
-            .style("opacity", 1);
-        
         self.addListeners(); 
-            
     }
     
     
