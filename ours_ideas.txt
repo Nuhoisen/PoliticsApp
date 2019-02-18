@@ -1,0 +1,38 @@
+menu items
+	news feed
+	map
+	search
+
+
+search:
+	generate search bar
+	
+	have a filter for general 
+	
+	all politicians ordered in alphabetical ordered
+	
+	
+	
+	
+	
+truth/lying scale/count
+
+
+political profiles
+	political scale- 4 axes vs 2 axes
+	
+	
+
+map :
+	population details
+	demographics
+	
+	colorize based on partiship
+	
+	
+	
+	
+	
+	
+	
+	
