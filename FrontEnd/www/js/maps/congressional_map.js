@@ -20,8 +20,8 @@ class CongressionalMapTemplate extends MapTemplate{
         {
             self.removeStateSelection();
             self.previous_scale = 0;
-            cong_ui.removeUI();    //interface screen
-            state_ui.applyUI(self.selected_state_id);  
+            self.ui.removeUI();    //interface screen
+            self.creator.applyUI(self.selected_state_id);  
         }    
         
         //save previous scale
@@ -128,8 +128,8 @@ class CongressionalMapTemplate extends MapTemplate{
         var id = self.selectedExtractID(d).split(" ").join("-");
         self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20);
         self.applyStateSelection(id);
-        state_ui.removeUI();
-        cong_ui.applyUI(id, self);
+        self.creator.removeUI();
+        self.ui.applyUI(id);
     }
     
     selectedExtractID(d){
@@ -172,11 +172,15 @@ class CongressionalMapTemplate extends MapTemplate{
                 self.svg
                     .style("opacity", "1")
             });
+            
+        self.ui.applyUI(parent_id);
+        
     }
     
    
-    constructor(passed_map_features){
-        super(passed_map_features);
+    constructor(passed_map_features, creator){
+        super(passed_map_features, creator);
+        this.ui = new CongressionalUI("congressional-ui", this);
         self.selected_state = null;
         self.selected_state_data = null;
         self.selected_state_id = null;
@@ -185,17 +189,10 @@ class CongressionalMapTemplate extends MapTemplate{
 };
 
 
-// var map_features_1 = {
-    // "file_name" : "map_data/new_simpler_us_topo.json",
-    // "border_class_name" :"state-borders",
-    // "feature_access_hook": states_function
-// }
-
-
 var map_features_2 = {
     "file_name" : "map_data/congressional_borders/Alabama/state_house/topo_simple.json", //
     "border_class_name" :"state-senate-borders",
     "feature_access_hook": state_senate_map_function
 }
 
-var congr_map = new CongressionalMapTemplate(map_features_2);
+// var congr_map = new CongressionalMapTemplate(map_features_2, us_state_map.ui);

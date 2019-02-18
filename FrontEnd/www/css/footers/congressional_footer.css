@@ -1,0 +1,31 @@
+
+
+/* default */
+.cart-drawer {
+	background: #444;
+  	height: 10%;
+  	position: fixed;
+	text-align: center;
+	bottom: 0;
+	width: 100%;
+    text-align:center;
+}
+
+
+.cart-drawer-bottom.cart-drawer-open { 
+    bottom: 0;
+    height: 60%;
+}
+
+.cart-drawer-bottom { bottom: 0; }   
+
+
+.close-btn {
+	cursor: pointer;
+	/* position: static; Default */
+	top: 5px;
+    font-size:100%;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+}
