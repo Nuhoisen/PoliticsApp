@@ -10,6 +10,7 @@ class UI {
         self.state_congressional_map.map_file_name  = file_name;
         self.state_congressional_map.appendToParentMap(self.selected_state_id);
     }
+    loadImages(){}
 
 
     applyUI(id, parent){} 

@@ -16,7 +16,7 @@ class CongressionalUI extends UI{//extends StateUI {
     // Pulls senate geo filename and calls generate function
     stateSenateListener(){
         var self = this;
-        var file_name = "map_data/congressional_borders/" + self.selected_state_id + "/state_senate/topo_simple.json";
+        var file_name = "map_data/congressional_borders/" + self.creator.creator.selected_state_id + "/state_senate/topo_simple.json";
         self.generateCongressionalMap(file_name);
         // self.applyExitListener();   
     }
@@ -24,7 +24,7 @@ class CongressionalUI extends UI{//extends StateUI {
     // Pulls house geo filename and calls generate function
     stateHouseListener(){
         var self = this;
-        var file_name = "map_data/congressional_borders/" + self.selected_state_id + "/state_house/topo_simple.json";
+        var file_name = "map_data/congressional_borders/" + self.creator.creator.selected_state_id + "/state_house/topo_simple.json";
         self.generateCongressionalMap(file_name);
         // self.applyExitListener();
     }

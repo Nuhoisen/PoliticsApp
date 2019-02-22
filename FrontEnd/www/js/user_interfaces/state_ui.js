@@ -1,6 +1,42 @@
 
 
 class StateUI extends UI{
+    
+    
+    loadImages(id){
+        
+        d3.selectAll(".senator-img-left")
+            // .append("img")
+            .attr("src", "profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png")
+            // .attr("class", "senator-img-left senator-img state-ui");
+       
+       d3.selectAll(".senator-img-left-label")
+            // .append("a")
+            // .attr("class", "senator-img-right-label senator-img-label state-ui") 
+            .text("Hello");
+            
+        
+        d3.selectAll(".senator-img-right")
+            // .append("img")
+            .attr("src", "profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png")
+            // .attr("class", "senator-img-right senator-img state-ui");
+        
+        d3.selectAll(".senator-img-right-label")
+            // .append("a")
+            // .attr("class", "senator-img-right-label senator-img-label state-ui") 
+            .text("shetland rapist");
+            
+        d3.selectAll(".governor-img")
+            .attr("src", "profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png")
+        
+        d3.selectAll(".governor-img-label")
+            .text("shetland rapist");
+            
+             
+         
+            
+    }
+    
     // Congressional Map
     generateCongressionalMap(file_name){
         var self = this;
@@ -17,23 +53,46 @@ class StateUI extends UI{
     generateHTML(){
         var self = this;
         super.generateHTML();
+        //<img src='profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png'/> \
         
         var html = "<div class='state-ui state-label'>Text</div> \
+                    \
+                    <div class='state-ui governor-img-div'> \
+                        <img src='' class='governor-img state-ui' alt=''/> \
+                        <a href='' class='governor-img-label state-ui'></a> \
+                    </div> \
+                    \
+                    <div class='state-ui senate-img-div-left senate-img-div'> \
+                        <img src='' alt='' class='senator-img-left senator-img state-ui'/> \
+                         <a href='' class='senator-img-left-label  senator-img-label  state-ui'></a> \
+                    </div> \
+                    \
+                    <div class='state-ui senate-img-div-right senate-img-div'> \
+                        <img src='' class='senator-img-right senator-img state-ui' alt=''/>\
+                         <a href='' class='senator-img-right-label senator-img-label state-ui'></a> \
+                    </div> \
+                    \
                     <div class='state-button-container'> \
                         <a  id='state-left-button' class='state-ui state-districts-button state-buttons'>Districts</a> \
                     </div> \
+                    \
                     <a class='state-exit-button state-ui'>Back</a>" ;
 
         $(".ui-body").addClass("state-ui");
         
         $(".ui-body").append(html);
         
+        // Add State Name to the Label
         self.addLabel(self.selected_state_id);
+        // Generate Footer
         self.footer.generateHTML();
         
+        self.loadImages();
+        
        $(".state-ui").css("z-index", 1);
-       
        d3.selectAll(".state-ui")
+            .transition()
+            .duration(1000)
             .style("opacity", 1);
     }
       

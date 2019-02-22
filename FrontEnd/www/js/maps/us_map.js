@@ -55,7 +55,7 @@ class USMap extends MapTemplate {
         var self = this;
         var id = self.selectedExtractID(d).split(" ").join("-");
                     self.ui.removeUI();
-                    self.ui.applyUI(id, self);
+                    self.ui.applyUI(id);
                     self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20);
                     self.applyStateSelection(id);
     }

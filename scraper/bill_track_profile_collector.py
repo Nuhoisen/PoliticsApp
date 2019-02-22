@@ -13,9 +13,6 @@ urls = ["https://www.billtrack50.com/LegislatorDetail/3308", "https://www.billtr
 
 legislature_dict = defaultdict(lambda: defaultdict(list))
 
-
-
-    
 def get_name(soup):
     name = soup.find(id='lblLegislator').string
     name = name.replace("&nbsp", " ")
@@ -97,7 +94,7 @@ def get_committees(soup): #soup):#
 
 passed = 0
 failed = 0
-for i in range(1, 1000):    
+for i in range(1, 30000):    
     try:
         billtrack = url+str(i)
         r = http.request('GET', billtrack)
