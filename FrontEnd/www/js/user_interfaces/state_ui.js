@@ -2,34 +2,27 @@
 
 class StateUI extends UI{
     
-    
+
+     // Load image of senators and governor. Update they're banners
     loadImages(id){
         
         d3.selectAll(".senator-img-left")
-            // .append("img")
-            .attr("src", "profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png")
-            // .attr("class", "senator-img-left senator-img state-ui");
-       
-       d3.selectAll(".senator-img-left-label")
-            // .append("a")
-            // .attr("class", "senator-img-right-label senator-img-label state-ui") 
-            .text("Hello");
+             .attr("src", "profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png")
+           
+        d3.selectAll(".senator-img-left-name")
+              .text("Hello");
             
         
         d3.selectAll(".senator-img-right")
-            // .append("img")
             .attr("src", "profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png")
-            // .attr("class", "senator-img-right senator-img state-ui");
-        
-        d3.selectAll(".senator-img-right-label")
-            // .append("a")
-            // .attr("class", "senator-img-right-label senator-img-label state-ui") 
-            .text("shetland rapist");
+           
+        d3.selectAll(".senator-img-right-name")
+             .text("shetland rapist");
             
         d3.selectAll(".governor-img")
             .attr("src", "profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png")
         
-        d3.selectAll(".governor-img-label")
+        d3.selectAll(".governor-name-label")
             .text("shetland rapist");
             
              
@@ -58,18 +51,19 @@ class StateUI extends UI{
         var html = "<div class='state-ui state-label'>Text</div> \
                     \
                     <div class='state-ui governor-img-div'> \
+                        <a href='' class='governor-label state-ui'>Governor</a> \
                         <img src='' class='governor-img state-ui' alt=''/> \
-                        <a href='' class='governor-img-label state-ui'></a> \
+                        <a href='' class='governor-name-label state-ui'></a> \
                     </div> \
                     \
                     <div class='state-ui senate-img-div-left senate-img-div'> \
                         <img src='' alt='' class='senator-img-left senator-img state-ui'/> \
-                         <a href='' class='senator-img-left-label  senator-img-label  state-ui'></a> \
+                         <a href='' class='senator-img-left-name  senator-img-name  state-ui'></a> \
                     </div> \
                     \
                     <div class='state-ui senate-img-div-right senate-img-div'> \
                         <img src='' class='senator-img-right senator-img state-ui' alt=''/>\
-                         <a href='' class='senator-img-right-label senator-img-label state-ui'></a> \
+                         <a href='' class='senator-img-right-name senator-img-name state-ui'></a> \
                     </div> \
                     \
                     <div class='state-button-container'> \

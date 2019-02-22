@@ -87,7 +87,7 @@
     width: 100%;
 }
 
-.senator-img-label{
+.senator-img-name{
     color: white;
     text-decoration: none;
     top: 30%;
@@ -98,11 +98,11 @@
 
 
 
-.senator-img-left-label{
+.senator-img-left-name{
     right:20%;
 }
 
-.senator-img-right-label{
+.senator-img-right-name{
     right:20%;
 }
 /* ------------------------- */
@@ -121,7 +121,7 @@
     border-radius: 50%;
 }
 
-.governor-img-label{
+.governor-name-label{
     color: white;
     text-decoration: none;
     right:50%;
@@ -129,6 +129,17 @@
     text-align: center;
     display:block;
     top: 15%;
+    
+}
+
+.governor-label{
+    color: white;
+    text-decoration: none;
+    right:50%;
+    width:100%;
+    text-align: center;
+    display:block;
+    top: 5%;
     
 }
 /* ------------------------- */
