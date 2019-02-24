@@ -4,6 +4,7 @@ import urllib3
 from bs4 import BeautifulSoup
 from collections import defaultdict
 from poly_scraper import PolyScraper
+from sql_storer import SqlStorer
 urllib3.disable_warnings()
 
 url = "https://www.billtrack50.com/LegislatorDetail/"
@@ -13,6 +14,13 @@ urls = ["https://www.billtrack50.com/LegislatorDetail/3308", "https://www.billtr
 
 legislature_dict = defaultdict(lambda: defaultdict(list))
 
+
+
+my_sql = SqlStorer("PoliticianInfo", "PoliticianTable")
+my_sql.set_up_connection()
+my_sql.create_table()
+
+
 def get_name(soup):
     name = soup.find(id='lblLegislator').string
     name = name.replace("&nbsp", " ")
@@ -21,33 +29,56 @@ def get_name(soup):
     
     
 def get_ballotpedia(soup):
-    return soup.find(id='lnkBallotpedia').get('href')
+    bal_link = ""
+    try:
+        bal_link = soup.find(id='lnkBallotpedia').get('href')
+    except Exception:
+        bal_link = ""
+        
+    return bal_link
   
 def get_follow_money(soup):
-    return soup.find(id='lnkFollowTheMoney').get('href')
+    fm_link = ""
+    try:
+        fm_link = soup.find(id='lnkFollowTheMoney').get('href')
+    except Exception:
+        fm_link = ""
+    return fm_link
 
 def get_role(soup):
-    role = soup.find(id='lblRole').string.split('-')[0]
-    
+    role = ""
+    try:
+        role = soup.find(id='lblRole').string.split('-')[0]
+    except Exception:
+        role = ""
     return role
     
     
 def get_state(soup):
-    state = soup.find(id='lblRole').string.split('-')           
-    state = state[1]
-    state = state.split()
-    district = " ".join(state)
-    if( state[0].lower() == "new" ):
-        state = ("%s %s" % (state[0], state[1]))
-    else:
-        state = state[0]
-        
+    state = ""
+    try:
+        state = soup.find(id='lblRole').string.split('-')           
+        state = state[1]
+        state = state.split()
+        district = " ".join(state)
+        if( state[0].lower() == "new" ):
+            state = ("%s %s" % (state[0], state[1]))
+        else:
+            state = state[0]
+    except Exception:
+        state = ""
     return state
+    
 def get_district(soup):
-    district = soup.find(id='lblRole').string.split('-')[1]
+    district = ""
+    try:
+        district = soup.find(id='lblRole').string.split('-')[1]
+    except Exception:
+        district = ""
     return district
    
 def get_sponsored_bills(soup):
+    
     bill_list = []
     
     sponsored_body = soup.find(id= 'tblSponsors')
@@ -92,73 +123,82 @@ def get_committees(soup): #soup):#
 
     return committee_list
 
-passed = 0
-failed = 0
-for i in range(1, 30000):    
-    try:
-        billtrack = url+str(i)
-        r = http.request('GET', billtrack)
-        
-        
-        
-        
-        
-        
-        soup = BeautifulSoup(r.data, "lxml")
-        
-        
-        
-        in_office = soup.find(id= 'lblInOffice').string
-        
-        if("yes" in in_office.lower()):
-            name = get_name(soup)
-            
-            
-            
-            ballotpedia = get_ballotpedia(soup) #soup.find(id='lnkBallotpedia').get('href')
-            follow_money = get_follow_money(soup) #soup.find(id='lnkFollowTheMoney').get('href')
-            role = get_role(soup)
-            state = get_state(soup)            
-            district = get_district(soup)
-
-            sponsored_bills = None
-            try:
-                sponsored_bills = get_sponsored_bills(soup)
-            except AttributeError as e:
-                continue
-                #print("No Sponsored Bills")
-
-            committees = None
-            try:
-                committees = get_committees(soup)
-
-            except AttributeError as e:
-                continue
-                #print("No Committees")
-                
-            
-            
-            profile = {"Name":name, "District": district, "BillTrack": billtrack, "FMLink": follow_money, "Ballotpedia": ballotpedia, "SponsoredBills": sponsored_bills, "Committees": committees}
-            
-            legislature_dict[state][role].append(profile)
-            
-            
-            #print(legislature_dict)
-            
-            passed+=1
-            
-    except AttributeError or TypeError as e:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print(exc_type, fname, exc_tb.tb_lineno)
+def get_img_url(id):
+        return "https://www.billtrack50.com/Handlers/LegislatorImageHandler.ashx?id=" + str(id)
     
-        print("Failed link: %s" % billtrack)
-        failed += 1
-        print(e)
-        
+def run():    
 
-print("Passed: %d" % passed)
-print("Failed: %d" % failed)
+    passed = 0
+    failed = 0
+    
+    #for url in urls:
+    #    print(url)
+    for i in range(1, 30000):    
+        try:
+            billtrack = url+str(i)
+            r = http.request('GET', billtrack)
+            
+            soup = BeautifulSoup(r.data, "lxml")
+            
+            
+            
+            in_office = soup.find(id= 'lblInOffice').string
+            
+            if("yes" in in_office.lower()):
+                name = get_name(soup).strip()
+                
+                
+                ballotpedia = get_ballotpedia(soup).strip() #soup.find(id='lnkBallotpedia').get('href')
+                follow_money = get_follow_money(soup).strip() #soup.find(id='lnkFollowTheMoney').get('href')
+                role = get_role(soup).strip()
+                state = get_state(soup).strip()            
+                district = get_district(soup).strip()
+                img_url = get_img_url(i).strip()
+                sql_profile =  {"Id": i, "Name":name, "State": state, "Role": role, "District": district, \
+                "FollowMoneyURL": follow_money, "BallotpediaURL" : ballotpedia, \
+                "BillTrackURL" : billtrack, "ImageURL": img_url}
+                my_sql.add_formatted_entry(sql_profile)
+                
+                # sponsored_bills = None
+                # try:
+                    # sponsored_bills = get_sponsored_bills(soup).strip()
+                # except AttributeError as e:
+                    # sponsored_bills = []
+
+                # committees = None
+                # try:
+                    # committees = get_committees(soup).strip()
+
+                # except AttributeError as e:
+                    # committees = []
+                
+                    
+                
+                
+                
+                # profile = {"Name":name, "District": district, "BillTrack": billtrack, "FMLink": follow_money, "Ballotpedia": ballotpedia, "SponsoredBills": sponsored_bills, "Committees": committees}
+                
+                # legislature_dict[state][role].append(profile)
+                
+                
+                #print(legislature_dict)
+                
+                passed+=1
+                
+        except AttributeError or TypeError as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
         
-with open('data.json', 'w') as fp:
-    json.dump( legislature_dict , fp)
+            print("Failed link: %s" % billtrack)
+            failed += 1
+            print(e)
+            
+
+    print("Passed: %d" % passed)
+    print("Failed: %d" % failed)
+            
+    # with open('data.json', 'w') as fp:
+        # json.dump( legislature_dict , fp)
+            
+run()            
