@@ -12,6 +12,12 @@ conda activate poly_scraper
 ## SCRAPY INSTRUCTIONS
 
 
+## SQL ACCESS
+# Must specify the proper driver for SQL server. It is:
+{ODBC Driver 13 for SQL Server}
+
+#For more info see: https://github.com/mkleehammer/pyodbc/wiki/Connecting-to-SQL-Server-from-Windows
+
 
 ### FRONT END
 ## CORDOVA INSTRUCTIONS
@@ -27,3 +33,7 @@ cordova add android
 # To run
 cordova run android
 cordova run ios
+
+
+
+
