@@ -2,19 +2,33 @@
 
 class StateUI extends UI{
     
-
+     retrieveProfileImages(id){
+         var self = this;
+         self.retrieveSenatorImages(id);
+     }
      // Load image of senators and governor. Update they're banners
-    loadImages(id){
+     retrieveSenatorImages(id){
+         var self = this;
+         var args= "state=" + id + "&role=US Senator";
+         get_senator_prof_imgs(args, self.loadSenatorImages);
+     }
+     
+    loadSenatorImages(urls){
+        var urls = urls.split(',');
+        
+        console.log(urls)
+        
         
         d3.selectAll(".senator-img-left")
-             .attr("src", "profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png")
-           
+             .attr("src", urls[0]);//"profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png")
+                  
+        
         d3.selectAll(".senator-img-left-name")
               .text("Hello");
             
         
         d3.selectAll(".senator-img-right")
-            .attr("src", "profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png")
+            .attr("src", urls[1])
            
         d3.selectAll(".senator-img-right-name")
              .text("shetland rapist");
@@ -23,11 +37,7 @@ class StateUI extends UI{
             .attr("src", "profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png")
         
         d3.selectAll(".governor-name-label")
-            .text("shetland rapist");
-            
-             
-         
-            
+            .text("shetland rapist");  
     }
     
     // Congressional Map
@@ -81,7 +91,9 @@ class StateUI extends UI{
         // Generate Footer
         self.footer.generateHTML();
         
-        self.loadImages();
+        // self.loadImages();
+        self.retrieveSenatorImages(self.selected_state_id);
+        
         
        $(".state-ui").css("z-index", 1);
        d3.selectAll(".state-ui")
@@ -142,6 +154,7 @@ class StateUI extends UI{
         this.old_states_data;
         
         this.selected_state_id = null;
+        
         this.ui_class_name = ui_class_name;
     }
 }

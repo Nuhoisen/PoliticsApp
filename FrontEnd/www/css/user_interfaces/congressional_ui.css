@@ -92,51 +92,27 @@ svg {display: block;}
 
 
 
-/* .cart-drawer-push {
-	overflow-x: hidden;
-	position: relative;
-	right: 0;
-} */
-
-/* default */
-/* .cart-drawer {
-	background: #444;
-  	height: 10%;
-  	position: fixed;
-	text-align: center;
-	bottom: 0;
-	width: 100%;
-    text-align:center;
-} */
-
-/* hidden */
-/* .cart-drawer-bottom { bottom: 0; }    */
-
-/* shown */
-/* .cart-drawer-bottom.cart-drawer-open { 
-    bottom: 0;
-    height: 60%;
-} */
-
-/* .cart-drawer-pushtoleft { bottom: 300px; } */
-
-/* .cart-drawer, .cart-drawer-push {
-	-webkit-transition: all 0.5s ease;
-	-moz-transition: all 0.5s ease;
-	transition: all 0.5s ease;
+/* state-politician-divs */
+.state-politician-img-div{
+    position:fixed;
+    width: 8%;
+    top:20%;
+    left: 50%;
 }
- */
-/* .cart-btn {
-	cursor: pointer;
-	display: inline-block;
-	font-size: 30px;
-} */
 
-/* .close-btn {
-	cursor: pointer;
-	top: 5px;
-    font-size:100%;
+
+.state-politician-img{
+    border-radius:50%;   
     width: 100%;
-    height: 100%;
-    padding: 20px;
-} */
+}
+
+.state-politician-img-name{
+    color: white;
+    text-decoration: none;
+    top: 30%;
+    width: 100%;
+    text-align:center;
+    display:block;
+    left: 50%;
+}
+

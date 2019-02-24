@@ -25,6 +25,7 @@ def get_name(soup):
     name = soup.find(id='lblLegislator').string
     name = name.replace("&nbsp", " ")
     name = name.split('-')[0]
+    name = name.replace("'", "''")
     return name
     
     
@@ -34,7 +35,7 @@ def get_ballotpedia(soup):
         bal_link = soup.find(id='lnkBallotpedia').get('href')
     except Exception:
         bal_link = ""
-        
+    bal_link = bal_link.replace("'", "''")
     return bal_link
   
 def get_follow_money(soup):
@@ -43,6 +44,7 @@ def get_follow_money(soup):
         fm_link = soup.find(id='lnkFollowTheMoney').get('href')
     except Exception:
         fm_link = ""
+    fm_link = fm_link.replace("'", "''")
     return fm_link
 
 def get_role(soup):
@@ -51,6 +53,7 @@ def get_role(soup):
         role = soup.find(id='lblRole').string.split('-')[0]
     except Exception:
         role = ""
+    role = role.replace("'", "''")
     return role
     
     
@@ -67,6 +70,7 @@ def get_state(soup):
             state = state[0]
     except Exception:
         state = ""
+    state = state.replace("'", "''")        
     return state
     
 def get_district(soup):
@@ -75,6 +79,7 @@ def get_district(soup):
         district = soup.find(id='lblRole').string.split('-')[1]
     except Exception:
         district = ""
+    district.replace("'", "''")
     return district
    
 def get_sponsored_bills(soup):
@@ -133,7 +138,7 @@ def run():
     
     #for url in urls:
     #    print(url)
-    for i in range(1, 30000):    
+    for i in range(181, 30000):    
         try:
             billtrack = url+str(i)
             r = http.request('GET', billtrack)

@@ -39,12 +39,11 @@ class SqlStorer:
                                     BillTrackURL varchar(255), \
                                     ImageURL varchar(255) );" % self.c_table_name
         cursor = self.c_cnxn.cursor()
-        #try:
-        cursor.execute(command)
-        self.c_cnxn.commit()
-        #except Exception:
-            
-         #   print("Table: %s exists"% self.c_table_name)
+        try:
+            cursor.execute(command)
+            self.c_cnxn.commit()
+        except Exception:
+            print("Table: %s exists"% self.c_table_name)
             
     
     

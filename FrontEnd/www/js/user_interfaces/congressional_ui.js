@@ -2,6 +2,32 @@
 
 class CongressionalUI extends UI{//extends StateUI {
     
+     retrieveProfileImages(id){
+         var self = this;
+         self.retrievePoliticianImage(id);
+     }
+    
+     retrievePoliticianImage(id){
+         var self = this;
+         id = id.replace(/-/g, " ");
+         var args= "state=" + self.creator.creator.selected_state_id + "&role=" + self.selected_role + "&district=" + id;
+         get_state_politician_prof_img(args, self.loadPoliticianImage);
+     }
+     
+    loadPoliticianImage(urls){
+        var urls = urls.split(',');
+        
+        console.log(urls)
+        
+            
+        d3.selectAll(".state-politician-img")
+            .attr("src", urls[0])
+        
+        d3.selectAll(".state-politician-img-name")
+            .text("shetland rapist");  
+    }
+    
+    
     // Congressional Map
     generateCongressionalMap(file_name){
         var self = this;
@@ -17,6 +43,7 @@ class CongressionalUI extends UI{//extends StateUI {
     stateSenateListener(){
         var self = this;
         var file_name = "map_data/congressional_borders/" + self.creator.creator.selected_state_id + "/state_senate/topo_simple.json";
+        self.selected_role = "State Senator";
         self.generateCongressionalMap(file_name);
         // self.applyExitListener();   
     }
@@ -24,6 +51,7 @@ class CongressionalUI extends UI{//extends StateUI {
     // Pulls house geo filename and calls generate function
     stateHouseListener(){
         var self = this;
+        self.selected_role = "State Representative";
         var file_name = "map_data/congressional_borders/" + self.creator.creator.selected_state_id + "/state_house/topo_simple.json";
         self.generateCongressionalMap(file_name);
         // self.applyExitListener();
@@ -45,6 +73,10 @@ class CongressionalUI extends UI{//extends StateUI {
         super.generateHTML();
         
         var html = "    <div class='congressional-ui congressional-label'>Text</div> \
+                        <div class='congressional-ui state-politician-img-div'> \
+                            <img src='' class='state-politician-img congressional-ui' alt=''/> \
+                            <a href='' class='state-politician-img-name congressional-ui'></a> \
+                        </div> \
                         <div class='congressional-ui congressional-button-container'> \
                             <a class='congressional-ui congressional-buttons' id='congressional-left-button' >State Senate</a> \
                             <a class='congressional-ui congressional-buttons' id='congressional-right-button' >State House</a> \
@@ -57,6 +89,7 @@ class CongressionalUI extends UI{//extends StateUI {
         self.addLabel(self.selected_state_id)
         
         self.footer.generateHTML();
+        self.retrievePoliticianImage(self.selected_state_id);
         $(".congressional-ui").css("z-index", 1);
         
         d3.selectAll(".congressional-ui")
@@ -95,16 +128,15 @@ class CongressionalUI extends UI{//extends StateUI {
     applyUI(id){
         var self = this;
         self.selected_state_id = id;
-        self.generateHTML();
-        
-            
-       self.addListeners();
+        self.generateHTML();    
+        self.addListeners();
     }
     
     
     constructor(ui_class_name, creator){
        super(ui_class_name, creator);
        this.footer = new ToggleFooter(this);
+       this.selected_role = "State Senator";
     }
 }
 

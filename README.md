@@ -12,6 +12,11 @@ conda activate poly_scraper
 ## SCRAPY INSTRUCTIONS
 
 
+## Flask Server
+# set FLASK_APP=flask_test.py
+# flask run
+
+
 ## SQL ACCESS
 # Must specify the proper driver for SQL server. It is:
 {ODBC Driver 13 for SQL Server}
