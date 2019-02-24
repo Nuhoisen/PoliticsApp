@@ -146,11 +146,11 @@ class CongressionalMapTemplate extends MapTemplate{
     appendToParentMap(parent_id){
         var self = this;
             
-        // Draw states
+        // Need to Consider Changing this
         if(!reg_flag.exists()){
             reg_flag.create();
             self.selected_state_id = parent_id;
-            self.selected_state = d3.select("#"+self.selected_state_id);
+            self.selected_state = d3.select("#"+self.selected_state_id.replace(/ /g, "-"));
             self.selected_state_data = self.selected_state.data()['0'];            
         }
         

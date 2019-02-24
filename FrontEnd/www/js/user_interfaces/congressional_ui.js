@@ -24,7 +24,7 @@ class CongressionalUI extends UI{//extends StateUI {
             .attr("src", urls[0])
         
         d3.selectAll(".state-politician-img-name")
-            .text("shetland rapist");  
+            .text("");  
     }
     
     

@@ -9,6 +9,8 @@ class StateUI extends UI{
      // Load image of senators and governor. Update they're banners
      retrieveSenatorImages(id){
          var self = this;
+         id = id.replace(/-/g, " ");
+         
          var args= "state=" + id + "&role=US Senator";
          get_senator_prof_imgs(args, self.loadSenatorImages);
      }
@@ -105,7 +107,7 @@ class StateUI extends UI{
     // Modifies the Title Label
     addLabel(id){
         var self = this;
-        self.selected_state_id = id;
+        self.selected_state_id = id.replace(/-/g, " "); //id;
         d3.select(".state-label")
             .html( self.selected_state_id );
     }
@@ -119,7 +121,8 @@ class StateUI extends UI{
         
         d3.select(".state-districts-button")
             .on("click", function(){
-                var file_name = "map_data/congressional_borders/" + self.selected_state_id + "/state_senate/topo_simple.json";
+                var file_name = "./map_data/congressional_borders/" + self.selected_state_id + "/state_senate/topo_simple.json";
+                console.log(file_name)
                 self.removeUI();
                 self.generateCongressionalMap(file_name);
             });
@@ -139,7 +142,7 @@ class StateUI extends UI{
     // Calls addListeners
     applyUI(id){
         var self = this;
-        self.selected_state_id = id;
+        self.selected_state_id = id.replace(/-/g, " ");;
         self.generateHTML();
         
         self.addListeners(); 

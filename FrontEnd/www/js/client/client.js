@@ -1,5 +1,5 @@
 var httpRequest = new XMLHttpRequest();
-url = "http://50.53.206.60:5000"//"http://localhost:5000"//
+url = "http://localhost:5000"//"http://50.53.206.60:5000"//
 
 
 
