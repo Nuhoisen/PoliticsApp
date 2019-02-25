@@ -113,10 +113,11 @@ class CongressionalUI extends UI{//extends StateUI {
                 
         d3.select(".congressional-exit-button")
             .on("click", function(){
-                // self.state_congressional_map.removeMapPaths();
+                self.selected_role = "State Senator";   //reset role
                 self.removeUI();
                 self.creator.zoomOut();
                 self.creator.removeMapPaths();
+                
                 self.creator.creator.creator.generateMapPaths("map_data/new_simpler_us_topo.json"); //us_map.generateMapPaths
             });
          
