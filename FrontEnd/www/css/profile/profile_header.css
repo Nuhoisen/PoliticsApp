@@ -1,0 +1,23 @@
+.profile-header{
+    position:relative;
+    width: 100%;  
+    /* border: 1px solid #ccc; */
+    /* border-radius: 16px;  */
+}
+        
+.profile-picture{
+    border-radius: 50%;
+}
+
+.profile-picture-background{
+    background-color: purple;
+    height: 50%;
+    width: 100%;
+    position: absolute;
+    z-index: -100;
+    <!-- border-top-right-radius: 16px; -->
+    <!-- border-top-left-radius: 16px; -->
+}
+.profile-name{
+    color: black;
+}

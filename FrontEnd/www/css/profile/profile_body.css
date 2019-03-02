@@ -1,0 +1,103 @@
+.profile-body{
+    width: 100%; 
+    
+}
+
+.profile-stances-collapsible{
+      background-color: #eee;
+      color: #444;
+      cursor: pointer;
+      padding-top: 5px;
+      padding-left: 5px;
+      padding-bottom: 5px;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 22px;
+    
+}
+
+.active, .profile-stances-collapsible:hover{
+      background-color: #ccc;
+      display: block;
+}
+
+.profile-stances-container{
+    padding-top: 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+.topic-slide-container {
+  width: 100%; /* Width of the outside container */
+  text-align:center;
+   background-image: linear-gradient(to right, blue, red);
+   padding: 10px 0 10px 0;
+   border-radius: 20px;
+}
+
+.profile-stance-topic-title{
+    text-align:center;
+}
+
+
+.topic-left{
+    text-align: left;
+    display:inline-block;
+    position:static;
+    width:49%;
+    /* background-image: linear-gradient(to right, blue, purple); */
+    
+}
+.topic-right{
+    text-align: right;
+    display:inline-block;
+    position:static;
+    width:49%;
+    /* background-image: linear-gradient(to right, purple, red); */
+}
+
+
+/* The slider itself */
+.topic-slider {
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 90%; /* Full-width */
+  height: 25px; /* Specified height */
+  background: #d3d3d3; /* Grey background */
+  border-radius: 30px;
+  outline: none; /* Remove outline */
+  opacity: 1; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+.topic-slider:hover {
+  opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.topic-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  height: 25px;
+  border-radius: 50%; 
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background-size: 25px;
+  background: url('temp/alabama_us_senate/Richard_Shelby.png'); /*#4CAF50;  Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.topic-slider::-moz-range-thumb {
+    
+  height: 25px;
+  border-radius: 50%; 
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background-size: 25px 25px;
+  background: url('../../temp/alabama_us_senate/Richard_Shelby.png');  /* #4CAF50; Green background */
+  cursor: pointer; /* Cursor on hover */
+}
