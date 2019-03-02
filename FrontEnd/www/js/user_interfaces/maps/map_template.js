@@ -1,15 +1,17 @@
 
 
-class MapTemplate{
+class MapTemplate extends UI {
     
     zoomed(self){}
     
     initiateZoom() {}
     
+    
+    
      // Resets map while performing half-second transition
     zoomOut(){
         var self = this;
-        self.minZoom = Math.min($("#map-holder").width() / (self.w), $("#map-holder").height() / (self.h));
+        self.minZoom = Math.min($( "#map-holder").width() / (self.w), $( "#map-holder").height() / (self.h)); //#map-holder
         var midX = ($("#map-holder").width() - self.minZoom * self.w) / 2;
         var midY = ($("#map-holder").height() - self.minZoom * self.h) / 2;
         // change zoom transform to min zoom and centre offsets
@@ -144,16 +146,23 @@ class MapTemplate{
         });
     }
     
-    
+    generateContainer(){
+        var self = this;
+        d3.select("."+self.creator.class_name)
+            .append("div")
+            .attr("class", self.class_name)
+            .attr("id", "map-holder");
+            
+    }
 
     generateMapSVG(){
         var self = this;
         self.svg = d3
-            .select("#map-holder")
+            .select("." + self.class_name)//"#map-holder")
             .append("svg")
             .attr("class", "states-svg")
-            .attr("width", $("#map-holder").width())
-            .attr("height", $("#map-holder").height())
+            .attr("width", $("#map-holder").width())//"#map-holder").width())
+            .attr("height", $("#map-holder").height())//"#map-holder").height())
             .call(self.zoom);
     }
    
@@ -166,17 +175,19 @@ class MapTemplate{
      
     generateMap(){
         var self = this;
+        self.generateContainer();
         self.generateMapSVG();
         self.generateMapG();
         self.generateMapPaths(this.map_file_name);
     }
     
-    constructor(passed_map_features, creator){
+    constructor(ui_class_name, creator,  attr){
+        super(ui_class_name, creator, attr);
         this.creator = creator;
-        this.feature_map = passed_map_features;
-        this.map_border_class =  this.feature_map['border_class_name'];
-        this.access_hook = this.feature_map['feature_access_hook'];
-        this.map_file_name = this.feature_map['file_name'];
+        this.attr = attr;
+        this.map_border_class =  this.attr['border_class_name'];
+        this.access_hook = this.attr['feature_access_hook'];
+        this.map_file_name = this.attr['file_name'];
         this.svg;
         this.minZoom=0;
         this.maxZoom=0;

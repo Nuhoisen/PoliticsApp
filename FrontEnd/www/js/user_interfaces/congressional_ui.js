@@ -134,8 +134,8 @@ class CongressionalUI extends UI{//extends StateUI {
     }
     
     
-    constructor(ui_class_name, creator){
-       super(ui_class_name, creator);
+    constructor(ui_class_name, creator, attr=null){
+       super(ui_class_name, creator,attr);
        this.footer = new ToggleFooter(this);
        this.selected_role = "State Senator";
     }

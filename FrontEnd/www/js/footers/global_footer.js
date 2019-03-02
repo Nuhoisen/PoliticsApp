@@ -5,7 +5,7 @@ class GlobalFooter extends Footer {
         super.generateHTML();
         
 
-        var html = "<div class='global-footer' id='myHeader'> \
+        var html = "<div class='global-footer' id='footerHolder'> \
                         <span class='footer-item'> \
                             <i class='fas fa-newspaper'></i> \
                         </span> \

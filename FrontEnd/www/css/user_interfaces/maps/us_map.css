@@ -5,10 +5,11 @@ body {
     font-weight: 200;
     font-size: 17px;
   }
+
 #map-holder {
     width: 100vw;
     height: 100vh;
-}
+} 
 svg rect {
     fill: #fff;   /* map background colour */
 }

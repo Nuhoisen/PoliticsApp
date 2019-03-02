@@ -1,6 +1,21 @@
 
 class UI {
 
+
+    unfocus(){
+        var self = this;
+        d3.selectAll("."+self.class_name)
+            // .style("zIndex", -1)
+            .style("display","none");
+    }
+
+    refocus(){
+        var self = this;
+        d3.selectAll("."+self.class_name)
+            // .style("zIndex", 1)
+            .style("display", "block");
+    }
+    
     generateCongressionalMap(file_name){
         var self = this;
         var selected = d3.select("#"+self.selected_state_id);
@@ -16,14 +31,7 @@ class UI {
     applyUI(id, parent){} 
     generateHTML(){}
     
-    // // Cause UI fadeout
-    // opaqueUI(){
-        // var self = this;
-        // d3.selectAll("." + self.ui_class_name)
-            // .transition()
-            // .style("opacity", 0);
-    // }
-    
+
     getName(){
         return "ui-body";
     }
@@ -44,11 +52,12 @@ class UI {
         // $("#map-holder").append(html);
     }
     
-    constructor(ui_class_name, creator){
+    constructor(ui_class_name, creator, attr=null){
         this.class_name = ui_class_name;
         this.creator = creator;
         this.ui_generated = false;
         this.footer = NaN;
+        this.attr = attr;
     }   
 }
 

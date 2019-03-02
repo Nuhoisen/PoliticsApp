@@ -152,7 +152,7 @@ class StateUI extends UI{
     constructor(ui_class_name, creator){
         super(ui_class_name, creator);
         
-        this.state_congressional_map = new CongressionalMapTemplate(map_features_2, this);
+        this.state_congressional_map = new CongressionalMapTemplate("congressional-map", this, map_features_2);
         this.footer = new ToggleFooter(this);
         this.old_states_data;
         

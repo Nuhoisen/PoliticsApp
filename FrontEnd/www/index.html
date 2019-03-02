@@ -4,15 +4,20 @@
 	<meta charset="UTF-8">
 	<title></title>
     <!-- css -->
-    <link rel="stylesheet" href="css/maps/us_map.css"/>
-    <link rel="stylesheet" href="css/maps/congressional_map.css"/>
+    <link rel="stylesheet" href="css/user_interfaces/maps/us_map.css"/>
+    <link rel="stylesheet" href="css/user_interfaces/maps/congressional_map.css"/>
     <link rel="stylesheet" href="css/user_interfaces/state_ui.css"/>
     <link rel="stylesheet" href="css/user_interfaces/congressional_ui.css"/>
     <link rel="stylesheet" href="css/user_interfaces/profile_ui.css"/>
+    <link rel="stylesheet" href="css/user_interfaces/global_ui.css"/>
     <link rel="stylesheet" href="css/footers/footer.css"/>
     <link rel="stylesheet" href="css/footers/toggle_footer.css"/>
     <link rel="stylesheet" href="css/footers/global_footer.css"/>
-    
+   
+
+    <link rel="stylesheet" href="css/user_interfaces/profile/profile_body.css"/>
+    <link rel="stylesheet" href="css/user_interfaces/profile/profile_header.css"/>
+    <link rel="stylesheet" href="css/user_interfaces/profile/profile_container.css"/>
     <!-- js libraries -->
     <script type="text/javascript" src="js/d3/d3.v4.min.js"></script>
     <script type="text/javascript" src="js/d3/topojson.v2.min.js"></script>
@@ -20,38 +25,99 @@
     
     <!-- font-awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-    <style>
+
+    <style type="text/css">
+       
         
-
-        .middle {
-          transition: .5s ease;
-          opacity: 0;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          -ms-transform: translate(-50%, -50%);
-          text-align: center;
-          z-index: -1;
-        }
-
-      
-
-    
-
-        .text {
-          background-color: #4CAF50;
-          color: white;
-          font-size: 16px;
-          padding: 16px 32px;
-        }
+        
     </style>
-    
-    </head>
+        
+</head>
 
 <body>
-    <div id="map-holder" class="container"></div>
+    <!-- <div class="ui-body">
+    
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-picture-background"></div>
+                <img class="profile-picture" src="./temp/alabama_us_senate/Richard_Shelby.png"/> 
+                <div class="profile-name">
+                    Shetland Rapist
+                </div>
+                
+                
+            </div>
+            
+            <div class="profile-body">
+                
+                <div class="profile-stances-collapsible">
+                    Stances
+                </div>
+                
+                <div class="profile-stances-container">
+                    
+                    <div class="abortion-container topic-container">
+                        <div class="abortion-left topic-left">
+                            Pro-choice
+                        </div>
+                        <div class="abortion-right topic-right">
+                            Pro-life
+                        </div>
+                        
+                        <div class="abortion-slide-container topic-slide-container">
+                                <input type="range" min="1" max="100" value="50" class="abortion-slider topic-slider">
+                        </div>
+                        <div class="profile-stance-topic-title">
+                            Abortion Stance
+                        </div>
+                    </div>
+                    
+                    <div class="gun-container topic-container">
+                        <div class="gun-left topic-left">
+                            Tigher Restrictions
+                        </div>
+                        <div class="gun-right topic-right">
+                            Loser Restrictions
+                        </div>
+                        
+                        <div class="gun-slide-container topic-slide-container">
+                                <input type="range" min="1" max="100" value="50" class="gun-slider topic-slider">
+                        </div>
+                        <div class="gun-stance-topic-title profile-stance-topic-title">
+                            Gun Control Stance
+                        </div>
+                    </div>
+                    
+                    
+                    
+                        
+                </div>
+            </div>
+        </div> 
+        
+        
+        
+    </div>-->
+    <!-- <div id="map-holder" class="container"></div> -->
 
+  <!--   <script type="text/javascript">
+        var coll = document.getElementsByClassName("profile-stances-collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+          coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+              content.style.display = "none";
+            } else {
+              content.style.display = "block";
+            }
+          });
+        }
+    
+    </script> -->
+    
                     <!-- </div>  -->
 
                         <!-- <div class='container congressional-ui'> UI BODY -->
@@ -59,16 +125,22 @@
                             <!-- <div class='cart-drawer cart-drawer-bottom congressional-ui'> FOOTER -->
                             <!-- </div> \ -->
     <!-- Local Scripts -->
+   
+   <script type="text/javascript" src="js/user_interfaces/UI.js"></script>
+   <script type="text/javascript" src="js/user_interfaces/profile/profile_ui.js"></script>
+   
     <script type="text/javascript" src="js/client/client.js"></script>
     <script type="text/javascript" src="js/registry_flag.js"></script>
     <script type="text/javascript" src="js/footers/footer.js"></script>
     <script type="text/javascript" src="js/footers/toggle_footer.js"></script>
-    <script type="text/javascript" src="js/user_interfaces/UI.js"></script>
+    
+    
+    
     <script type="text/javascript" src="js/user_interfaces/congressional_ui.js"></script>
-    <script type="text/javascript" src="js/maps/map_template.js"></script>
-    <script type="text/javascript" src="js/maps/congressional_map.js"></script>
+    <script type="text/javascript" src="js/user_interfaces/maps/map_template.js"></script>
+    <script type="text/javascript" src="js/user_interfaces/maps/congressional_map.js"></script>
     <script type="text/javascript" src="js/user_interfaces/state_ui.js"></script>
-    <script type="text/javascript" src="js/maps/us_map.js"></script>
+    <script type="text/javascript" src="js/user_interfaces/maps/us_map.js"></script>
     <script type="text/javascript" src="js/footers/global_footer.js"></script>
     <script type="text/javascript" src="js/user_interfaces/global_ui.js"></script>
 </body>

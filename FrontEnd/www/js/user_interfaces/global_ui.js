@@ -13,8 +13,7 @@ var map_features_2 = {
 
 class GlobalUI extends UI{
     
-    
-    
+  
     generateHTML(){
         var self = this;
         var html = "<div class='global-ui-body'> \
@@ -25,13 +24,20 @@ class GlobalUI extends UI{
         
         //THIS WILL DEPEND ON VIEW- CHANGE LATER
         this.us_state_map.generateMap();
+        this.us_state_map.unfocus();
+        this.profile_page.generateHTML();
+        
     }
     
     
-    constructor(ui_class_name, creator){
+    constructor(ui_class_name, creator, attr=null){
         super(ui_class_name, creator);
         this.footer = new GlobalFooter(this);
-        this.us_state_map = new USMap(map_features_1, this);
+        
+        
+        this.us_state_map = new USMap("us-map", this,map_features_1);
+        this.profile_page = new ProfileUI("profile-page", this);
+        
     }
 }
 

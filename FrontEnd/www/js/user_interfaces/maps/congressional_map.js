@@ -180,8 +180,8 @@ class CongressionalMapTemplate extends MapTemplate{
     }
     
    
-    constructor(passed_map_features, creator){
-        super(passed_map_features, creator);
+    constructor(class_name, creator, attr){
+        super(class_name,creator,attr);
         this.ui = new CongressionalUI("congressional-ui", this);
         self.selected_state = null;
         self.selected_state_data = null;
@@ -197,4 +197,3 @@ var map_features_2 = {
     "feature_access_hook": state_senate_map_function
 }
 
-// var congr_map = new CongressionalMapTemplate(map_features_2, us_state_map.ui);

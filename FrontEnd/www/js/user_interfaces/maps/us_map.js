@@ -65,31 +65,12 @@ class USMap extends MapTemplate {
     }
    
    
-    constructor(passed_map_features, creator){
-        super(passed_map_features, creator);
+    constructor(class_name, creator, attr){
+        super(class_name, creator, attr);
         this.ui = new StateUI("state-ui", this);
     }
     
 };
-
-
-// var map_features_1 = {
-    // "file_name" : "map_data/new_simpler_us_topo.json",
-    // "border_class_name" :"state-borders",
-    // "feature_access_hook": states_function
-// }
-
-
-// var map_features_2 = {
-    // "file_name" : "map_data/congressional_borders/Oregon/state_house/topo_simple.json", //
-    // "border_class_name" :"state-senate-borders",
-    // "feature_access_hook": state_senate_map_function
-// }
-
-// var us_state_map = new USMap(map_features_1, this);
-// us_state_map.generateMap(); 
-
-
 
 
 
