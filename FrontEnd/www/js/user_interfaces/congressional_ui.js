@@ -2,26 +2,39 @@
 
 class CongressionalUI extends UI{//extends StateUI {
     
+    // 
      retrieveProfileImages(id){
          var self = this;
          self.retrievePoliticianImage(id);
      }
     
+    
+    // Make a client call to the server, request the 
+    // image of the politician by state & role
      retrievePoliticianImage(id){
          var self = this;
          id = id.replace(/-/g, " ");
          var args= "state=" + self.creator.creator.selected_state_id + "&role=" + self.selected_role + "&district=" + id;
-         get_state_politician_prof_img(args, self.loadPoliticianImage);
+         get_state_politician_prof_img(args, self.loadPoliticianImage.bind(self));
      }
      
+     
+    // Load the politician's image
     loadPoliticianImage(urls){
+        var self = this;
         var urls = urls.split(',');
         
         console.log(urls)
         
-            
+        // When they click the profile picture 
         d3.selectAll(".state-politician-img")
             .attr("src", urls[0])
+            .on("click", function(){
+                var img_url = this.src;
+                self.creator.creator.creator.creator.profile_page.loadPoliticianImage(img_url);
+                self.creator.creator.creator.creator.toggleActivePage("news");
+                self.removeUI();
+            })
         
         d3.selectAll(".state-politician-img-name")
             .text("");  

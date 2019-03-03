@@ -1,12 +1,12 @@
 .global-footer {
-  height:10%;
-  background: #444;
-  color: #f1f1f1;
-  overflow-x: auto; 
-  overflow-y: hidden;
-  position: fixed;
-  bottom: 0;
-  width : 100%;
+    height:10%;
+    background: #444;
+    color: #f1f1f1;
+    overflow-x: auto; 
+    overflow-y: hidden;
+    position: fixed;
+    bottom: 0;
+    width : 100%;
 }
 
 .footer-item{
@@ -28,4 +28,8 @@ i{
 .content {
   padding: 16px;
   background: #77c2a9;
+}
+
+.selected{
+    background-color: #2d2222;
 }

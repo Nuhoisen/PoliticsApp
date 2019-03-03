@@ -85,9 +85,16 @@
   border-radius: 50%; 
   width: 25px; /* Set a specific slider handle width */
   height: 25px; /* Slider handle height */
-  background: url('./temp/alabama_us_senate/Richard_Shelby.png'); /*#4CAF50;  Green background */
+  /* background: url('./temp/alabama_us_senate/Richard_Shelby.png'); /*#4CAF50;  Green background */ 
   background-size: 100%;
   cursor: pointer; /* Cursor on hover */
+}
+
+.topic-slider-background::-webkit-slider-thumb{
+    background: url('./temp/alabama_us_senate/Richard_Shelby.png');
+}
+.topic-slider-background::-moz-range-thumb{
+    background: url('./temp/alabama_us_senate/Richard_Shelby.png');
 }
 
 .topic-slider::-moz-range-thumb {
@@ -96,7 +103,7 @@
   border-radius: 50%; 
   width: 25px; /* Set a specific slider handle width */
   height: 25px; /* Slider handle height */
-  background: url('./temp/alabama_us_senate/Richard_Shelby.png');  /* #4CAF50; Green background */
+  /* background: url('./temp/alabama_us_senate/Richard_Shelby.png');  /* #4CAF50; Green background */ 
   background-size: 100%;
   cursor: pointer; /* Cursor on hover */
 }

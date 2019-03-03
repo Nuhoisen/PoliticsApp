@@ -1,6 +1,19 @@
 class ProfileUI extends UI{
     
-    
+    loadPoliticianImage(url){
+        d3.selectAll(".profile-picture")
+            .attr("src", url);
+        // d3.selectAll(".topic-slider::-moz-range-thumb")
+            // .attr("background", "blue");
+        
+        d3.selectAll(".topic-slider-background")
+            .attr("background", "blue");
+        d3.selectAll(".topic-slider").classed("topic-slider-background", true);
+        
+        // d3.selectAll(".topic-slider::-moz-range-thumb")
+            // .attr("background", "url("+url+")");            
+            
+    }
     
     stancesClick(){
         var self = this;
@@ -10,11 +23,9 @@ class ProfileUI extends UI{
         
         coll.classList.toggle("active");
         fold.style.display = ( fold.style.display == "block" ) ? "none" : "block";
-        
-        
     }
    
-    
+    // Topic containers
     addTopicContainers(topics){
         var self = this;
         for (var i = 0; i < topics.length; i++){ //
@@ -32,7 +43,6 @@ class ProfileUI extends UI{
                                 </div>";
             
             slider_html = slider_html.replace(/replace/g, topics[i]);
-            // console.log(slider_html);
             $(".profile-stances-container").append(slider_html);
             
         }
@@ -50,20 +60,22 @@ class ProfileUI extends UI{
     generateHTML(){
         var self = this;
         // super.generateHTML();
-        var html = "<div class='profile-header'>\
-                        <div class='profile-picture-background'></div>\
-                        <img class='profile-picture' src='./css/user_interfaces/profile/temp/alabama_us_senate/Richard_Shelby.png'/> \
-                        <div class='profile-name'>\
-                            Shetland Rapist\
+        var html = "<div class=profile-page> \
+                        <div class='profile-header'>\
+                            <div class='profile-picture-background'></div>\
+                            <img class='profile-picture' src='./css/user_interfaces/profile/temp/alabama_us_senate/Richard_Shelby.png'/> \
+                            <div class='profile-name'>\
+                                Shetland Rapist\
+                            </div>\
                         </div>\
-                    </div>\
-                    <div class='profile-body'> \
-                        <div class='profile-stances-collapsible'> \
-                            Stances \
-                        </div> \
-                        <div class='profile-stances-container'> \
-                        </div> \
-                    </div>";
+                        <div class='profile-body'> \
+                            <div class='profile-stances-collapsible'> \
+                                Stances \
+                            </div> \
+                            <div class='profile-stances-container'> \
+                            </div> \
+                        </div>\
+                </div>";
           
         $("."+this.creator.class_name).append(html);
         
@@ -85,5 +97,5 @@ class ProfileUI extends UI{
 
 
 // var ui = new UI("ui", this);
-var prof_ui  = new ProfileUI("test_profile", this);
-prof_ui.generateHTML();
+// var prof_ui  = new ProfileUI("test_profile", this);
+// prof_ui.generateHTML();

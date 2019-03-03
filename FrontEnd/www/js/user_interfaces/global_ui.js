@@ -13,6 +13,28 @@ var map_features_2 = {
 
 class GlobalUI extends UI{
     
+    
+    
+    
+    toggleActivePage(id){
+        var self = this;
+        self.selected_page.unfocus();
+        
+        switch(id){
+            case "news":
+                self.selected_page = self.profile_page;
+            break;
+            
+            case "map":
+                self.selected_page = self.us_state_map;
+            break;
+        }
+        
+        self.selected_page.refocus();
+    }
+    
+    
+    
   
     generateHTML(){
         var self = this;
@@ -24,8 +46,8 @@ class GlobalUI extends UI{
         
         //THIS WILL DEPEND ON VIEW- CHANGE LATER
         this.us_state_map.generateMap();
-        this.us_state_map.unfocus();
         this.profile_page.generateHTML();
+        this.profile_page.unfocus();
         
     }
     
@@ -35,8 +57,11 @@ class GlobalUI extends UI{
         this.footer = new GlobalFooter(this);
         
         
-        this.us_state_map = new USMap("us-map", this,map_features_1);
+        this.us_state_map = new USMap("us-map", this, map_features_1);
         this.profile_page = new ProfileUI("profile-page", this);
+        
+        
+        this.selected_page = this.us_state_map;
         
     }
 }
