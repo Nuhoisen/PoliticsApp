@@ -1,7 +1,7 @@
 
-
 class StateUI extends UI{
-    
+
+     // Retrieve political images
      retrieveProfileImages(id){
          var self = this;
          self.retrieveSenatorImages(id);
@@ -12,34 +12,43 @@ class StateUI extends UI{
          id = id.replace(/-/g, " ");
          
          var args= "state=" + id + "&role=US Senator";
-         get_senator_prof_imgs(args, self.loadSenatorImages);
+         get_senator_prof_imgs(args, self.loadSenatorImages.bind(self));
      }
-     
+    
+    // Gets binded to the two senator images
+    // Swaps view over to profile page
+    imageListener(img_url){
+        var self = this;
+        // var img_url = this.src;
+        self.creator.creator.profile_page.loadPoliticianImage(img_url);
+        self.creator.creator.toggleActivePage("news");
+        self.removeUI();
+    }
+    
+    // Load senator images and add click listeners
     loadSenatorImages(urls){
+        var self = this;
         var urls = urls.split(',');
         
-        console.log(urls)
-        
-        
         d3.selectAll(".senator-img-left")
-             .attr("src", urls[0]);//"profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png")
+             .attr("src", urls[0])
+             .on("click", self.imageListener.bind(self, urls[0]));//"profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png")
                   
-        
         d3.selectAll(".senator-img-left-name")
               .text("Hello");
             
-        
         d3.selectAll(".senator-img-right")
             .attr("src", urls[1])
+            .on("click", self.imageListener.bind(self, urls[1]));
            
         d3.selectAll(".senator-img-right-name")
              .text("shetland rapist");
             
         d3.selectAll(".governor-img")
-            .attr("src", "profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png")
+            .attr("src", "profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png");
         
         d3.selectAll(".governor-name-label")
-            .text("shetland rapist");  
+            .text("shetland rapist");
     }
     
     // Congressional Map
@@ -49,7 +58,7 @@ class StateUI extends UI{
         this.old_states_data = selected.data();
         
         self.removeUI();
-        self.state_congressional_map.map_file_name  = file_name;
+        self.state_congressional_map.map_file_name = file_name;
         self.state_congressional_map.appendToParentMap(self.selected_state_id);
     }
     
@@ -122,6 +131,7 @@ class StateUI extends UI{
         d3.select(".state-districts-button")
             .on("click", function(){
                 var file_name = "./map_data/congressional_borders/" + self.selected_state_id + "/state_senate/topo_simple.json";
+                
                 console.log(file_name)
                 self.removeUI();
                 self.generateCongressionalMap(file_name);

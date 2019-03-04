@@ -1,4 +1,23 @@
+var addRule = (function (style) {
+    var sheet = document.head.appendChild(style).sheet;
+    return function (selector, css) {
+        var propText = typeof css === "string" ? css : Object.keys(css).map(function (p) {
+            return p + ":" + (p === "content" ? "'" + css[p] + "'" : css[p]);
+        }).join(";");
+        try{
+            sheet.insertRule(selector + "{" + propText + "}", sheet.cssRules.length);            
+        }
+        catch(err){
+            console.log(err);
+        }
+    };
+})(document.createElement("style"));
+    
+    
 class ProfileUI extends UI{
+    
+    
+    
     
     loadPoliticianImage(url){
         d3.selectAll(".profile-picture")
@@ -6,9 +25,23 @@ class ProfileUI extends UI{
         // d3.selectAll(".topic-slider::-moz-range-thumb")
             // .attr("background", "blue");
         
-        d3.selectAll(".topic-slider-background")
-            .attr("background", "blue");
-        d3.selectAll(".topic-slider").classed("topic-slider-background", true);
+        
+        
+        // d3.selectAll(".topic-slider-background")
+            // .attr("background", "blue");
+        // d3.selectAll(".topic-slider").classed("topic-slider-background", true);
+        
+        addRule(".topic-slider::-moz-range-thumb", 
+        {
+            "height": "25px",
+            "border-radius": "50%", 
+            "width": "25px", 
+            "height": "25px", 
+            "background": "url('" + url + "')",
+            "background-size": "100%",
+            "cursor": "pointer"
+        });
+        
         
         // d3.selectAll(".topic-slider::-moz-range-thumb")
             // .attr("background", "url("+url+")");            
@@ -65,7 +98,7 @@ class ProfileUI extends UI{
                             <div class='profile-picture-background'></div>\
                             <img class='profile-picture' src='./css/user_interfaces/profile/temp/alabama_us_senate/Richard_Shelby.png'/> \
                             <div class='profile-name'>\
-                                Shetland Rapist\
+                                Bob Billard\
                             </div>\
                         </div>\
                         <div class='profile-body'> \
@@ -80,7 +113,6 @@ class ProfileUI extends UI{
         $("."+this.creator.class_name).append(html);
         
         self.addTopicContainers(self.topics_list);
-        
     }
     
 

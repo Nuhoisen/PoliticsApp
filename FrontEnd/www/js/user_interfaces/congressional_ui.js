@@ -2,7 +2,7 @@
 
 class CongressionalUI extends UI{//extends StateUI {
     
-    // 
+    // Retrieve political images
      retrieveProfileImages(id){
          var self = this;
          self.retrievePoliticianImage(id);
@@ -14,7 +14,7 @@ class CongressionalUI extends UI{//extends StateUI {
      retrievePoliticianImage(id){
          var self = this;
          id = id.replace(/-/g, " ");
-         var args= "state=" + self.creator.creator.selected_state_id + "&role=" + self.selected_role + "&district=" + id;
+         var args = "state=" + self.creator.creator.selected_state_id + "&role=" + self.selected_role + "&district=" + id;
          get_state_politician_prof_img(args, self.loadPoliticianImage.bind(self));
      }
      
@@ -23,8 +23,6 @@ class CongressionalUI extends UI{//extends StateUI {
     loadPoliticianImage(urls){
         var self = this;
         var urls = urls.split(',');
-        
-        console.log(urls)
         
         // When they click the profile picture 
         d3.selectAll(".state-politician-img")
@@ -56,17 +54,23 @@ class CongressionalUI extends UI{//extends StateUI {
     stateSenateListener(){
         var self = this;
         var file_name = "map_data/congressional_borders/" + self.creator.creator.selected_state_id + "/state_senate/topo_simple.json";
-        self.selected_role = "State Senator";
-        self.generateCongressionalMap(file_name);
+        if(self.selected_role!= "State Senator")
+        {
+            self.selected_role = "State Senator";
+            self.generateCongressionalMap(file_name);
+        }
         // self.applyExitListener();   
     }
     
     // Pulls house geo filename and calls generate function
     stateHouseListener(){
         var self = this;
-        self.selected_role = "State Representative";
         var file_name = "map_data/congressional_borders/" + self.creator.creator.selected_state_id + "/state_house/topo_simple.json";
-        self.generateCongressionalMap(file_name);
+        if(self.selected_role != "State Representative")
+        {
+            self.selected_role = "State Representative";
+            self.generateCongressionalMap(file_name);
+        }
         // self.applyExitListener();
     }
   
@@ -99,6 +103,9 @@ class CongressionalUI extends UI{//extends StateUI {
         $(".ui-body").addClass("congressional-ui");
         $(".ui-body").append(html);
         
+        // Activate Highlighting
+        (self.selected_role == "State Senator") ? $("#congressional-left-button").addClass("congressional-buttons-active") : $("#congressional-right-button").addClass("congressional-buttons-active");
+        
         self.addLabel(self.selected_state_id)
         
         self.footer.generateHTML();
@@ -109,18 +116,24 @@ class CongressionalUI extends UI{//extends StateUI {
             .style("opacity", 1);
     }
     
+    
+    // Add listeners to the left/right options, and exit option
     addListeners(){
         var self = this;
         
         d3.select("#congressional-left-button")
                 .on("click", function(){
                     self.stateSenateListener();
+                    // d3.selectAll(".congressional-buttons").classed("congressional-buttons-active", false);
+                    // d3.select("#"+this.id).classed("congressional-buttons-active", true);
                 });
                        
             
         d3.select("#congressional-right-button")
             .on("click", function(){
                 self.stateHouseListener();
+                // d3.selectAll(".congressional-buttons").classed("congressional-buttons-active", false);
+                // d3.select("#"+this.id).classed("congressional-buttons-active", true);
             });
                 
                 

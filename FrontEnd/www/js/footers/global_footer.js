@@ -2,14 +2,26 @@
 class GlobalFooter extends Footer {
     
     
+    // Highlights the newly selected tab
+    // Called from Global UI
+    
+    toggleFooter(id){
+         var all_fters = d3.selectAll(".footer-item");
+         all_fters.classed("selected", false);
+         d3.select("#"+id).classed("selected", true);
+                
+    }
+    
+    
     
     addListeners(){
         var self = this;
         d3.selectAll(".footer-item")
             .on("click", function(d, i){
-                var all_fters = d3.selectAll(".footer-item");
-                all_fters.classed("selected", false);
-                d3.select("#"+this.id).classed("selected", true);
+                
+                // var all_fters = d3.selectAll(".footer-item");
+                // all_fters.classed("selected", false);
+                // d3.select("#"+this.id).classed("selected", true);
                 self.creator.toggleActivePage(this.id);
                 
             });

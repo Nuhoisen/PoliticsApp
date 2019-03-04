@@ -5,12 +5,15 @@ class ToggleFooter extends Footer {
     generateList(){
         var self = this;
         var path_ids = self.creator.creator.path_ids;
+        
+        // .replace(/-/, ' ');
+        
         d3.select("div.vertical-menu").selectAll("a").remove();
         d3.select("div.vertical-menu").selectAll("a")
             .data(path_ids)
             .enter().append("a")
             .html(function(d, i){
-                return d;
+                return d.replace(/-/g, " ");
             })
             .attr("id", function(d, i){return d;})
             .on("click", function(id, i){
@@ -18,7 +21,8 @@ class ToggleFooter extends Footer {
                 
                 self.creator.creator.boxZoom(self.creator.creator.path.bounds(data), self.creator.creator.path.centroid(data), 20); //congress_map.bounds ...
                 self.creator.creator.applyStateSelection(id); // congress_map.applyStateSelection
-                self.creator.addLabel(id);   // This Will Initialize State ID
+                
+                self.creator.addLabel(id);   // congressional_ui.addLabel. This sets the state-id
                 self.creator.retrieveProfileImages(id);
                 // self.creator.retrieveSenatorImages(id);
             });

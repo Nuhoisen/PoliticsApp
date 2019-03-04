@@ -31,10 +31,9 @@ class GlobalUI extends UI{
         }
         
         self.selected_page.refocus();
+        self.footer.toggleFooter(id);
     }
-    
-    
-    
+
   
     generateHTML(){
         var self = this;
