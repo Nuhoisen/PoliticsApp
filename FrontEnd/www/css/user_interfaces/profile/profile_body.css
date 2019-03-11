@@ -1,26 +1,49 @@
 .profile-body{
-    width: 100%;     
+    width: 100%;
 }
 
-.profile-stances-collapsible{
+
+.profile-stances-collapsible-container{
       background-color: #eee;
       color: #444;
       cursor: pointer;
-      padding-top: 5px;
-      padding-left: 5px;
-      padding-bottom: 5px;
-      width: 100%;
-      border: none;
+
+      /* border: none; */
       text-align: left;
       outline: none;
       font-size: 22px;
+
+}
+
+.profile-stances-collapsible{
+      display: inline-block;
+      width: 76%;
+      padding-top: 5px;
+      padding-left: 5px;
+      padding-bottom: 5px;
+}
+
+.stances-active, .profile-stances-collapsible:active{
+      background-color: #ccc;
+}
+
+.profile-stances-collapsible-all{
+    color: #07C;
+    display: inline-block;
+    width: 21%;
+    text-align: right;
+    font-size: 70%;
+    
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
     
 }
 
-.active, .profile-stances-collapsible:hover{
+.stances-active, .profile-stances-collapsible-all:active{
       background-color: #ccc;
-      display: block;
 }
+
 
 .profile-stances-container{
     padding-top: 18px;
@@ -28,6 +51,18 @@
     overflow: hidden;
     background-color: #f1f1f1;
 }
+
+.topics-container{
+    
+    
+}
+
+.topic-body{
+    display: none;
+    /* height: 10%; */
+    /* height needs to be set to a proportional percentage */
+}
+
 .topic-slide-container {
    width: 100%; /* Width of the outside container */
    text-align:center;
@@ -36,9 +71,18 @@
    border-radius: 20px;
 }
 
-.profile-stance-topic-title{
+.topic-collapsible{
     text-align:center;
     color: black;
+    background-color: beige;
+    padding: 10px;
+    text-align: left;
+    
+}
+
+.topic-active, .topic-collapsible:hover{
+      background-color: #ccc;
+      display: block;
 }
 
 
@@ -47,14 +91,19 @@
     display:inline-block;
     position:static;
     width:49%;
-    /* background-image: linear-gradient(to right, blue, purple); */
-    
+    color: black;
+    /* background-image: linear-gradient(to right, blue, purple); */   
 }
+
+
+
+
 .topic-right{
     text-align: right;
     display:inline-block;
     position:static;
     width:49%;
+    color: black;
     /* background-image: linear-gradient(to right, purple, red); */
 }
 
@@ -79,7 +128,7 @@
 }
 
 /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-.topic-slider::-webkit-slider-thumb {
+.topic-slider::-webkit-slider-thumb{
   -webkit-appearance: none; /* Override default look */
   appearance: none;
   height: 25px;
@@ -91,12 +140,11 @@
   cursor: pointer; /* Cursor on hover */
 }
 
-/* .topic-slider-background::-webkit-slider-thumb{
-    background: url('./temp/alabama_us_senate/Richard_Shelby.png');
+/* Pop on hover */
+.topic-slider::-webkit-slider-thumb:hover{  
+  height: 30px;
+  width: 30px;
 }
-.topic-slider-background::-moz-range-thumb{
-    background: url('./temp/alabama_us_senate/Richard_Shelby.png');
-} */
 
 .topic-slider::-moz-range-thumb {
     
@@ -107,4 +155,41 @@
   background: url('./temp/alabama_us_senate/Richard_Shelby.png');  /* #4CAF50; Green background  */
   background-size: 100%;
   cursor: pointer; /* Cursor on hover */
+}
+
+/* Pop on hover */
+.topic-slider::-moz-range-thumb:active{  
+  height: 30px;
+  width: 30px;
+}
+
+
+.topic-stance-source-container{
+    cursor: pointer;   
+    color: black;
+    /* text-align: right; */
+    padding: 5px;
+    display:inline-block;
+    width: 80%;
+}
+.topic-stance-sources-collapsible{
+    
+}
+.topic-stance-sources-collapsible:hover{
+      background-color: #ccc;
+}
+
+.topic-source-list{
+        font-size: 90%;
+        display:none;
+}
+
+
+.topic-perceived-stance{
+    cursor: pointer;   
+    color: black;
+    text-align: right;
+    padding: 5px;
+    display: inline-block;
+    width: 19%;
 }

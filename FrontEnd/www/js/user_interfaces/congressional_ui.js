@@ -75,12 +75,12 @@ class CongressionalUI extends UI{//extends StateUI {
     }
   
     
-     // Modifies the title label. Saves it
+     // Modifies the title label.
     addLabel(id){
         var self = this;
-        // self.selected_state_id = id;
+        
         d3.select(".congressional-label")
-            .html( id );
+            .html( id.replace(/-/g, " ") );
     }
     
     

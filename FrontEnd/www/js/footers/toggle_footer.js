@@ -5,9 +5,11 @@ class ToggleFooter extends Footer {
     generateList(){
         var self = this;
         var path_ids = self.creator.creator.path_ids;
+        var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+        path_ids.sort(collator.compare);
+        
         
         // .replace(/-/, ' ');
-        
         d3.select("div.vertical-menu").selectAll("a").remove();
         d3.select("div.vertical-menu").selectAll("a")
             .data(path_ids)
