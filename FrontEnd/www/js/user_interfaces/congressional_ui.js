@@ -54,7 +54,7 @@ class CongressionalUI extends UI{//extends StateUI {
     stateSenateListener(){
         var self = this;
         var file_name = "map_data/congressional_borders/" + self.creator.creator.selected_state_id + "/state_senate/topo_simple.json";
-        if(self.selected_role!= "State Senator")
+        if(self.selected_role != "State Senator")
         {
             self.selected_role = "State Senator";
             self.generateCongressionalMap(file_name);

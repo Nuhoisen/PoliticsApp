@@ -17,10 +17,9 @@ class MapTemplate extends UI {
         // change zoom transform to min zoom and centre offsets
         self.svg
             .transition()
-            .duration(500)    
+            .duration(500)
             .call(self.zoom.transform, d3.zoomIdentity.translate(midX, midY).scale(self.minZoom));
     }
-    
     
     // Define map zoom behaviour
     // zoom to show a bounding box, with optional additional padding as percentage of box size

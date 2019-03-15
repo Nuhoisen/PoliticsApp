@@ -29,7 +29,6 @@ class ProfileUI extends UI{
             "height": "25px",
             "border-radius": "50%", 
             "width": "25px", 
-            "height": "25px", 
             "background": "url('" + url + "')",
             "background-size": "100%",
             "cursor": "pointer"
@@ -47,7 +46,7 @@ class ProfileUI extends UI{
         fold.style.display = ( fold.style.display == "block" ) ? "none" : "block";
     }
    
-   
+  
    
    addListeners(){
         d3.select(".profile-stances-collapsible-all")
@@ -59,6 +58,7 @@ class ProfileUI extends UI{
                     if (coll.classed("active")){
                         d3.selectAll(".topic-body")
                             .style("display", "block");
+                        
                         d3.select(".profile-stances-container")
                             .style("display", "block");
                         d3.select(this).html( "Collapse All" );
@@ -66,6 +66,10 @@ class ProfileUI extends UI{
                     else{
                         d3.selectAll(".topic-body")
                             .style("display", "none");
+                            
+                        d3.selectAll(".topic-source-list")
+                            .style("display", "none");
+                            
                         d3.select(".profile-stances-container")
                             .style("display", "none");
                         d3.select(this).html( "Expand All" );
@@ -100,6 +104,28 @@ class ProfileUI extends UI{
                 var src_lst = d3.select(this.nextElementSibling);
                 ( src_lst.style("display") == "block" ) ? src_lst.style("display", "none") : src_lst.style("display", "block");
             });
+            
+        d3.selectAll(".topic-perceived-stance")
+            .on("click", function(){
+                var sel_top = this.classList[1];
+                d3.select("." + sel_top + "-slide-container")
+                    .transition()
+                    .duration(500)
+                    .style("opacity", 0)
+                    .on("end", function(){
+                        // Enable the slider
+                        d3.select("." + sel_top + "-slider")
+                            .property("disabled", false);
+                        
+                        d3.select(this) 
+                            .transition()
+                            .duration(250)
+                            .style("opacity", 1);
+                        
+                    })
+                var self = d3.select(this);
+                console.log(self.attr("class"));
+            })
        
    }
    
@@ -112,20 +138,20 @@ class ProfileUI extends UI{
                                         replace \
                                     </div> \
                                     <div class='topic-body'> \
-                                        <div class='topic-left replace-left'> \
+                                        <div class='topic-left replace replace-left'> \
                                             Here \
                                         </div> \
-                                        <div class='topic-right replace-right'> \
+                                        <div class='topic-right replace replace-right'> \
                                             There \
                                         </div> \
-                                        <div class='topic-slide-container replace-slide-container'> \
-                                            <input type='range' min='1' max='100' value='50' class='topic-slider replace-slider'> \
+                                        <div class='topic-slide-container replace replace-slide-container'> \
+                                            <input type='range' min='1' max='100' value='50' class='topic-slider replace replace-slider'> \
                                         </div> \
-                                        <div class='topic-stance-source-container replace-stance-source-container'> \
-                                                <div class='topic-stance-sources-collapsible replace-stance-sources-collapsible'>\
+                                        <div class='topic-stance-source-container replace replace-stance-source-container'> \
+                                                <div class='topic-stance-sources-collapsible replace replace-stance-sources-collapsible'>\
                                                     Sources \
                                                 </div> \
-                                                <ul class='topic-source-list replace-source-list'> \
+                                                <ul class='topic-source-list replace replace-source-list'> \
                                                     <li> \
                                                         Source \
                                                     </li> \
@@ -134,7 +160,7 @@ class ProfileUI extends UI{
                                                     </li> \
                                                 </ul> \
                                         </div> \
-                                        <div class='topic-perceived-stance replace-perceived-stance'> \
+                                        <div class='topic-perceived-stance replace replace-perceived-stance'> \
                                             Perceived Stance \
                                         </div> \
                                     </div>  \
