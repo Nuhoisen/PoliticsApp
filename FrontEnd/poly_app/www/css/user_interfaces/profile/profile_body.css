@@ -1,5 +1,8 @@
 .profile-body{
     width: 100%;
+    position: relative;
+    top: 8%;
+    bottom: 10%;
 }
 
 
@@ -34,9 +37,9 @@
     text-align: right;
     font-size: 70%;
     
-    padding-top: 5px;
+    padding-top: 10px;
     padding-right: 5px;
-    padding-bottom: 5px;
+    padding-bottom: 10px;
     
 }
 
@@ -94,8 +97,6 @@
     color: black;
     /* background-image: linear-gradient(to right, blue, purple); */   
 }
-
-
 
 
 .topic-right{
@@ -165,12 +166,11 @@
 
 
 .topic-stance-source-container{
-    cursor: pointer;   
+    cursor: pointer;
     color: black;
-    /* text-align: right; */
     padding: 5px;
-    display:inline-block;
-    width: 80%;
+    display: inline-block;
+    width: 66%;
 }
 .topic-stance-sources-collapsible{
     
@@ -181,15 +181,16 @@
 
 .topic-source-list{
         font-size: 90%;
-        display:none;
+        display: none;
 }
 
 
 .topic-perceived-stance{
-    cursor: pointer;   
+    cursor: pointer;
     color: black;
     text-align: right;
     padding: 5px;
     display: inline-block;
-    width: 19%;
+    width: 33%;
+    position: absolute;
 }

@@ -42,11 +42,11 @@ class GlobalUI extends UI{
         $("body").append(html);
         
         self.footer.generateHTML();
-        
         //THIS WILL DEPEND ON VIEW- CHANGE LATER
-        this.us_state_map.generateMap();
-        this.profile_page.generateHTML();
-        this.profile_page.unfocus();
+        self.us_state_map.generateMap();
+        self.profile_page.generateHTML();
+        self.profile_page.unfocus();
+        self.header.generateHTML();
         
     }
     
@@ -54,7 +54,7 @@ class GlobalUI extends UI{
     constructor(ui_class_name, creator, attr=null){
         super(ui_class_name, creator);
         this.footer = new GlobalFooter(this);
-        
+        this.header = new GlobalHeader(this);
         
         this.us_state_map = new USMap("us-map", this, map_features_1);
         this.profile_page = new ProfileUI("profile-page", this);

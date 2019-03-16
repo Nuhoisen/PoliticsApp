@@ -1,0 +1,61 @@
+.dummy_div{
+    height:200px;
+    background: #d1bd2e;
+    outline-style: dotted;
+}
+
+
+.global-search-submit{
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+}
+
+.global-search{
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    /* margin: 0 auto; */
+}
+
+
+
+.header-search-span{
+    text-align: center;
+    height: 33%;
+    display: inline-block;
+    width: 12%;
+    float: right;
+    position: relative;
+    top: 19%;
+}
+    
+
+.header-search-icon{
+    font-size: 5vh;
+}    
+
+
+.global-search-container{
+    display: inline-block;
+    height: 80%;
+    width: 88%;
+    top: 10%;
+    position: relative;
+}
+
+.global-search-submit-container{
+    display: inline-block;
+    height: 60%;
+    width: 15%;
+}
+
+.global-header{
+    height: 8%;
+    width: 100%;
+    background:#555;
+    position: fixed;
+    top: 0;
+    transition: top 0.1s;
+}
+

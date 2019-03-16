@@ -216,26 +216,6 @@ class ProfileUI extends UI{
         
         
         
-        
-        
-        
-        
-        // <div class=profile-page> \
-                        // <div class='profile-header'>\
-                            // <div class='profile-picture-background'></div>\
-                            // <img class='profile-picture' src='./css/user_interfaces/profile/temp/alabama_us_senate/Richard_Shelby.png'/> \
-                            // <div class='profile-name'>\
-                                // Bob Billard\
-                            // </div>\
-                        // </div>\
-                        // <div class='profile-body'> \
-                            // <div class='profile-stances-collapsible'> \
-                                // Stances \
-                            // </div> \
-                            // <div class='profile-stances-container'> \
-                            // </div> \
-                        // </div>\
-                // </div>";
           
         $("."+this.creator.class_name).append(html);
         

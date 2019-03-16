@@ -1,6 +1,7 @@
 .profile-header{
     position:relative;
     width: 100%;  
+    top: 8%;
     /* border: 1px solid #ccc; */
     /* border-radius: 16px;  */
 }

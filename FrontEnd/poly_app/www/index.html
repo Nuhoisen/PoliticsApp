@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+    <!-- css -->
+    <link rel="stylesheet" href="css/user_interfaces/maps/us_map.css"/>
+    <link rel="stylesheet" href="css/user_interfaces/maps/congressional_map.css"/>
+    <link rel="stylesheet" href="css/user_interfaces/state_ui.css"/>
+    <link rel="stylesheet" href="css/user_interfaces/congressional_ui.css"/>
+    <link rel="stylesheet" href="css/user_interfaces/profile_ui.css"/>
+    <link rel="stylesheet" href="css/user_interfaces/global_ui.css"/>
+    <link rel="stylesheet" href="css/footers/footer.css"/>
+    <link rel="stylesheet" href="css/footers/toggle_footer.css"/>
+    <link rel="stylesheet" href="css/footers/global_footer.css"/>
+    <link rel="stylesheet" href="css/headers/global_header.css"/>
+   
+
+    <link rel="stylesheet" href="css/user_interfaces/profile/profile_body.css"/>
+    <link rel="stylesheet" href="css/user_interfaces/profile/profile_header.css"/>
+    <link rel="stylesheet" href="css/user_interfaces/profile/profile_container.css"/>
+    <!-- js libraries -->
+    <script type="text/javascript" src="js/d3/d3.v4.min.js"></script>
+    <script type="text/javascript" src="js/d3/topojson.v2.min.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery.min.js"></script>
+    
+    <!-- font-awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+    <style type="text/css">
+       
+        
+        
+    </style>
+        
+</head>
+
+<body>
+
+    
+    
+ <!--    <div class='global-header' id="navbar"> 
+    
+    </div> -->
+    
+<!--     
+    <div class="dummy_div"></div>
+    <div class="dummy_div"></div>
+    <div class="dummy_div"></div>
+    <div class="dummy_div"></div>
+    <div class="dummy_div"></div>
+    <div class="dummy_div"></div>
+    <div class="dummy_div"></div>
+    <div class="dummy_div"></div>
+    <div class="dummy_div"></div> -->
+   
+   <script type="text/javascript" src="js/headers/global_header.js"></script>
+   <script type="text/javascript" src="js/user_interfaces/UI.js"></script>
+   <script type="text/javascript" src="js/user_interfaces/profile/profile_ui.js"></script>
+   
+    <script type="text/javascript" src="js/client/client.js"></script>
+    <script type="text/javascript" src="js/registry_flag.js"></script>
+    <script type="text/javascript" src="js/footers/footer.js"></script>
+    <script type="text/javascript" src="js/footers/toggle_footer.js"></script>
+    
+    
+    
+    <script type="text/javascript" src="js/user_interfaces/congressional_ui.js"></script>
+    <script type="text/javascript" src="js/user_interfaces/maps/map_template.js"></script>
+    <script type="text/javascript" src="js/user_interfaces/maps/congressional_map.js"></script>
+    <script type="text/javascript" src="js/user_interfaces/state_ui.js"></script>
+    <script type="text/javascript" src="js/user_interfaces/maps/us_map.js"></script>
+    <script type="text/javascript" src="js/footers/global_footer.js"></script>
+    <script type="text/javascript" src="js/user_interfaces/global_ui.js"></script>
+    
+    
+    <script type="text/javascript">
+        var currentScrollPos = window.pageYOffset;
+        d3.selectAll(".profile-page")
+            .on("scroll", function(){
+                currentScrollPos = this.scrollTop;
+                if (prevScrollpos > currentScrollPos) {
+                    document.getElementById("navbar").style.top = "0%";
+                } 
+                else {
+                    document.getElementById("navbar").style.top = "-8%";
+                }
+                prevScrollpos = currentScrollPos;
+            
+            });
+    
+       
+    
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
