@@ -46,6 +46,29 @@ function get_state_politician_prof_img(args, callback){
     httpRequest.send();    
 }
 
+function get_state_politician_profile(args, callback){
+    httpRequest.onreadystatechange = acceptFile.bind(this, callback);
+    httpRequest.open('GET', url +'/request_state_politician_profile?'+args, true);
+    httpRequest.send();    
+}
+
+
+function get_wildcard_search(args, callback){
+    
+    httpRequest.onreadystatechange = acceptFile.bind(this, callback);
+    httpRequest.open('GET', url +'/request_wildcard_match?'+args, true);
+    httpRequest.send();    
+}
+
+function response_here(res){
+    console.log(res);
+}
+
+
+// var args = "state=Mississippi&role=US Senator&district=Mississippi US Senate";
+// get_state_politician_profile(args, response_here)
+
+
 // getData();
 
 // get_prof_img()

@@ -1,6 +1,5 @@
 import pyodbc
 
-
 class SqlRetriever:
 
     c_cnxn = None
@@ -94,8 +93,39 @@ class SqlRetriever:
         print(str_response)
         return str_response
     
-    
+  
+    # Returns profile info when provided specific
+    # state, role, and district
+    def retrieve_politician_profile(self, state, role, district):
+        condition = (self.c_table_name, state, role, district)
+        command = "SELECT * from %s WHERE State='%s' AND Role='%s' AND District='%s'" %condition
+        cursor = self.c_cnxn.cursor()
+        cursor.execute(command)
+        row_response = cursor.fetchall()
         
+        return row_response
+        
+    def retrieve_wildcard(self, query):
+        condition = (self.c_table_name, query)
+        
+        command = "SELECT TOP(200) * from " + self.c_table_name +" WHERE Name LIKE '" + query + "%'" 
+        cursor = self.c_cnxn.cursor()
+        cursor.execute(command)
+        row_response = cursor.fetchall()
+  
+        for row in row_response:
+            print(row)
+  
+        return row_response
+# sql_db_name ="PoliticianInfo"
+# sql_table_name = "PoliticianTable"
+
+# sql_type = SqlRetriever(sql_db_name, sql_table_name)
+# sql_type.set_up_connection()
+# sql_type.retrieve_wildcard("Pete")
+
+# sql_type.retrieve_politician_profile("Alabama", "State Representative", "Alabama House District 20")
+  
 # --------------EXAMPLES--------------
 # cursor.execute("INSERT INTO polyTestTable (testID, testID2) VALUES (3, 2)")   
 # cnxn.commit()

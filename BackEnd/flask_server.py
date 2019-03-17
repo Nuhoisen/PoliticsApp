@@ -48,6 +48,60 @@ def request_state_politician_profile_img():
     
     return response
     
+def convert_response_2_dict(res):
+    prof_list = []
+    for row in res:
+        prof_dict = {}
+        prof_dict["State"] = row.State
+        prof_dict["District"] = row.District
+        prof_dict["Name"] = row.Name
+        prof_dict["Id"] = row.Id
+        prof_dict["FollowMoneyURL"] = row.FollowMoneyURL
+        prof_dict["BallotpediaURL"] = row.BallotpediaURL
+        prof_dict["BillTrackURL"] = row.BillTrackURL
+        prof_dict["ImageURL"] = row.ImageURL
+        prof_list.append(prof_dict)
+    return prof_list
+        
+@app.route('/request_state_politician_profile/', methods=['GET'])    
+def request_state_politician_profile():
+    state = request.args.get('state')
+    role = request.args.get('role')
+    district = request.args.get('district')
+    sql_type = SqlRetriever(sql_db_name, sql_table_name)
+    sql_type.set_up_connection()
     
+    
+    print("making sql Call")
+    response = sql_type.retrieve_politician_profile(state, role, district)
+    print("sql Call response")
+    print(response)
+    
+    prof_list = convert_response_2_dict(response)
+    
+    
+    # for row in response:
+        # prof_dict = {}
+        # prof_dict["State"] = row.State
+        # prof_dict["District"] = row.District
+        # prof_dict["Name"] = row.Name
+        # prof_dict["Id"] = row.Id
+        # prof_dict["FollowMoneyURL"] = row.FollowMoneyURL
+        # prof_dict["BallotpediaURL"] = row.BallotpediaURL
+        # prof_dict["BillTrackURL"] = row.BillTrackURL
+        # prof_dict["ImageURL"] = row.ImageURL
+        # prof_list.append(prof_dict)
+    
+    return json.dumps(prof_list)
+
+@app.route('/request_wildcard_match/', methods=['GET'])
+def request_wildcard_match():
+    query = request.args.get('query')
+    sql_type = SqlRetriever(sql_db_name, sql_table_name)
+    sql_type.set_up_connection()
+    response = sql_type.retrieve_wildcard(query)
+    print("SQL wildcard call response")
+    prof_list = convert_response_2_dict(response)
+    return json.dumps(prof_list)
     
 app.run(host='0.0.0.0')    

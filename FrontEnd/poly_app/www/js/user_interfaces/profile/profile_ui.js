@@ -20,16 +20,20 @@ class ProfileUI extends UI{
     
  
     // Load political image
-    loadPoliticianImage(url){
+    loadPoliticianImage(profile){
+        
         d3.selectAll(".profile-picture")
-            .attr("src", url);
+            .attr("src", profile['ImageURL']);
+            
+        d3.selectAll(".profile-name")
+            .html(profile['Name']);
  
         addRule(".topic-slider::-moz-range-thumb", 
         {
             "height": "25px",
             "border-radius": "50%", 
             "width": "25px", 
-            "background": "url('" + url + "')",
+            "background": "url('" + profile['ImageURL'] + "')",
             "background-size": "100%",
             "cursor": "pointer"
         });

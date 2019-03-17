@@ -1,48 +1,34 @@
 
-class StateUI extends UI{
-
-     // Retrieve political images
-     retrieveProfileImages(id){
-         var self = this;
-         self.retrieveSenatorImages(id);
-     }
-     // Load image of senators and governor. Update they're banners
-     retrieveSenatorImages(id){
-         var self = this;
-         id = id.replace(/-/g, " ");
-         
-         var args= "state=" + id + "&role=US Senator";
-         get_senator_prof_imgs(args, self.loadSenatorImages.bind(self));
-     }
+class StateUI extends ImageMapUI{
     
-    // Gets binded to the two senator images
+    // Gets binded to the politicians profile
     // Swaps view over to profile page
-    imageListener(img_url){
+    imageListener(profile){
         var self = this;
         // var img_url = this.src;
-        self.creator.creator.profile_page.loadPoliticianImage(img_url);
+        self.creator.creator.profile_page.loadPoliticianImage(profile);
         self.creator.creator.toggleActivePage("news");
         self.removeUI();
     }
     
     // Load senator images and add click listeners
-    loadSenatorImages(urls){
+    loadPoliticianImages(profiles){
+        profiles = JSON.parse(profiles)
         var self = this;
-        var urls = urls.split(',');
         
         d3.selectAll(".senator-img-left")
-             .attr("src", urls[0])
-             .on("click", self.imageListener.bind(self, urls[0]));//"profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png")
+             .attr("src", profiles[0]["ImageURL"])
+             .on("click", self.imageListener.bind(self, profiles[0]));//"profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png")
                   
         d3.selectAll(".senator-img-left-name")
-              .text("Hello");
+              .text(profiles[0]["Name"]);
             
         d3.selectAll(".senator-img-right")
-            .attr("src", urls[1])
-            .on("click", self.imageListener.bind(self, urls[1]));
+            .attr("src", profiles[1]["ImageURL"])
+            .on("click", self.imageListener.bind(self, profiles[1]));
            
         d3.selectAll(".senator-img-right-name")
-             .text("shetland rapist");
+             .text(profiles[1]["Name"]);
             
         d3.selectAll(".governor-img")
             .attr("src", "profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png");
@@ -79,12 +65,12 @@ class StateUI extends UI{
                     \
                     <div class='state-ui senate-img-div-left senate-img-div'> \
                         <img src='' alt='' class='senator-img-left senator-img state-ui'/> \
-                         <a href='' class='senator-img-left-name  senator-img-name  state-ui'></a> \
+                         <div href='' class='senator-img-left-name  senator-img-name  state-ui'></div> \
                     </div> \
                     \
                     <div class='state-ui senate-img-div-right senate-img-div'> \
                         <img src='' class='senator-img-right senator-img state-ui' alt=''/>\
-                         <a href='' class='senator-img-right-name senator-img-name state-ui'></a> \
+                         <div href='' class='senator-img-right-name senator-img-name state-ui'></div> \
                     </div> \
                     \
                     <div class='state-button-container'> \
@@ -103,7 +89,7 @@ class StateUI extends UI{
         self.footer.generateHTML();
         
         // self.loadImages();
-        self.retrieveSenatorImages(self.selected_state_id);
+        self.retrievePoliticianImages(self.selected_state_id);
         
         
        $(".state-ui").css("z-index", 1);
@@ -112,11 +98,25 @@ class StateUI extends UI{
             .duration(1000)
             .style("opacity", 1);
     }
-      
-    // Modifies the Title Label
-    addLabel(id){
+    
+
+    
+    
+    setLocationInfo(id){
         var self = this;
-        self.selected_state_id = id.replace(/-/g, " "); //id;
+        // self.selected_state_id = id.replace(/-/g, " "); //id;
+        var district  = id + " US Senate";
+        self.setStateInfo(id);
+        self.setDistrictInfo(district);
+    }
+    
+    // Modifies the Title Label
+    addLabel(id=this.selected_state_id){
+        var self = this;
+        self.setLocationInfo(id);
+        
+        // self.selected_state_id = id.replace(/-/g, " "); //id;
+        // self.selected_district = self.selected_state_id + " US Senate";
         d3.select(".state-label")
             .html( self.selected_state_id );
     }
@@ -146,13 +146,13 @@ class StateUI extends UI{
         self.footer.addListeners();
     }
     
-    
     // Generates HTML
     // Saves the selected state
     // Calls addListeners
     applyUI(id){
         var self = this;
-        self.selected_state_id = id.replace(/-/g, " ");;
+        self.selected_state_id = id.replace(/-/g, " ");
+        self.selected_district = self.selected_state_id + " US Senate";
         self.generateHTML();
         
         self.addListeners(); 
@@ -164,10 +164,11 @@ class StateUI extends UI{
         
         this.state_congressional_map = new CongressionalMapTemplate("congressional-map", this, map_features_2);
         this.footer = new ToggleFooter(this);
-        this.old_states_data;
         
+        this.old_states_data = null;
         this.selected_state_id = null;
-        
+        this.selected_district = null;
+        this.selected_role = "US Senator";
         this.ui_class_name = ui_class_name;
     }
 }

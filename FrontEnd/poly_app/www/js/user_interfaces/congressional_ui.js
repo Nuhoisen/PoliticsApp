@@ -1,41 +1,48 @@
 
 
-class CongressionalUI extends UI{//extends StateUI {
+class CongressionalUI extends ImageMapUI{//extends StateUI {
     
     // Retrieve political images
-     retrieveProfileImages(id){
-         var self = this;
-         self.retrievePoliticianImage(id);
-     }
+     // retrieveProfileImages(id){
+         // var self = this;
+         // self.retrievePoliticianImages(id);
+     // }
     
     
     // Make a client call to the server, request the 
     // image of the politician by state & role
-     retrievePoliticianImage(id){
-         var self = this;
-         id = id.replace(/-/g, " ");
-         var args = "state=" + self.creator.creator.selected_state_id + "&role=" + self.selected_role + "&district=" + id;
-         get_state_politician_prof_img(args, self.loadPoliticianImage.bind(self));
-     }
+     // retrievePoliticianImages(id){
+         // var self = this;
+         // id = id.replace(/-/g, " ");
+         // var args = "state=" + self.creator.creator.selected_state_id + "&role=" + self.selected_role + "&district=" + id;
+         // get_state_politician_profile(args, self.loadPoliticianImage.bind(self));
+     // }
      
+     
+    // Gets binded to the politicians profile
+    // Swaps view over to profile page
+     imageListener(profile){
+        var self = this;
+        // var img_url = this.src;
+        self.creator.creator.creator.creator.profile_page.loadPoliticianImage(profile);
+        self.creator.creator.creator.creator.toggleActivePage("news");
+        self.removeUI();
+    }
      
     // Load the politician's image
-    loadPoliticianImage(urls){
+    loadPoliticianImages(profile){
+        profile = JSON.parse(profile);
         var self = this;
-        var urls = urls.split(',');
         
         // When they click the profile picture 
         d3.selectAll(".state-politician-img")
-            .attr("src", urls[0])
-            .on("click", function(){
-                var img_url = this.src;
-                self.creator.creator.creator.creator.profile_page.loadPoliticianImage(img_url);
-                self.creator.creator.creator.creator.toggleActivePage("news");
-                self.removeUI();
-            })
-        
+            .attr("src", profile[0]["ImageURL"])
+            .on("click", self.imageListener.bind(self, profile[0]));
+            
         d3.selectAll(".state-politician-img-name")
-            .text("");  
+            .text(profile[0]["Name"]);
+            
+            
     }
     
     
@@ -59,8 +66,8 @@ class CongressionalUI extends UI{//extends StateUI {
             self.selected_role = "State Senator";
             self.generateCongressionalMap(file_name);
         }
-        // self.applyExitListener();   
     }
+    
     
     // Pulls house geo filename and calls generate function
     stateHouseListener(){
@@ -71,14 +78,28 @@ class CongressionalUI extends UI{//extends StateUI {
             self.selected_role = "State Representative";
             self.generateCongressionalMap(file_name);
         }
-        // self.applyExitListener();
     }
   
-    
-     // Modifies the title label.
-    addLabel(id){
+  
+    // This sets the state. Does not change the district
+    // setStateInfo(id){
+        // var self = this;
+        // self.selected_state_id = id.replace(/-/g, " "); 
+    // }
+    // // This sets the district. It does not change the state
+    // setDistrictInfo(id){
+        // var self = this;
+        // self.selected_district = id.replace(/-/g, " "); 
+    // }
+    // Override!
+    setLocationInfo(id){
         var self = this;
-        
+        self.setDistrictInfo(id);
+    }
+     // Modifies the title label.
+    addLabel(id=this.selected_district){
+        var self = this;
+        self.setDistrictInfo(id);
         d3.select(".congressional-label")
             .html( id.replace(/-/g, " ") );
     }
@@ -109,13 +130,15 @@ class CongressionalUI extends UI{//extends StateUI {
         self.addLabel(self.selected_state_id)
         
         self.footer.generateHTML();
-        self.retrievePoliticianImage(self.selected_state_id);
+        self.retrievePoliticianImages(self.selected_state_id);
         $(".congressional-ui").css("z-index", 1);
         
         d3.selectAll(".congressional-ui")
             .style("opacity", 1);
     }
     
+    
+  
     
     // Add listeners to the left/right options, and exit option
     addListeners(){
@@ -124,16 +147,13 @@ class CongressionalUI extends UI{//extends StateUI {
         d3.select("#congressional-left-button")
                 .on("click", function(){
                     self.stateSenateListener();
-                    // d3.selectAll(".congressional-buttons").classed("congressional-buttons-active", false);
-                    // d3.select("#"+this.id).classed("congressional-buttons-active", true);
+
                 });
                        
             
         d3.select("#congressional-right-button")
             .on("click", function(){
                 self.stateHouseListener();
-                // d3.selectAll(".congressional-buttons").classed("congressional-buttons-active", false);
-                // d3.select("#"+this.id).classed("congressional-buttons-active", true);
             });
                 
                 
@@ -152,9 +172,11 @@ class CongressionalUI extends UI{//extends StateUI {
     }
     
     
-    applyUI(id){
+    // This takes all the information present
+    // in the class structure and makes a UI out of it.
+    // All settings must be set with mutators prior to call
+    applyUI(){
         var self = this;
-        self.selected_state_id = id;
         self.generateHTML();    
         self.addListeners();
     }
@@ -164,6 +186,8 @@ class CongressionalUI extends UI{//extends StateUI {
        super(ui_class_name, creator,attr);
        this.footer = new ToggleFooter(this);
        this.selected_role = "State Senator";
+       this.selected_state_id = null;
+       this.selected_district = null;
     }
 }
 

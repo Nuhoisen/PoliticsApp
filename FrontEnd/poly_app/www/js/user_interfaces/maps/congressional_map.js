@@ -129,8 +129,11 @@ class CongressionalMapTemplate extends MapTemplate{
         var id = self.selectedExtractID(d).split(" ").join("-");
         self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20);
         self.applyStateSelection(id);
-        self.ui.removeUI();
-        self.ui.applyUI(id);
+        self.ui.setDistrictInfo(id);
+        self.ui.addLabel(); 
+        self.ui.retrievePoliticianImages(id);
+        // self.ui.removeUI();
+        // self.ui.applyUI(id);
         // self.ui.addLabel(id);
     }
     
@@ -171,8 +174,9 @@ class CongressionalMapTemplate extends MapTemplate{
                 self.svg.select("path.state-borders").remove();
                 self.svg.select("path.state-senate-borders").remove();
                 self.generateMapPaths(self.map_file_name);
-                self.svg.style("opacity", "1")
-                self.ui.applyUI(self.selected_state_id);
+                self.svg.style("opacity", "1");
+                self.ui.setStateInfo(self.selected_state_id);
+                self.ui.applyUI();
             });
             
         
@@ -183,9 +187,9 @@ class CongressionalMapTemplate extends MapTemplate{
     constructor(class_name, creator, attr){
         super(class_name,creator,attr);
         this.ui = new CongressionalUI("congressional-ui", this);
-        self.selected_state = null;
-        self.selected_state_data = null;
-        self.selected_state_id = null;
+        this.selected_state = null;
+        this.selected_state_data = null;
+        this.selected_state_id = null;
     }
     
 };

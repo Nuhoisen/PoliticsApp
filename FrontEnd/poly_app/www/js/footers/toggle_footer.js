@@ -24,8 +24,9 @@ class ToggleFooter extends Footer {
                 self.creator.creator.boxZoom(self.creator.creator.path.bounds(data), self.creator.creator.path.centroid(data), 20); //congress_map.bounds ...
                 self.creator.creator.applyStateSelection(id); // congress_map.applyStateSelection
                 
-                self.creator.addLabel(id);   // congressional_ui.addLabel. This sets the state-id
-                self.creator.retrieveProfileImages(id);
+                self.creator.setLocationInfo(id);
+                self.creator.addLabel();   // congressional_ui.addLabel. This sets the state-id
+                self.creator.retrievePoliticianImages(id);
                 // self.creator.retrieveSenatorImages(id);
             });
     } 
