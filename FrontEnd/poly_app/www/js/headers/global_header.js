@@ -58,49 +58,65 @@ class GlobalHeader{
         var a, b, i, val = this.value;
         a = document.getElementById(this.id+"autocomplete-list");
         
+        var start_index = 0;
+        
         for (i = 0; i < profiles.length; i++) {             
             /*check if the item starts with the same letters as the text field value:*/
-            if (profiles[i]["Name"].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-              /*create a DIV element for each matching element:*/
-              
-              
-              outter_div = document.createElement("DIV");
-              outter_div.setAttribute("class", "search-item-container");
-              
-              
-              item_name = document.createElement("DIV");
-              item_name.setAttribute("class", "search-item-name");
-              
-              
-               /*make the matching letters bold:*/
-              item_name.innerHTML = "<strong>" + profiles[i]["Name"].substr(0, val.length) + "</strong>";
-              item_name.innerHTML += profiles[i]["Name"].substr(val.length);
-              /*insert a input field that will hold the current array item's value:*/
-              item_name.innerHTML += "<input type='hidden' value='" + profiles[i]["Name"] + "'>";
-              /*execute a function when someone clicks on the item value (DIV element):*/
+            var match_name = profiles[i]["Name"];
+                start_index = match_name.toUpperCase().indexOf( val.toUpperCase() );
+                
+                
+                
+                
+                if ( start_index !== -1){//profiles[i]["Name"].substr(start_index, start_index + val.length).toUpperCase() == val.toUpperCase()) {
+                  /*create a DIV element for each matching element:*/
                   
-              
-              outter_div.addEventListener("click", function(){
                   
-                  document.getElementById("global-search-id").value = this.getElementsByTagName("input")[0].value;
-                  var sel_district = this.getElementsByClassName("search-item-district")[0].innerHTML;
-                  console.log(sel_district);
-                  /*close the list of autocompleted values,
-                  (or any other open lists of autocompleted values:*/
-                  closeAllLists();
+                  outter_div = document.createElement("DIV");
+                  outter_div.setAttribute("class", "search-item-container");
                   
-              })
-              
-              item_district = document.createElement("DIV");
-              item_district.setAttribute("class", "search-item-district");
-              
-              
-             item_district.innerHTML = profiles[i]["District"];
-              
-              outter_div.appendChild(item_name);
-              outter_div.appendChild(item_district);
-              a.appendChild(outter_div);
-            }
+                  
+                  item_name = document.createElement("DIV");
+                  item_name.setAttribute("class", "search-item-name");
+                  
+                  
+                   /*make the matching letters bold:*/
+                   if(start_index==0)
+                   {
+                        item_name.innerHTML = "<strong>" + match_name.substr(0, val.length) + "</strong>"; //profiles[i]["Name"].substr(0, val.length )
+                        item_name.innerHTML +=  match_name.substr(val.length); // profiles[i]["Name"].substr(val.length);
+                   }else{
+                        item_name.innerHTML = match_name.substr(0, start_index);//profiles[i]["Name"].substr(0, start_index);
+                        item_name.innerHTML += "<strong>" + match_name.substr(start_index, val.length) + "</strong>"; //profiles[i]["Name"].substr(start_index, start_index+(val.length-1))
+                        item_name.innerHTML += profiles[i]["Name"].substr(start_index+val.length);
+                        
+                   }
+                  
+                  /*insert a input field that will hold the current array item's value:*/
+                  item_name.innerHTML += "<input type='hidden' value='" + profiles[i]["Name"] + "'>";
+                  /*execute a function when someone clicks on the item value (DIV element):*/
+                      
+                  
+                  outter_div.addEventListener("click", function(){
+                      
+                      document.getElementById("global-search-id").value = this.getElementsByTagName("input")[0].value;
+                      var sel_district = this.getElementsByClassName("search-item-district")[0].innerHTML;
+                      console.log(sel_district);
+                      /*close the list of autocompleted values,
+                      (or any other open lists of autocompleted values:*/
+                      closeAllLists();
+                      
+                  })
+                  
+                  item_district = document.createElement("DIV");
+                  item_district.setAttribute("class", "search-item-district");
+                  
+                  item_district.innerHTML = profiles[i]["District"];
+                  
+                  outter_div.appendChild(item_name);
+                  outter_div.appendChild(item_district);
+                  a.appendChild(outter_div);
+                }
           }
     }
     

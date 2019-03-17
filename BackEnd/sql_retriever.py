@@ -108,7 +108,7 @@ class SqlRetriever:
     def retrieve_wildcard(self, query):
         condition = (self.c_table_name, query)
         
-        command = "SELECT TOP(200) * from " + self.c_table_name +" WHERE Name LIKE '" + query + "%'" 
+        command = "SELECT TOP(200) * from " + self.c_table_name +" WHERE Name LIKE '" + query + "%' OR Name LIKE '% "  + query  + "%'"
         cursor = self.c_cnxn.cursor()
         cursor.execute(command)
         row_response = cursor.fetchall()
