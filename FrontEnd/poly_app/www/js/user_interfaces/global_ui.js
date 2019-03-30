@@ -4,6 +4,12 @@ var map_features_1 = {
     "feature_access_hook": states_function
 }
 
+var map_features_3 = {
+    "file_name" : "map_data/2017_us_cd115_quantize.json",
+    "border_class_name" :"state-borders",
+    "feature_access_hook": us_house_map_function
+}
+
 
 var map_features_2 = {
     "file_name" : "map_data/congressional_borders/Oregon/state_house/topo_simple.json", //

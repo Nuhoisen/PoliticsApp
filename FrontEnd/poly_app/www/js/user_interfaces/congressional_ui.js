@@ -57,10 +57,22 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
         self.creator.appendToParentMap(self.selected_state_id);
     }
     
+    usRepresentativeListener(){
+        var self = this;
+        // var file_name = "map_data/us_house_borders/CA/us-house-ca.json";
+        var file_name = "map_data/congressional_borders/" + self.creator.creator.selected_state_id + "/us_representatives/us-house.json";
+        if(self.selected_role != "US Representative")
+        {
+            self.selected_role = "US Representative";
+            self.generateCongressionalMap(file_name);
+        }
+    }
+    
     // Pulls senate geo filename and calls generate function
     stateSenateListener(){
         var self = this;
-        var file_name = "map_data/congressional_borders/" + self.creator.creator.selected_state_id + "/state_senate/topo_simple.json";
+        // var file_name = "map_data/us_house_borders/CA/us-house-ca.json";
+        var file_name = "map_data/congressional_borders/" + self.creator.creator.selected_state_id + "/state_senate/topo_quantize.json";
         if(self.selected_role != "State Senator")
         {
             self.selected_role = "State Senator";
@@ -72,7 +84,7 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
     // Pulls house geo filename and calls generate function
     stateHouseListener(){
         var self = this;
-        var file_name = "map_data/congressional_borders/" + self.creator.creator.selected_state_id + "/state_house/topo_simple.json";
+        var file_name = "map_data/congressional_borders/" + self.creator.creator.selected_state_id + "/state_house/topo_quantize.json";
         if(self.selected_role != "State Representative")
         {
             self.selected_role = "State Representative";
@@ -113,10 +125,11 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
         var html = "    <div class='congressional-ui congressional-label'>Text</div> \
                         <div class='congressional-ui state-politician-img-div'> \
                             <img src='' class='state-politician-img congressional-ui' alt=''/> \
-                            <a href='' class='state-politician-img-name congressional-ui'></a> \
+                            <div  class='state-politician-img-name congressional-ui'></div> \
                         </div> \
                         <div class='congressional-ui congressional-button-container'> \
-                            <a class='congressional-ui congressional-buttons' id='congressional-left-button' >State Senate</a> \
+                            <a class='congressional-ui congressional-buttons' id='congressional-left-button' >US Representatives</a> \
+                            <a class='congressional-ui congressional-buttons' id='congressional-center-button' >State Senate</a> \
                             <a class='congressional-ui congressional-buttons' id='congressional-right-button' >State House</a> \
                         </div> \
                         <a class='congressional-exit-button congressional-ui'>Back</a>";
@@ -125,7 +138,17 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
         $(".ui-body").append(html);
         
         // Activate Highlighting
-        (self.selected_role == "State Senator") ? $("#congressional-left-button").addClass("congressional-buttons-active") : $("#congressional-right-button").addClass("congressional-buttons-active");
+        switch(self.selected_role){
+            case "US Representative":
+                $("#congressional-left-button").addClass("congressional-buttons-active"); break;
+            case "State Senator":
+                $("#congressional-center-button").addClass("congressional-buttons-active"); break;
+            case "State Representative":
+                $("#congressional-right-button").addClass("congressional-buttons-active"); break;     
+            default:
+                $("#congressional-left-button").addClass("congressional-buttons-active"); break;   
+        }
+        // (self.selected_role == "State Senator") ?  : $("#congressional-right-button").addClass("congressional-buttons-active");
         
         self.addLabel(self.selected_state_id)
         
@@ -146,8 +169,12 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
         
         d3.select("#congressional-left-button")
                 .on("click", function(){
+                    self.usRepresentativeListener();
+                });
+        
+        d3.select("#congressional-center-button")
+                .on("click", function(){
                     self.stateSenateListener();
-
                 });
                        
             
@@ -163,7 +190,6 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
                 self.removeUI();
                 self.creator.zoomOut();
                 self.creator.removeMapPaths();
-                
                 self.creator.creator.creator.generateMapPaths("map_data/new_simpler_us_topo.json"); //us_map.generateMapPaths
             });
          

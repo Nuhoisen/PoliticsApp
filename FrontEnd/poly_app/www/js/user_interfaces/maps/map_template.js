@@ -118,7 +118,7 @@ class MapTemplate extends UI {
                 .attr("d", self.path)
                 .attr("class", "state-neutral")
                 .attr("id", function(d, i) {
-                    var path_id = self.selectedExtractID(d).split(" ").join("-"); // return d.properties.NAMELSAD.split(" ").join("-");//
+                   var path_id = self.selectedExtractID(d).split(" ").join("-"); 
                     self.path_ids.push(path_id);
                     return path_id;
                 })

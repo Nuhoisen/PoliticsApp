@@ -34,7 +34,7 @@ class StateUI extends ImageMapUI{
             .attr("src", "profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png");
         
         d3.selectAll(".governor-name-label")
-            .text("shetland rapist");
+            .text("fill name");
     }
     
     // Congressional Map
@@ -58,9 +58,9 @@ class StateUI extends ImageMapUI{
         var html = "<div class='state-ui state-label'>Text</div> \
                     \
                     <div class='state-ui governor-img-div'> \
-                        <a href='' class='governor-label state-ui'>Governor</a> \
+                        <div class='governor-label state-ui'>Governor</div> \
                         <img src='' class='governor-img state-ui' alt=''/> \
-                        <a href='' class='governor-name-label state-ui'></a> \
+                        <div  class='governor-name-label state-ui'></div> \
                     </div> \
                     \
                     <div class='state-ui senate-img-div-left senate-img-div'> \
@@ -70,7 +70,7 @@ class StateUI extends ImageMapUI{
                     \
                     <div class='state-ui senate-img-div-right senate-img-div'> \
                         <img src='' class='senator-img-right senator-img state-ui' alt=''/>\
-                         <div href='' class='senator-img-right-name senator-img-name state-ui'></div> \
+                         <div  class='senator-img-right-name senator-img-name state-ui'></div> \
                     </div> \
                     \
                     <div class='state-button-container'> \
@@ -130,7 +130,7 @@ class StateUI extends ImageMapUI{
         
         d3.select(".state-districts-button")
             .on("click", function(){
-                var file_name = "./map_data/congressional_borders/" + self.selected_state_id + "/state_senate/topo_simple.json";
+                var file_name = "./map_data/congressional_borders/" + self.selected_state_id + "/state_senate/topo_quantize.json";
                 
                 console.log(file_name)
                 self.removeUI();

@@ -51,11 +51,12 @@ svg {display: block;}
 .congressional-buttons{
     font-size: 16px;
     display: inline-block;
-    width: 50%;
+    width: 33%;
     height:5%;
     padding: 1px 1px;
     background-color: #fff;
     color: red;
+    border: 1px solid #ddd;
 }
 
 .congressional-buttons-active{
@@ -64,14 +65,19 @@ svg {display: block;}
 }
 
 #congressional-left-button{
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
     
 }
 
+#congressional-left-button{
+      /* border: 1px solid #ddd; */
+}
+
+
 #congressional-right-button{
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
