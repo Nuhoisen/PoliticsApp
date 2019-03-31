@@ -1,13 +1,23 @@
 var selected_elem = 0
-var states_function = function(us){    
-    return us.objects.us_states;
-}
 
-var state_senate_map_function = function(us){
+
+var stateSenateMapFunction = function(us){
     return us.objects.combined;//us_states;
 }
 
 
+
+var genericExtractIDFunction = function(d){
+        return  d.properties.NAMELSAD;
+}
+
+var usRepresentativeMeshFunction = function(self, us){
+    return topojson.mesh(us);
+}
+
+var usRepresentativeExtractIDFunction = function(d){
+        return d.properties.state_name + "-District-" + d.properties.district;
+}
 
 class CongressionalMapTemplate extends MapTemplate{    
     // Create function to apply zoom to countriesGroup
@@ -126,6 +136,7 @@ class CongressionalMapTemplate extends MapTemplate{
     // Activates when a congressional district is clicked
     selectedClickListener(d, i){
         var self = this;
+        // ID Is selected from the the element tag field
         var id = self.selectedExtractID(d).split(" ").join("-");
         self.boxZoom(self.path.bounds(d), self.path.centroid(d), 20);
         self.applyStateSelection(id);
@@ -138,10 +149,22 @@ class CongressionalMapTemplate extends MapTemplate{
     }
     
     selectedExtractID(d){
-        return d.properties.NAMELSAD;
+        return genericExtractIDFunction(d);
     }
     
-    
+    // Sets up function overrides for US vs State Reps/Sens
+    overrideClassFunctions(subClassName="State Senator"){
+        var self = this;
+        switch(subClassName){
+            case "US Representative":
+                self.selectedExtractID = usRepresentativeExtractIDFunction;
+                self.meshFunction = usRepresentativeMeshFunction;
+            break;
+            default:
+                self.selectedExtractID = genericExtractIDFunction;
+                self.meshFunction = genericMeshFunction;
+        }
+    }
     
     
     // Takes existing map, removes state & border paths
@@ -190,6 +213,7 @@ class CongressionalMapTemplate extends MapTemplate{
         this.selected_state = null;
         this.selected_state_data = null;
         this.selected_state_id = null;
+        
     }
     
 };
@@ -198,6 +222,6 @@ class CongressionalMapTemplate extends MapTemplate{
 var map_features_2 = {
     "file_name" : "map_data/congressional_borders/Alabama/state_house/topo_simple.json", //
     "border_class_name" :"state-senate-borders",
-    "feature_access_hook": state_senate_map_function
+    "feature_access_hook": stateSenateMapFunction
 }
 

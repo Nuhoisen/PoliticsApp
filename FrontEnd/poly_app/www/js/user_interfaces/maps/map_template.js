@@ -1,4 +1,9 @@
 
+var genericMeshFunction = function(self, us){
+    return topojson.mesh(us, self.access_hook(us), function(a, b) { return a !== b; });
+}
+
+// var meshFunction = genericMeshFunction;
 
 class MapTemplate extends UI {
     
@@ -104,6 +109,10 @@ class MapTemplate extends UI {
         return self.countriesGroup.select("#"+id);
     }
     
+   meshFunction(self, us){
+        return genericMeshFunction(self, us);
+   };
+    
     generateMapPaths(file_name){
         var self = this;
         self.map_file_name = file_name;
@@ -129,7 +138,7 @@ class MapTemplate extends UI {
               // Draw state border paths
             self.bordersGroup = self.svg.append("path")
                 .attr("class", self.map_border_class)
-                .attr("d", self.path(topojson.mesh(us, self.access_hook(us), function(a, b) { return a !== b; })));
+                .attr("d", self.path( self.meshFunction( self, us ) ) );
                 
                 
             self.svg.call(self.zoom);

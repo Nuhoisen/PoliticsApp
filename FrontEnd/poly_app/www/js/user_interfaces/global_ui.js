@@ -1,20 +1,20 @@
 var map_features_1 = {
     "file_name" : "map_data/new_simpler_us_topo.json",
     "border_class_name" :"state-borders",
-    "feature_access_hook": states_function
+    "feature_access_hook": statesFunction
 }
 
-var map_features_3 = {
-    "file_name" : "map_data/2017_us_cd115_quantize.json",
-    "border_class_name" :"state-borders",
-    "feature_access_hook": us_house_map_function
-}
+// var map_features_3 = {
+    // "file_name" : "map_data/2017_us_cd115_quantize.json",
+    // "border_class_name" :"state-borders",
+    // "feature_access_hook": us_house_map_function
+// }
 
 
 var map_features_2 = {
     "file_name" : "map_data/congressional_borders/Oregon/state_house/topo_simple.json", //
     "border_class_name" :"state-senate-borders",
-    "feature_access_hook": state_senate_map_function
+    "feature_access_hook": stateSenateMapFunction
 }
 
 class GlobalUI extends UI{

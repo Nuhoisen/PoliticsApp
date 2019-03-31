@@ -2,21 +2,7 @@
 
 class CongressionalUI extends ImageMapUI{//extends StateUI {
     
-    // Retrieve political images
-     // retrieveProfileImages(id){
-         // var self = this;
-         // self.retrievePoliticianImages(id);
-     // }
-    
-    
-    // Make a client call to the server, request the 
-    // image of the politician by state & role
-     // retrievePoliticianImages(id){
-         // var self = this;
-         // id = id.replace(/-/g, " ");
-         // var args = "state=" + self.creator.creator.selected_state_id + "&role=" + self.selected_role + "&district=" + id;
-         // get_state_politician_profile(args, self.loadPoliticianImage.bind(self));
-     // }
+
      
      
     // Gets binded to the politicians profile
@@ -31,8 +17,8 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
      
     // Load the politician's image
     loadPoliticianImages(profile){
-        profile = JSON.parse(profile);
         var self = this;
+        profile = JSON.parse(profile);
         
         // When they click the profile picture 
         d3.selectAll(".state-politician-img")
@@ -53,7 +39,7 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
         this.old_states_data = selected.data();
         
         self.removeUI();
-        self.creator.map_file_name  = file_name;
+        self.creator.map_file_name = file_name;
         self.creator.appendToParentMap(self.selected_state_id);
     }
     
@@ -64,6 +50,7 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
         if(self.selected_role != "US Representative")
         {
             self.selected_role = "US Representative";
+            self.creator.overrideClassFunctions(self.selected_role);
             self.generateCongressionalMap(file_name);
         }
     }
@@ -71,11 +58,11 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
     // Pulls senate geo filename and calls generate function
     stateSenateListener(){
         var self = this;
-        // var file_name = "map_data/us_house_borders/CA/us-house-ca.json";
         var file_name = "map_data/congressional_borders/" + self.creator.creator.selected_state_id + "/state_senate/topo_quantize.json";
         if(self.selected_role != "State Senator")
         {
             self.selected_role = "State Senator";
+            self.creator.overrideClassFunctions(self.selected_role);
             self.generateCongressionalMap(file_name);
         }
     }
@@ -88,6 +75,7 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
         if(self.selected_role != "State Representative")
         {
             self.selected_role = "State Representative";
+            self.creator.overrideClassFunctions(self.selected_role);
             self.generateCongressionalMap(file_name);
         }
     }

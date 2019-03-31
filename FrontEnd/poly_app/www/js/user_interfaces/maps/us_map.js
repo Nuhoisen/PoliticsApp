@@ -1,18 +1,11 @@
 
 
 var selected_elem = 0;
-var states_function = function(us){    
+var statesFunction = function(us){    
     return us.objects.us_states;
 }
 
-var us_house_map_function = function(us){
-    return us.objects['2017_us_cd115'];
-}
 
-
-var state_senate_map_function = function(us){
-    return us.objects.combined;//us_states;
-}
 
 
 class USMap extends MapTemplate {
