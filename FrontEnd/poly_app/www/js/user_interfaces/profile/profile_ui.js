@@ -28,6 +28,9 @@ class ProfileUI extends UI{
         d3.selectAll(".profile-name")
             .html(profile['Name']);
  
+        d3.selectAll(".profile-position")
+            .html(profile['District']);
+ 
         addRule(".topic-slider::-moz-range-thumb", 
         {
             "height": "25px",
@@ -197,17 +200,33 @@ class ProfileUI extends UI{
         // super.generateHTML();
         var html = "    <div class='profile-page'> \
                             <div class='profile-header'> \
+                                <div class='profile-bio-container'> \
+                                    <img  class='profile-donate-img' src='img/cutouts/click_donate.png' alt=/> \
+                                    <div class='profile-donate-text'> \
+                                        Donate\
+                                    </div> \
+                                </div> \
                                 <div class='profile-picture-background'> \
                                 </div> \
                                 <img class='profile-picture' src='./css/user_interfaces/profile/temp/alabama_us_senate/Richard_Shelby.png'/> \
-                                <div class='profile-name'> \
-                                    Bob Billard \
+                                <div class='profile-name-position-container'> \
+                                    <div class='profile-name'> \
+                                        Bob Billard \
+                                    </div> \
+                                    <div class='profile-position'> \
+                                        Senator \
+                                    </div> \
                                 </div> \
                             </div> \
                             <div class='profile-body'>  \
                                 <div class='profile-stances-collapsible-container'> \
                                     <div class='profile-stances-collapsible'> \
-                                        Stances \
+                                        <div class='profile-stances-collapsible-text'> \
+                                            Stances \
+                                        </div> \
+                                        <div class='profile-stances-collapsible-img-div'> \
+                                            <img  class='profile-stances-collapsible-img' src='img/cutouts/stances.png' alt=/> \
+                                        </div> \
                                     </div> \
                                     <div class='profile-stances-collapsible-all'> \
                                         Expand All \

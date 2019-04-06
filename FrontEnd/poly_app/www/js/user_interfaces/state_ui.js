@@ -8,7 +8,7 @@ class StateUI extends ImageMapUI{
         // var img_url = this.src;
         self.creator.creator.profile_page.loadPoliticianImage(profile);
         self.creator.creator.toggleActivePage("news");
-        self.removeUI();
+        // self.removeUI();
     }
     
     // Load senator images and add click listeners
@@ -74,15 +74,17 @@ class StateUI extends ImageMapUI{
                          <div  class='senator-img-right-name senator-img-name state-ui'></div> \
                     </div> \
                     \
-                    <div class='state-button-container'> \
+                    <div class='state-ui state-button-container'> \
                         <a  id='state-left-button' class='state-ui state-districts-button state-buttons'>Districts</a> \
                     </div> \
                     \
                     <a class='state-exit-button state-ui'>Back</a>" ;
 
-        $(".ui-body").addClass("state-ui");
-        
-        $(".ui-body").append(html);
+        //MODIFICATIONS
+        // $(".us-map").addClass("state-ui");
+        $(".us-map").append(html);
+        // $(".ui-body").addClass("state-ui");
+        // $(".ui-body").append(html);
         
         // Add State Name to the Label
         self.addLabel(self.selected_state_id);
@@ -164,7 +166,7 @@ class StateUI extends ImageMapUI{
         super(ui_class_name, creator);
         
         this.state_congressional_map = new CongressionalMapTemplate("congressional-map", this, map_features_2);
-        this.footer = new ToggleFooter(this);
+        this.footer = new ToggleFooter("state-ui-footer", this);
         
         this.old_states_data = null;
         this.selected_state_id = null;

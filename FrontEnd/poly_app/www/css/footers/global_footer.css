@@ -10,7 +10,7 @@
 }
 
 .footer-item{
-	width:33.3333333333333333%;
+	width:50%;
 	display:inline-block;
 	float:left;
 	height:100%;	
@@ -32,4 +32,23 @@ i{
 
 .selected{
     background-color: #2d2222;
+}
+
+
+.footer-globe-img{
+    width: auto;
+    height: 75%;
+    
+}
+
+.footer-search-img{
+    width: auto;
+    height: 75%;
+    
+}
+
+.footer-profile-img{
+    width: auto;
+    height: 75%;
+    
 }

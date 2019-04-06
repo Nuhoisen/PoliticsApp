@@ -1,7 +1,7 @@
 .profile-header{
     position:relative;
     width: 100%;  
-    top: 8%;
+    top: 9%;
     /* border: 1px solid #ccc; */
     /* border-radius: 16px;  */
 }
@@ -16,9 +16,35 @@
     width: 100%;
     position: absolute;
     z-index: -100;
-    <!-- border-top-right-radius: 16px; -->
-    <!-- border-top-left-radius: 16px; -->
+    
+}
+
+
+
+.profile-bio-container{
+    display: inline-block;
+    padding: 10px;
+    float: right;
+    cursor: pointer;
+    text-align: center;
+    /* background: white; */
+}
+
+.profile-donate-img{
+    width: 30px;
+    height: auto;
+    
+}
+
+.profile-donate-text{
+    background: white;
 }
 .profile-name{
     color: black;
+    /* display: inline-block; */
+}
+
+.profile-position{
+    /* display: inline-block; */
+    /* float: right; */
 }

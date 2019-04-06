@@ -12,7 +12,7 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
         // var img_url = this.src;
         self.creator.creator.creator.creator.profile_page.loadPoliticianImage(profile);
         self.creator.creator.creator.creator.toggleActivePage("news");
-        self.removeUI();
+        // self.removeUI();
     }
      
     // Load the politician's image
@@ -122,8 +122,10 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
                         </div> \
                         <a class='congressional-exit-button congressional-ui'>Back</a>";
         
-        $(".ui-body").addClass("congressional-ui");
-        $(".ui-body").append(html);
+        // $(".us-map").addClass("congressional-ui");
+        $(".us-map").append(html);
+        // $(".ui-body").addClass("congressional-ui");
+        // $(".ui-body").append(html);
         
         // Activate Highlighting
         switch(self.selected_role){
@@ -171,14 +173,19 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
                 self.stateHouseListener();
             });
                 
-                
+        // In congressional UI, apply hard-exit
         d3.select(".congressional-exit-button")
             .on("click", function(){
                 self.selected_role = "State Senator";   //reset role
-                self.removeUI();
-                self.creator.zoomOut();
-                self.creator.removeMapPaths();
-                self.creator.creator.creator.generateMapPaths("map_data/new_simpler_us_topo.json"); //us_map.generateMapPaths
+                // Calling zoomout, reapplies UI, so need to remove the UI once it finishes
+                self.creator.zoomOut().on("end", function(){
+                    self.removeUI();
+                    self.creator.removeMapPaths();
+                    self.creator.creator.creator.generateMapPaths("map_data/new_simpler_us_topo.json"); //us_map.generateMapPaths
+                    
+                });
+                
+                
             });
          
         
@@ -198,7 +205,7 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
     
     constructor(ui_class_name, creator, attr=null){
        super(ui_class_name, creator,attr);
-       this.footer = new ToggleFooter(this);
+       this.footer = new ToggleFooter("congressional-ui-footer", this);
        this.selected_role = "State Senator";
        this.selected_state_id = null;
        this.selected_district = null;

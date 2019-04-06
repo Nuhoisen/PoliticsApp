@@ -33,13 +33,17 @@ class ToggleFooter extends Footer {
 
     generateHTML(){
         var self = this;
-        super.generateHTML();
+        // super.generateHTML();
         
-        var html = "<div class='close-btn'>☰</div>\
-                    <div class='vertical-menu'></div>"
+        var html = "<div class='footer-body " + self.class_name + "'>\
+                        <div class='close-btn'>☰</div>\
+                        <div class='vertical-menu'></div>\
+                    </div>"
         
-        $("."+super.getName()).append(html);
-        $("."+super.getName()).addClass("cart-drawer cart-drawer-bottom " + self.creator.class_name)
+         // $("."+self.creator.class_name).append(html);
+         $(".us-map").append(html);
+        // $("."+super.getName()).append(html);
+        $("."+self.class_name).addClass("cart-drawer cart-drawer-bottom " + self.creator.class_name);
         
         self.generateList();
         
@@ -87,8 +91,8 @@ class ToggleFooter extends Footer {
                 });
     }
 
-    constructor(creator){
-        super(creator);
+    constructor(footer_class_name, creator, attr=null){
+        super(footer_class_name, creator, attr);
     }
     
 }

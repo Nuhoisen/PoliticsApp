@@ -4,27 +4,33 @@ class UI {
 
     unfocus(){
         var self = this;
-        d3.selectAll("."+self.class_name)
-            // .style("zIndex", -1)
+        d3.selectAll("."+self.class_name +" *")
             .style("display","none");
+        d3.selectAll("."+self.class_name)
+            .style("display","none");
+            
     }
 
     refocus(){
         var self = this;
+        d3.selectAll("."+self.class_name +" *")
+            .style("display", "");
+            
         d3.selectAll("."+self.class_name)
-            // .style("zIndex", 1)
-            .style("display", "block");
+            .style("display", "block");            
+            
+        
     }
     
-    generateCongressionalMap(file_name){
-        var self = this;
-        var selected = d3.select("#"+self.selected_state_id);
-        this.old_states_data = selected.data();
+    // generateCongressionalMap(file_name){
+        // var self = this;
+        // var selected = d3.select("#"+self.selected_state_id);
+        // this.old_states_data = selected.data();
         
-        self.removeUI();
-        self.state_congressional_map.map_file_name  = file_name;
-        self.state_congressional_map.appendToParentMap(self.selected_state_id);
-    }
+        // self.removeUI();
+        // self.state_congressional_map.map_file_name  = file_name;
+        // self.state_congressional_map.appendToParentMap(self.selected_state_id);
+    // }
     loadImages(){}
 
 
@@ -41,14 +47,15 @@ class UI {
         var self = this;
         self.footer.removeFooter();
         d3.selectAll(".ui-body").remove();
+        d3.selectAll("." + self.class_name).remove();
         self.ui_generated = false;
     }
 
     generateHTML(){
-         var html = "<div class='ui-body'>\
-                    </div>";
+         // var html = "<div class='ui-body'>\
+                    // </div>";
     
-        $("body").append(html);
+        // $("body").append(html);
         // $("#map-holder").append(html);
     }
     

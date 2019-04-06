@@ -22,12 +22,12 @@
 
 .header-search-span{
     text-align: center;
-    height: 33%;
+    height: 100%;
     display: inline-block;
     width: 12%;
     float: right;
     position: relative;
-    top: 19%;
+    top: 6%;
 }
     
 
@@ -35,6 +35,10 @@
     font-size: 5vh;
 }    
 
+.header-search-img{
+    width: auto;
+    height: 89%;
+}
 
 .global-search-container{
     display: inline-block;

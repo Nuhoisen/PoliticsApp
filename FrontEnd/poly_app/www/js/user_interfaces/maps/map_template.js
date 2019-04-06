@@ -20,7 +20,7 @@ class MapTemplate extends UI {
         var midX = ($("#map-holder").width() - self.minZoom * self.w) / 2;
         var midY = ($("#map-holder").height() - self.minZoom * self.h) / 2;
         // change zoom transform to min zoom and centre offsets
-        self.svg
+        return self.svg
             .transition()
             .duration(500)
             .call(self.zoom.transform, d3.zoomIdentity.translate(midX, midY).scale(self.minZoom));

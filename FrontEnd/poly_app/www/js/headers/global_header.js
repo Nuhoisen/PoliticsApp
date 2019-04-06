@@ -25,9 +25,12 @@ class GlobalHeader extends Header{
                                     <input class='global-search' id='global-search-id' type='text' placeholder='Search..' name='search'> \
                                 </div> \
                                 <span class='header-search-span'>\
-                                    <i class='fas fa-search header-search-icon'></i> \
+                                    <img class='header-search-img' src='img/cutouts/search.png' alt=/> \
                                 </span>\
                             </div> ";
+                            
+        
+       
                                 
         $(".global-ui-body").append(header_html);  //decide what to apply : ui-body
 

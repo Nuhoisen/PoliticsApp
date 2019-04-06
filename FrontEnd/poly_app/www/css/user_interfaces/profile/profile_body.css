@@ -1,7 +1,7 @@
 .profile-body{
     width: 100%;
     position: relative;
-    top: 8%;
+    top: 9%;
     bottom: 10%;
 }
 
@@ -25,6 +25,24 @@
       padding-left: 5px;
       padding-bottom: 5px;
 }
+
+.profile-stances-collapsible-text{
+    display: inline-block;
+}
+
+.profile-stances-collapsible-img-div{
+    display: inline-block;
+}
+
+.profile-stances-collapsible-img{
+    width: auto;
+    height: 5vh;
+    
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
 
 .stances-active, .profile-stances-collapsible:active{
       background-color: #ccc;

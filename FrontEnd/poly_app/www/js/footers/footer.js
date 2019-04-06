@@ -5,9 +5,10 @@ class Footer{
 
     generateHTML(){
         var self = this;
-        var html = "<div class='footer-body'></div>";
+        var html = "<div class='footer-body' '" + self.class_name + "'></div>";
         
-        $(".ui-body").append(html);  //decide what to apply : ui-body
+        $(".global-ui-body").append(html);  //decide what to apply : ui-body
+        // $(".ui-body").append(html);  //decide what to apply : ui-body
         
         self.ui_generated = true;
     } 
@@ -24,7 +25,9 @@ class Footer{
         d3.selectAll(".footer-body").remove();
     }
  
-    constructor(creator){
+    constructor(footer_class_name, creator, attr=null){
         this.creator = creator;
+        this.class_name = footer_class_name;
+        this.attr = attr;
     }
 }

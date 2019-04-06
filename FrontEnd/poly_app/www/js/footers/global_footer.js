@@ -27,30 +27,44 @@ class GlobalFooter extends Footer {
             });
     }
     
+    // Calls the super constructor which implements a footer under the global-ui-body
+    // This creates customer global footer html and appends this to the body too.
     generateHTML(){
         var self = this;
-        super.generateHTML();
-        
-
-        var html = "<div class='global-footer' id='footerHolder'> \
+        // super.generateHTML();
+        var html = "<div class='global-footer' id='footerHolder' '" + self.class_name + "'> \
                         <span class='footer-item' id='news'> \
-                            <i class='fas fa-newspaper'></i> \
+                            <img class='footer-profile-img' src='img/cutouts/profile.png' alt=/> \
                         </span> \
                         <span class='footer-item selected' id='map'> \
-                            <i class='fas fa-globe '></i> \
-                        </span> \
-                        <span class='footer-item' id='search'> \
-                            <i class='fas fa-search'></i> \
+                            <img class='footer-globe-img' src='img/cutouts/globe_2.png' alt=/> \
                         </span> \
                     </div>";
+                    
+                    // <span class='footer-item' id='search'> \
+                            // <img class='footer-search-img' src='img/cutouts/search.png' alt=/> \
+                        // </span> \
+
+        // var html = "<div class='global-footer' id='footerHolder'> \
+                        // <span class='footer-item' id='news'> \
+                            // <i class='fas fa-newspaper'></i> \
+                        // </span> \
+                        // <span class='footer-item selected' id='map'> \
+                            // <i class='fas fa-globe '></i> \
+                        // </span> \
+                        // <span class='footer-item' id='search'> \
+                            // <i class='fas fa-search'></i> \
+                        // </span> \
+                    // </div>";
         
         $(".global-ui-body").append(html);  //decide what to apply : ui-body
         self.addListeners();
     } 
     
     
-    constructor(creator){
-        super(creator);
+    constructor(footer_class_name, creator, attr=null){
+        super(footer_class_name, creator, attr);
+        
     }
     
 }

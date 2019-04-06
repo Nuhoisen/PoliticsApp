@@ -40,7 +40,9 @@ class GlobalUI extends UI{
         self.footer.toggleFooter(id);
     }
 
-  
+    // This function overrides UI's
+    // it appends HTML to the Body rather than the container?
+    // Possibly change so that it applies it to the super's container
     generateHTML(){
         var self = this;
         var html = "<div class='global-ui-body'> \
@@ -59,7 +61,7 @@ class GlobalUI extends UI{
     
     constructor(ui_class_name, creator, attr=null){
         super(ui_class_name, creator);
-        this.footer = new GlobalFooter(this);
+        this.footer = new GlobalFooter("global-ui-footer", this);
         this.header = new GlobalHeader(this);
         
         this.us_state_map = new USMap("us-map", this, map_features_1);
