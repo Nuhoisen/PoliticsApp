@@ -9,7 +9,6 @@ class GlobalFooter extends Footer {
          var all_fters = d3.selectAll(".footer-item");
          all_fters.classed("selected", false);
          d3.select("#"+id).classed("selected", true);
-                
     }
     
     
@@ -31,8 +30,7 @@ class GlobalFooter extends Footer {
     // This creates customer global footer html and appends this to the body too.
     generateHTML(){
         var self = this;
-        // super.generateHTML();
-        var html = "<div class='global-footer' id='footerHolder' '" + self.class_name + "'> \
+        var html = "<div class='global-footer " + self.class_name + "' id='footerHolder'> \
                         <span class='footer-item' id='news'> \
                             <img class='footer-profile-img' src='img/cutouts/profile.png' alt=/> \
                         </span> \
@@ -57,9 +55,11 @@ class GlobalFooter extends Footer {
                         // </span> \
                     // </div>";
         
-        $(".global-ui-body").append(html);  //decide what to apply : ui-body
+        $("."+self.creator.class_name).append(html);  //decide what to apply : ui-body
         self.addListeners();
     } 
+    
+    
     
     
     constructor(footer_class_name, creator, attr=null){

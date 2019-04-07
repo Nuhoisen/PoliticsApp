@@ -10,9 +10,6 @@ class MapTemplate extends UI {
     zoomed(self){}
     
     initiateZoom() {}
-    
-    
-    
      // Resets map while performing half-second transition
     zoomOut(){
         var self = this;
@@ -117,9 +114,8 @@ class MapTemplate extends UI {
         var self = this;
         self.map_file_name = file_name;
         self.path_ids = [];
-        d3.json(this.map_file_name, function(error, us) {
-            if (error) throw error;
-            
+        return d3.json(this.map_file_name).then(function( us) {
+           
             // Draw states
             self.countriesGroup.selectAll("path")
                 .data(topojson.feature(us, self.access_hook(us)).features)
@@ -150,9 +146,10 @@ class MapTemplate extends UI {
                   .attr("height", $("#map-holder").height())
                 ;
                 self.initiateZoom();
-            });
-        });
+            });  
+        })
     }
+    
     
     generateContainer(){
         var self = this;

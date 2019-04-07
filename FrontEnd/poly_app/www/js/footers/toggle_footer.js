@@ -1,15 +1,14 @@
 
 class ToggleFooter extends Footer {
 
-
+    // Selects id's function Paths and applies them to the toggle list
+    // This function must occurs AFTER the map paths are generated and labeled
     generateList(){
         var self = this;
-        var path_ids = self.creator.creator.path_ids;
+        var path_ids = self.creator.creator.path_ids;  // congressional_map.path_ids
         var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
         path_ids.sort(collator.compare);
         
-        
-        // .replace(/-/, ' ');
         d3.select("div.vertical-menu").selectAll("a").remove();
         d3.select("div.vertical-menu").selectAll("a")
             .data(path_ids)
@@ -27,31 +26,28 @@ class ToggleFooter extends Footer {
                 self.creator.setLocationInfo(id);
                 self.creator.addLabel();   // congressional_ui.addLabel. This sets the state-id
                 self.creator.retrievePoliticianImages(id);
-                // self.creator.retrieveSenatorImages(id);
             });
     } 
 
+    
+    // This footer is appended into the general HTML body
+    // This is not appended to it's creator's class tag(s) 
     generateHTML(){
         var self = this;
-        // super.generateHTML();
-        
         var html = "<div class='footer-body " + self.class_name + "'>\
                         <div class='close-btn'>☰</div>\
                         <div class='vertical-menu'></div>\
-                    </div>"
-        
-         // $("."+self.creator.class_name).append(html);
-         $(".us-map").append(html);
-        // $("."+super.getName()).append(html);
+                    </div>";
+        $(".map-profile").append(html);
         $("."+self.class_name).addClass("cart-drawer cart-drawer-bottom " + self.creator.class_name);
         
         self.generateList();
         
     }
 
+    
     toggleOpen(drawer){
-        drawer
-            .transition()
+        drawer.transition()
             .style("height", "60%")
             .on('end', function(){
                 d3.select(".close-btn")
@@ -71,12 +67,11 @@ class ToggleFooter extends Footer {
             });
         drawer.classed("cart-drawer-active", false);
     }
+  
     
     addListeners(){
         self = this;
         // Add any existing listeners from parent class
-        super.addListeners();
-        
          d3.select(".close-btn")
                 .on("click", function(){
                     var drawer = d3.select(".cart-drawer");
@@ -94,5 +89,6 @@ class ToggleFooter extends Footer {
     constructor(footer_class_name, creator, attr=null){
         super(footer_class_name, creator, attr);
     }
-    
+ 
+ 
 }

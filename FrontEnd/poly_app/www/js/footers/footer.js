@@ -1,30 +1,13 @@
 
 
 class Footer{
- 
 
-    generateHTML(){
-        var self = this;
-        var html = "<div class='footer-body' '" + self.class_name + "'></div>";
-        
-        $(".global-ui-body").append(html);  //decide what to apply : ui-body
-        // $(".ui-body").append(html);  //decide what to apply : ui-body
-        
-        self.ui_generated = true;
-    } 
- 
-    getName(){
-        return "footer-body";
-    }
- 
-    addListeners(){
-        
-    }
- 
+    // All footers should have their class name applied in the generate HTML function
+    // This ensures they can be removed by this class name
     removeFooter(){
-        d3.selectAll(".footer-body").remove();
+        d3.selectAll("." + self.class_name).remove();
     }
- 
+
     constructor(footer_class_name, creator, attr=null){
         this.creator = creator;
         this.class_name = footer_class_name;

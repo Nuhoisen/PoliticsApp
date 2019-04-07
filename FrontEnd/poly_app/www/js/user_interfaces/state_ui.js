@@ -1,4 +1,5 @@
 
+
 class StateUI extends ImageMapUI{
     
     // Gets binded to the politicians profile
@@ -41,7 +42,7 @@ class StateUI extends ImageMapUI{
     generateCongressionalMap(file_name){
         var self = this;
         var selected = d3.select("#"+self.selected_state_id);
-        this.old_states_data = selected.data();
+        // this.old_states_data = selected.data();
         
         self.removeUI();
         self.state_congressional_map.map_file_name = file_name;
@@ -82,7 +83,7 @@ class StateUI extends ImageMapUI{
 
         //MODIFICATIONS
         // $(".us-map").addClass("state-ui");
-        $(".us-map").append(html);
+        $(".map-profile").append(html);
         // $(".ui-body").addClass("state-ui");
         // $(".ui-body").append(html);
         
@@ -133,9 +134,8 @@ class StateUI extends ImageMapUI{
         
         d3.select(".state-districts-button")
             .on("click", function(){
-                var file_name = "./map_data/congressional_borders/" + self.selected_state_id + "/state_senate/topo_quantize.json";
-                
-                console.log(file_name)
+                // var file_name = "./map_data/congressional_borders/" + self.selected_state_id + "/state_senate/topo_quantize.json";
+                var file_name = server_url+ ":5000/request_state_senate/" + self.selected_state_id;
                 self.removeUI();
                 self.generateCongressionalMap(file_name);
             });
@@ -168,7 +168,7 @@ class StateUI extends ImageMapUI{
         this.state_congressional_map = new CongressionalMapTemplate("congressional-map", this, map_features_2);
         this.footer = new ToggleFooter("state-ui-footer", this);
         
-        this.old_states_data = null;
+        // this.old_states_data = null;
         this.selected_state_id = null;
         this.selected_district = null;
         this.selected_role = "US Senator";

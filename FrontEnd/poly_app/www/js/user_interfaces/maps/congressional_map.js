@@ -123,7 +123,6 @@ class CongressionalMapTemplate extends MapTemplate{
         d3.select("svg.states-svg").select("path.state-senate-borders").remove();
         reg_flag.destroy();
         
-        
         self.svg.on("mousedown.zoom", null);
         self.svg.on("mousemove.zoom", null);
         self.svg.on("dblclick.zoom", null);
@@ -196,10 +195,11 @@ class CongressionalMapTemplate extends MapTemplate{
                 self.countriesGroup.selectAll("path").remove();
                 self.svg.select("path.state-borders").remove();
                 self.svg.select("path.state-senate-borders").remove();
-                self.generateMapPaths(self.map_file_name);
-                self.svg.style("opacity", "1");
-                self.ui.setStateInfo(self.selected_state_id);
-                self.ui.applyUI();
+                self.generateMapPaths(self.map_file_name).then(function(){                    
+                    self.svg.style("opacity", "1");
+                    self.ui.setStateInfo(self.selected_state_id);
+                    self.ui.applyUI();
+                });
             });
             
         
@@ -220,6 +220,7 @@ class CongressionalMapTemplate extends MapTemplate{
 
 
 var map_features_2 = {
+    // "file_name" : "map_data/congressional_borders/Alabama/state_house/topo_simple.json", //
     "file_name" : "map_data/congressional_borders/Alabama/state_house/topo_simple.json", //
     "border_class_name" :"state-senate-borders",
     "feature_access_hook": stateSenateMapFunction

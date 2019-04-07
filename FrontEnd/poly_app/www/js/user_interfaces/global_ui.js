@@ -1,5 +1,6 @@
 var map_features_1 = {
-    "file_name" : "map_data/new_simpler_us_topo.json",
+    // "file_name" : "map_data/new_simpler_us_topo.json",
+    "file_name" : us_map_url,
     "border_class_name" :"state-borders",
     "feature_access_hook": statesFunction
 }
@@ -18,9 +19,6 @@ var map_features_2 = {
 }
 
 class GlobalUI extends UI{
-    
-    
-    
     
     toggleActivePage(id){
         var self = this;
@@ -45,12 +43,12 @@ class GlobalUI extends UI{
     // Possibly change so that it applies it to the super's container
     generateHTML(){
         var self = this;
-        var html = "<div class='global-ui-body'> \
+        var html = "<div class='"+self.class_name+ "'> \
                     </div>";
         $("body").append(html);
         
-        self.footer.generateHTML();
         //THIS WILL DEPEND ON VIEW- CHANGE LATER
+        self.footer.generateHTML();
         self.us_state_map.generateMap();
         self.profile_page.generateHTML();
         self.profile_page.unfocus();
@@ -62,11 +60,10 @@ class GlobalUI extends UI{
     constructor(ui_class_name, creator, attr=null){
         super(ui_class_name, creator);
         this.footer = new GlobalFooter("global-ui-footer", this);
-        this.header = new GlobalHeader(this);
+        this.header = new GlobalHeader("global-ui-header", this);
         
-        this.us_state_map = new USMap("us-map", this, map_features_1);
+        this.us_state_map = new USMap("map-profile", this, map_features_1);
         this.profile_page = new ProfileUI("profile-page", this);
-        
         
         this.selected_page = this.us_state_map;
         

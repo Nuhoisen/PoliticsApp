@@ -20,7 +20,7 @@ class GlobalHeader extends Header{
     // Generate template HTML
     generateHTML(){
         var self = this;
-        var header_html = " <div class='global-header' id='navbar'>  \
+        var header_html = " <div class='"+ self.class_name + "' id='navbar'>  \
                                 <div class='global-search-container' > \
                                     <input class='global-search' id='global-search-id' type='text' placeholder='Search..' name='search'> \
                                 </div> \
@@ -29,10 +29,8 @@ class GlobalHeader extends Header{
                                 </span>\
                             </div> ";
                             
+        $("." + self.creator.class_name).append(header_html);  //decide what to apply : ui-body 
         
-       
-                                
-        $(".global-ui-body").append(header_html);  //decide what to apply : ui-body
 
         
         self.addListeners();
@@ -204,8 +202,8 @@ class GlobalHeader extends Header{
       
         }
 
-    constructor(creator){
-        super(creator);
+    constructor(header_class_name, creator, attrs=null){
+        super(header_class_name, creator, attrs);
     }
 
 
