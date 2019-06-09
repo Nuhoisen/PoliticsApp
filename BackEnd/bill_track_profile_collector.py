@@ -1,3 +1,4 @@
+import re
 import os, sys
 import json
 import urllib3
@@ -130,14 +131,65 @@ def get_committees(soup): #soup):#
 
 def get_img_url(id):
         return "https://www.billtrack50.com/Handlers/LegislatorImageHandler.ashx?id=" + str(id)
+
+        
+def get_facebook(soup):
+    hrefs = soup.find_all('a', href=re.compile("facebook"))
+    
+    facebook = ""
+    backup_facebook = ""
+    for href in hrefs:
+        if "LegiNation" in href['href']:
+            backup_facebook = href['href']
+        else:
+            facebook = href['href']
+            
+    if facebook is not "":
+        return facebook.replace("'", "''")
+    else:
+        return backup_facebook.replace("'", "''")
+    
+# Retrieves twitter handle
+def get_twitter(soup):
+    hrefs = soup.find_all('a', href=re.compile("twitter"))
+    
+    twitter = ""
+    backup_twitter = ""
+    for href in hrefs:
+        if "BillTrack50" in href['href']:
+            backup_twitter = href['href']
+        else:
+            twitter = href['href']
+            
+    if twitter is not "":
+        return twitter.replace("'", "''")
+    else:
+        return backup_twitter.replace("'", "''")
+        
+def get_email(soup):
+    hrefs = soup.find_all('a', href=re.compile("mailto:"))
+    email = ""
+    
+    for href in hrefs:
+        email = href['href']
+    
+    return email.replace("'", "''")
+        
+def get_bio(soup):
+    bio = soup.find("span", id="lblBio")
+    bio = str(bio)
+    # print((bio))
+    bio = bio.replace("'", "''")
+    bio = bio.replace("_", "[_]")
+    bio = bio.replace("%", "[%]")
+    print(len(bio))
+    return bio
+    
     
 def run():    
-
     passed = 0
     failed = 0
     
-    #for url in urls:
-    #    print(url)
     for i in range(181, 30000):    
         try:
             billtrack = url+str(i)
@@ -164,30 +216,6 @@ def run():
                 "BillTrackURL" : billtrack, "ImageURL": img_url}
                 my_sql.add_formatted_entry(sql_profile)
                 
-                # sponsored_bills = None
-                # try:
-                    # sponsored_bills = get_sponsored_bills(soup).strip()
-                # except AttributeError as e:
-                    # sponsored_bills = []
-
-                # committees = None
-                # try:
-                    # committees = get_committees(soup).strip()
-
-                # except AttributeError as e:
-                    # committees = []
-                
-                    
-                
-                
-                
-                # profile = {"Name":name, "District": district, "BillTrack": billtrack, "FMLink": follow_money, "Ballotpedia": ballotpedia, "SponsoredBills": sponsored_bills, "Committees": committees}
-                
-                # legislature_dict[state][role].append(profile)
-                
-                
-                #print(legislature_dict)
-                
                 passed+=1
                 
         except AttributeError or TypeError as e:
@@ -203,7 +231,82 @@ def run():
     print("Passed: %d" % passed)
     print("Failed: %d" % failed)
             
-    # with open('data.json', 'w') as fp:
-        # json.dump( legislature_dict , fp)
+def run_social_media():
+    entries = {}
+    row_entries = my_sql.retrieve_billtrack_urls()
+    for entry in row_entries[2583:]:
+        try:
+            billtrack = entry[0]
+            print(billtrack)
+            r = http.request('GET', billtrack)
             
-run()            
+            soup = BeautifulSoup(r.data, "lxml")
+            
+            # hrefs = soup.find_all('a', href=True)
+            facebook = get_facebook(soup)
+            print(facebook)
+            
+            twitter =  get_twitter(soup)
+            print(twitter)
+            
+            email = get_email(soup)
+            print(email)
+            
+            entries['Twitter'] = twitter 
+            entries['Facebook'] = facebook
+            entries['Email'] = email
+            entries['BillTrack'] = billtrack
+            my_sql.update_with_social_media(entries)
+        except AttributeError or TypeError as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
+        
+            print("Failed link: %s" % billtrack)
+            failed += 1
+            print(e)
+            
+
+    print("Passed: %d" % passed)
+    print("Failed: %d" % failed)
+
+def run_bio():
+    entries = {}
+    row_entries = my_sql.retrieve_billtrack_urls()
+    for entry in row_entries[3339:]:
+        try:
+            billtrack = entry[0]
+            print(billtrack)
+            r = http.request('GET', billtrack)
+            
+            soup = BeautifulSoup(r.data, "lxml")
+            
+            # hrefs = soup.find_all('a', href=True)
+            bio = get_bio(soup)
+            
+            entries['Bio'] = bio 
+            entries['BillTrack'] = billtrack
+            
+            my_sql.update_with_bio(entries)
+        except AttributeError or TypeError as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
+        
+            print("Failed link: %s" % billtrack)
+            
+            print(e)
+            
+
+    print("Passed: %d" % passed)
+    print("Failed: %d" % failed)
+# print("mailto:Angelo.D'Emilia@mahouse.gov".replace("'", "''"))
+
+# run_social_media()
+run_bio()
+
+
+# r = http.request('GET', 'https://www.billtrack50.com/LegislatorDetail/15626' )
+# soup =   BeautifulSoup(r.data, "lxml")
+# bio = soup.find("span", id="lblBio")
+

@@ -1,0 +1,182 @@
+.stances-active, .profile-subject-collapsible:active{
+      background-color: #ccc;
+}
+
+.profile-subject-collapsible-all{
+    color: #07C;
+    display: inline-block;
+    width: 24%;
+    text-align: right;
+    font-size: 70%;
+    
+    padding-top: 10px;
+    padding-right: 5px;
+    padding-bottom: 10px;
+    
+}
+
+.stances-active, .profile-subject-collapsible-all:active{
+      background-color: #ccc;
+}
+
+
+.profile-subject-container{
+    all: initial;
+    padding-top: 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
+    font: 16px Arial;
+}
+
+.topics-container{
+    
+    
+}
+
+.topic-body{
+    display: none;
+    /* height: 10%; */
+    /* height needs to be set to a proportional percentage */
+}
+
+.topic-slide-container {
+   width: 100%; /* Width of the outside container */
+   text-align:center;
+   background-image: linear-gradient(to right, blue, red);
+   padding: 10px 0 10px 0;
+   border-radius: 20px;
+}
+
+.topic-collapsible{
+    text-align:center;
+    color: black;
+    background-color: beige;
+    padding: 10px;
+    text-align: left;
+    
+}
+
+.topic-active, .topic-collapsible:hover{
+      background-color: #ccc;
+      display: block;
+}
+
+
+.topic-left{
+    text-align: left;
+    display:inline-block;
+    position:static;
+    width:49%;
+    color: black;
+    /* background-image: linear-gradient(to right, blue, purple); */   
+}
+
+
+.topic-right{
+    text-align: right;
+    display:inline-block;
+    position:static;
+    width:49%;
+    color: black;
+    /* background-image: linear-gradient(to right, purple, red); */
+}
+
+
+/* The slider itself */
+.topic-slider {
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 90%; /* Full-width */
+  height: 25px; /* Specified height */
+  background: #d3d3d3; /* Grey background */
+  border-radius: 30px;
+  outline: none; /* Remove outline */
+  opacity: 1; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+.topic-slider:hover {
+  opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.topic-slider::-webkit-slider-thumb{
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  height: 25px;
+  border-radius: 50%; 
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: url('./temp/alabama_us_senate/Richard_Shelby.png'); /*#4CAF50;  Green background */ 
+  background-size: 100%;
+  cursor: pointer; /* Cursor on hover */
+}
+
+/* Pop on hover */
+.topic-slider::-webkit-slider-thumb:hover{  
+  height: 30px;
+  width: 30px;
+}
+
+.topic-slider::-moz-range-thumb {
+    
+  height: 25px;
+  border-radius: 50%; 
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: url('./temp/alabama_us_senate/Richard_Shelby.png');  /* #4CAF50; Green background  */
+  background-size: 100%;
+  cursor: pointer; /* Cursor on hover */
+}
+
+/* Pop on hover */
+.topic-slider::-moz-range-thumb:active{  
+  height: 30px;
+  width: 30px;
+}
+
+
+.topic-stance-source-container{
+    cursor: pointer;
+    color: black;
+    padding: 5px;
+    display: inline-block;
+    width: 66%;
+}
+.topic-stance-sources-collapsible{
+    
+}
+.topic-stance-sources-collapsible:hover{
+      background-color: #ccc;
+}
+
+.topic-source-list{
+        font-size: 90%;
+        display: none;
+}
+
+
+.topic-perceived-stance{
+    cursor: pointer;
+    color: black;
+    text-align: right;
+    padding: 5px;
+    display: inline-block;
+    width: 33%;
+    position: absolute;
+}
+
+.profile-subject-collapsible-img-div{
+    display: inline-block;
+}
+
+.profile-subject-collapsible-img{
+    width: auto;
+    height: 5vh;
+    
+    margin-left: auto;
+    margin-right: auto;
+}

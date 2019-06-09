@@ -1,5 +1,5 @@
 var httpRequest = new XMLHttpRequest();
-url = "http://50.53.206.60:5000"//"http://localhost:5000"
+
 
 
 
@@ -36,19 +36,19 @@ function acceptFile(callBack){
 
 function get_senator_prof_imgs(args, callback){
     httpRequest.onreadystatechange = acceptFile.bind(this, callback);
-    httpRequest.open('GET', url +'/request_senator_profile_img?'+args, true);
+    httpRequest.open('GET', profile_url +'/request_senator_profile_img?'+args, true);
     httpRequest.send();    
 }
 
 function get_state_politician_prof_img(args, callback){
     httpRequest.onreadystatechange = acceptFile.bind(this, callback);
-    httpRequest.open('GET', url +'/request_state_politician_profile_img?'+args, true);
+    httpRequest.open('GET', profile_url +'/request_state_politician_profile_img?'+args, true);
     httpRequest.send();    
 }
 
 function get_state_politician_profile(args, callback){
     httpRequest.onreadystatechange = acceptFile.bind(this, callback);
-    httpRequest.open('GET', url +'/request_state_politician_profile?'+args, true);
+    httpRequest.open('GET', profile_url +'/request_state_politician_profile?'+args, true);
     httpRequest.send();    
 }
 
@@ -56,7 +56,7 @@ function get_state_politician_profile(args, callback){
 function get_wildcard_search(args, callback){
     
     httpRequest.onreadystatechange = acceptFile.bind(this, callback);
-    httpRequest.open('GET', url +'/request_wildcard_match?'+args, true);
+    httpRequest.open('GET', profile_url +'/request_wildcard_match?'+args, true);
     httpRequest.send();    
 }
 

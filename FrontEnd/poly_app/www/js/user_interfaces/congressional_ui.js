@@ -47,7 +47,7 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
         var self = this;
         // var file_name = "map_data/us_house_borders/CA/us-house-ca.json";
         // var file_name = "map_data/congressional_borders/" + self.creator.creator.selected_state_id + "/us_representatives/us-house.json";
-        var file_name = server_url + ":5000/request_us_house/" + self.creator.creator.selected_state_id ;
+        var file_name = server_ip + ":5000/request_us_house/" + self.creator.creator.selected_state_id ;
         if(self.selected_role != "US Representative")
         {
             self.selected_role = "US Representative";
@@ -60,7 +60,7 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
     stateSenateListener(){
         var self = this;
         // var file_name = "http://localhost:6060/request_map/congressional_borders/" + self.creator.creator.selected_state_id + "/state_senate/topo_quantize.json";
-        var file_name = server_url + ":5000/request_state_senate/" + self.creator.creator.selected_state_id;
+        var file_name = server_ip + ":5000/request_state_senate/" + self.creator.creator.selected_state_id;
         if(self.selected_role != "State Senator")
         {
             self.selected_role = "State Senator";
@@ -73,7 +73,7 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
     // Pulls house geo filename and calls generate function
     stateHouseListener(){
         var self = this;
-        var file_name = server_url + ":5000/request_state_house/" + self.creator.creator.selected_state_id;
+        var file_name = server_ip + ":5000/request_state_house/" + self.creator.creator.selected_state_id;
         if(self.selected_role != "State Representative")
         {
             self.selected_role = "State Representative";

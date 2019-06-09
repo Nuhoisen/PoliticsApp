@@ -18,14 +18,16 @@
     <link rel="stylesheet" href="css/headers/search_header.css"/>
 
     <link rel="stylesheet" href="css/user_interfaces/profile/profile_body.css"/>
+    <link rel="stylesheet" href="css/user_interfaces/profile/profile_body_stances.css"/>
+    <link rel="stylesheet" href="css/user_interfaces/profile/profile_body_bio.css"/>
     <link rel="stylesheet" href="css/user_interfaces/profile/profile_header.css"/>
     <link rel="stylesheet" href="css/user_interfaces/profile/profile_container.css"/>
     <!-- js libraries -->
     <script type="text/javascript" src="js/d3/d3.v4.min.js"></script>
     <script type="text/javascript" src="js/d3/topojson.v2.min.js"></script>
     <script type="text/javascript" src="js/jquery/jquery.min.js"></script>
-    <script  type="text/javascript" src="js/d3/d3-dsv.v1.min.js"></script>
-    <script  type="text/javascript" src="js/d3/d3-fetch.v1.min.js"></script>
+    <script type="text/javascript" src="js/d3/d3-dsv.v1.min.js"></script>
+    <script type="text/javascript" src="js/d3/d3-fetch.v1.min.js"></script>
     <!-- font-awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
@@ -35,22 +37,26 @@
 
 <body>
     <script type="text/javascript">
-        var server_url = "http://50.53.206.60";
-        var us_map_url = server_url+":5000/request_map/new_simpler_us_topo.json"
+        $.getJSON('https://ipapi.co/json/', function(data) {
+          console.log(JSON.stringify(data, null, 2));
+        });
+        
+        <!-- var server_ip = "http://50.45.231.78"; -->
+        var server_ip = "http://localhost";
+        var us_map_url = server_ip+":5000/request_map/new_simpler_us_topo.json"
+        var profile_url = server_ip+ ":5000";//"http://localhost:5000"
     </script>
-
    
-   <script type="text/javascript" src="js/headers/header.js"></script>
-   <!-- <script type="text/javascript" src="js/headers/search_header.js"></script> -->
-   <script type="text/javascript" src="js/headers/global_header.js"></script>
-   <script type="text/javascript" src="js/user_interfaces/UI.js"></script>
-   <script type="text/javascript" src="js/user_interfaces/profile/profile_ui.js"></script>
-   
+    <script type="text/javascript" src="js/headers/header.js"></script>
+    <script type="text/javascript" src="js/headers/global_header.js"></script>
+    <script type="text/javascript" src="js/user_interfaces/UI.js"></script>
+    <script type="text/javascript" src="js/user_interfaces/profile/profile_ui.js"></script>
+    
     <script type="text/javascript" src="js/client/client.js"></script>
     <script type="text/javascript" src="js/registry_flag.js"></script>
     <script type="text/javascript" src="js/footers/footer.js"></script>
     <script type="text/javascript" src="js/footers/toggle_footer.js"></script>
-        
+    
     <script type="text/javascript" src="js/user_interfaces/image_map_ui.js"></script>
     <script type="text/javascript" src="js/user_interfaces/congressional_ui.js"></script>
     <script type="text/javascript" src="js/user_interfaces/maps/map_template.js"></script>

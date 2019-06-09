@@ -10,7 +10,7 @@ class SqlStorer:
     
     
     # CONSTRUCTOR
-    def __init__(self, db_name="PoliticianInfo", table_name = "test"):
+    def __init__(self, db_name="PoliticianInfo", table_name = "PoliticianTable"):
         self.c_query = ""
         self.c_table_name = table_name
         self.c_db_name = db_name
@@ -62,12 +62,35 @@ class SqlStorer:
 
         
         
+        
+    def retrieve_billtrack_urls(self):
+        formatted_entry = (self.c_table_name)
+        self.c_query = "SELECT BillTrackURL FROM %s; " % formatted_entry
+        
+        cursor = self.c_cnxn.cursor()
+        cursor.execute(self.c_query)
+        rows = cursor.fetchall()
+        return rows
+        
+    def update_with_social_media(self, entry):
+        formatted_entry = (self.c_table_name,  entry['Twitter'], entry['Facebook'],entry['Email'], entry['BillTrack'] )
+        self.c_query = "UPDATE %s SET TwitterURL = '%s', FacebookURL = '%s', EmailAddress = '%s' WHERE BillTrackURL = '%s'; " % formatted_entry
+        print(self.c_query)
+        cursor = self.c_cnxn.cursor()
+        cursor.execute(self.c_query)
+        self.c_cnxn.commit()
+    
+    def update_with_bio(self, entry):
+        formatted_entry = (self.c_table_name,  entry['Bio'], entry['BillTrack'] )
+        self.c_query = "UPDATE %s SET Bio = '%s' WHERE BillTrackURL = '%s'; " % formatted_entry
+        print(self.c_query)
+        cursor = self.c_cnxn.cursor()
+        cursor.execute(self.c_query)
+        self.c_cnxn.commit()
+sql_store = SqlStorer()
+sql_store.set_up_connection()
+sql_store.retrieve_billtrack_urls()
 
-        
-        
-        
-        
-        
         
 # --------------EXAMPLES--------------
 # cursor.execute("INSERT INTO polyTestTable (testID, testID2) VALUES (3, 2)")   

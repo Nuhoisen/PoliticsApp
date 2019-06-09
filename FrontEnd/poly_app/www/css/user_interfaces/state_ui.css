@@ -51,13 +51,17 @@
 
 
 .state-exit-button{
+    
     opacity: 0;
     background-color: red;
     position: fixed;
     top: 10%;
     right: 15%;
-    border: 1px solid #FFF;
+    width: 20%;
+    /* border: 1px solid #FFF; */
+    border: 1px solid #000;
     border-radius: 50px;
+    text-align : center;
     
 }
 
@@ -65,7 +69,7 @@
 /* senator-divs */
 .senate-img-div{
     position:fixed;
-    width: 8%;
+    width: 18%;
     top:20%;
 }
 

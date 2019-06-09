@@ -2,32 +2,45 @@
     position:relative;
     width: 100%;  
     top: 9%;
+    height: 40%;
     /* border: 1px solid #ccc; */
     /* border-radius: 16px;  */
+}
+
+.profile-picture-container {
+    position: absolute;
+    top: 34%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
 }
         
 .profile-picture{
     border-radius: 50%;
+    border: 1px solid black;
 }
 
 .profile-picture-background{
-    background-color: purple;
+    background-color: #fff;
     height: 50%;
     width: 100%;
+    height: 93%;
     position: absolute;
     z-index: -100;
-    
+    box-shadow: 0px 1px 5px gray;
 }
 
 
 
-.profile-bio-container{
+.profile-donate-container{
     display: inline-block;
-    padding: 10px;
-    float: right;
+    margin: 10px;
+    /* float: right; */
     cursor: pointer;
     text-align: center;
-    /* background: white; */
+    position: absolute;
+    right:5%;
+    
 }
 
 .profile-donate-img{
@@ -39,9 +52,68 @@
 .profile-donate-text{
     background: white;
 }
+
+
+.profile-name-position-container{
+    position: absolute;
+    bottom: 10%;
+    width: 100%;
+    
+}
+
+
+
 .profile-name{
+    font: 30px Arial;
     color: black;
-    /* display: inline-block; */
+    display: inline-block;
+    width: 67%;
+    
+}
+
+.profile-header-social-media-container{
+    display: inline-block;
+    width: 30%;
+    text-align: right;
+}
+
+.profile-header-facebook-img-div{
+    display: inline-block;
+    /* padding: 5px; */
+}
+
+.profile-header-facebook-img{
+    width: auto;
+    height: 5vh;
+    
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.profile-header-twitter-img-div{
+    display: inline-block;
+    /* padding: 5px; */
+}
+
+.profile-header-twitter-img{
+    width: auto;
+    height: 5vh;
+    
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.profile-header-email-img-div{
+    display: inline-block;
+    /* padding: 5px; */
+}
+
+.profile-header-email-img{
+    width: auto;
+    height: 5vh;
+    
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .profile-position{

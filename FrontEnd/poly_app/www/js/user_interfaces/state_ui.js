@@ -31,11 +31,11 @@ class StateUI extends ImageMapUI{
         d3.selectAll(".senator-img-right-name")
              .text(profiles[1]["Name"]);
             
-        d3.selectAll(".governor-img")
-            .attr("src", "profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png");
+        // d3.selectAll(".governor-img")
+            // .attr("src", "profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png");
         
-        d3.selectAll(".governor-name-label")
-            .text("fill name");
+        // d3.selectAll(".governor-name-label")
+            // .text("fill name");
     }
     
     // Congressional Map
@@ -57,14 +57,14 @@ class StateUI extends ImageMapUI{
         super.generateHTML();
         //<img src='profile_pics/alabama/us_senator/alabama_us_senate/Richard_Shelby.png'/> \
         
+                    // <div class='state-ui governor-img-div'> \
+                        // <div class='governor-label state-ui'>Governor</div> \
+                        // <img src='' class='governor-img state-ui' alt=''/> \
+                        // <div  class='governor-name-label state-ui'></div> \
+                    // </div> 
+                    
+                    
         var html = "<div class='state-ui state-label'>Text</div> \
-                    \
-                    <div class='state-ui governor-img-div'> \
-                        <div class='governor-label state-ui'>Governor</div> \
-                        <img src='' class='governor-img state-ui' alt=''/> \
-                        <div  class='governor-name-label state-ui'></div> \
-                    </div> \
-                    \
                     <div class='state-ui senate-img-div-left senate-img-div'> \
                         <img src='' alt='' class='senator-img-left senator-img state-ui'/> \
                          <div href='' class='senator-img-left-name  senator-img-name  state-ui'></div> \
@@ -135,7 +135,7 @@ class StateUI extends ImageMapUI{
         d3.select(".state-districts-button")
             .on("click", function(){
                 // var file_name = "./map_data/congressional_borders/" + self.selected_state_id + "/state_senate/topo_quantize.json";
-                var file_name = server_url+ ":5000/request_state_senate/" + self.selected_state_id;
+                var file_name = server_ip+ ":5000/request_state_senate/" + self.selected_state_id;
                 self.removeUI();
                 self.generateCongressionalMap(file_name);
             });

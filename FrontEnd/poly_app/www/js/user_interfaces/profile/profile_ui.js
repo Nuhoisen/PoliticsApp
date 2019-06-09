@@ -14,13 +14,14 @@ var addRule = (function (style) {
         }
     };
 })(document.createElement("style"));
-    
-    
+
+
+
 class ProfileUI extends UI{
     
- 
     // Load political image
     loadPoliticianImage(profile){
+        var self = this;
         
         d3.selectAll(".profile-picture")
             .attr("src", profile['ImageURL']);
@@ -31,6 +32,28 @@ class ProfileUI extends UI{
         d3.selectAll(".profile-position")
             .html(profile['District']);
  
+        d3.selectAll(".profile-header-twitter-img-div")
+            .attr("href", profile['Twitter']);
+        
+        d3.selectAll(".profile-header-facebook-img-div")
+            .attr("href", profile['Facebook']);
+        
+      
+      
+        var bio =  profile['Bio'];
+        var modified_bio = "";
+        bio = bio.split("<br/>");
+        console.log(bio);
+        bio.forEach( function( sentence, index ) {
+           modified_bio  = modified_bio + sentence + "<br/><br/>" 
+        });
+        console.log(modified_bio);
+        // var bio_html = "<span id='lblBio'>BORN-<br/>December 16, 1949 <br/>    EDUCATION- <br/>B.S. St. Thomas Aquinas College (Social Science/Criminal Justice)<br/>M.A. Seton Hall University (Administration and Supervision)<br/>U.S. Army Command and General Staff College <br/>    OCCUPATION- <br/>Independent Consultant<br/>    PUBLIC/PARTY SERVICE- <br/>Bergen County, Undersheriff 2002-05, 1999-2001, Sheriff 2001-02<br/>    MILITARY SERVICE- <br/>U.S. Army Reserve, Major<br/>    LEGISLATIVE SERVICE- General Assembly 2002-present, Deputy Speaker 2014-present, Majority Conference Leader 2012-13, Deputy Conference Leader 2010-11</span>";                
+        // $(".profile-bio-container").append(bio_html);
+        $(".profile-bio-container").append(modified_bio);
+        
+        
+        
         addRule(".topic-slider::-moz-range-thumb", 
         {
             "height": "25px",
@@ -58,7 +81,6 @@ class ProfileUI extends UI{
    addListeners(){
         d3.select(".profile-stances-collapsible-all")
             .on("click", function(){
-                 
                     var coll = d3.select(".profile-stances-collapsible");
                     coll.classed("active", !coll.classed("active"));
                     
@@ -82,24 +104,25 @@ class ProfileUI extends UI{
                         d3.select(this).html( "Expand All" );
                     }
             });
-            
-        d3.select(".profile-stances-collapsible")
-            .on("click", function(){
-                    var coll = d3.select(".profile-stances-collapsible");
+        
+        // Stance expand listeners
+        d3.selectAll(".profile-subject-collapsible")
+            .on("click", function(d, i){
+                    var coll = d3.select(this);//.select("profile-subject-collapsible")
                     coll.classed("active", !coll.classed("active"));
                     
                     if (coll.classed("active")){
-                        d3.select(".profile-stances-container")
+                        d3.select(this.parentNode).select(".profile-subject-container")
                             .style("display", "block");
-                        d3.select(".profile-stances-collapsible-all").html("Collapse All");
+                        d3.select(this.parentNode).select(".profile-subject-collapsible-all").html("Collapse All");
                     }
                     else{
-                        d3.select(".profile-stances-container")
+                        d3.select(this.parentNode).select(".profile-subject-container")
                             .style("display", "none");
-                        d3.select(".profile-stances-collapsible-all").html("Expand All");
+                        d3.select(this.parentNode).select(".profile-subject-collapsible-all").html("Expand All");
                     }
                 });
-                
+         
          d3.selectAll(".topic-collapsible")
             .on("click", function(){
                  var som = d3.select(this.nextElementSibling);
@@ -136,8 +159,97 @@ class ProfileUI extends UI{
        
    }
    
+   addHeader(){
+       var self = this;
+       var header_html =  "<div class='profile-header'> \
+                                <div class='profile-donate-container'> \
+                                    <img  class='profile-donate-img' src='img/cutouts/click_donate.png' alt=/> \
+                                    <div class='profile-donate-text'> \
+                                        Donate\
+                                    </div> \
+                                </div> \
+                                <div class='profile-picture-background'> \
+                                </div> \
+                                <div class = 'profile-picture-container'> \
+                                    <img class='profile-picture' src='./css/user_interfaces/profile/temp/alabama_us_senate/Richard_Shelby.png'/> \
+                                </div> \
+                                <div class='profile-name-position-container'> \
+                                    <div class='profile-name-and-social-media-container'>\
+                                        <div class='profile-name'> \
+                                            Bob Billard \
+                                        </div> \
+                                        <div class='profile-header-social-media-container'> \
+                                            <a class='profile-header-facebook-img-div' href='http://www.facebook.com/kimthatcheroregon'> \
+                                                <img class='profile-header-facebook-img' src='img/cutouts/facebook.png' alt=/>  \
+                                            </a> \
+                                            <a class='profile-header-twitter-img-div' > \
+                                                <img  class='profile-header-twitter-img' src='img/cutouts/twitter.png' alt=/>  \
+                                            </a>\
+                                            <a class='profile-header-email-img-div' > \
+                                                <img  class='profile-header-email-img' src='img/cutouts/email.png' alt=/>  \
+                                            </a>\
+                                        </div> \
+                                    </div>\
+                                    <div class='profile-position'> \
+                                        Senator \
+                                    </div> \
+                                </div>\
+                            </div>";
+       
+       $(".profile-page").append(header_html);
+       
+   }
+   
+   addBody(){
+       var body_html = "<div class='profile-body'> \
+                            <div class='profile-stances-collapsible-container profile-subject-collapsible-container'> \
+                                <div class='profile-stances-collapsible profile-subject-collapsible'> \
+                                    <div class='profile-stances-collapsible-text profile-subject-collapsible-text'> \
+                                        Stances \
+                                    </div> \
+                                    <div class='profile-stances-collapsible-img-div profile-subject-collapsible-img-div'> \
+                                        <img  class='profile-subject-collapsible-img' src='img/cutouts/stances.png' alt=/> \
+                                    </div> \
+                                </div> \
+                                <div class='profile-stances-collapsible-all profile-subject-collapsible-all'> \
+                                    Expand All \
+                                </div> \
+                                <div class='profile-stances-container profile-subject-container'> \
+                                </div> \
+                            </div> \
+                            <div class='profile-bio-collapsible-container profile-subject-collapsible-container'> \
+                                <div class='profile-bio-collapsible profile-subject-collapsible'> \
+                                    <div class='profile-bio-collapsible-text profile-subject-collapsible-text'> \
+                                        Bio \
+                                    </div> \
+                                    <div class='profile-bio-collapsible-img-div profile-subject-collapsible-img-div'> \
+                                        <img  class='profile-subject-collapsible-img' src='img/cutouts/bio.png' alt=/>  \
+                                    </div> \
+                                </div> \
+                                <div class='profile-bio-collapsible-all profile-subject-collapsible-all'> \
+                                    Expand All \
+                                </div> \
+                                <div class=' profile-bio-container profile-subject-container'> \
+                                </div> \
+                            </div> \
+                        </div>";
+        $(".profile-page").append(body_html);
+       
+   }
+   
+   
+   addBioContainer(){
+        var self = this;
+       
+      
+       
+    }
+   
+   
+   
+   
     // Topic containers
-    addTopicContainers(topics){
+    addStanceContainer(topics){
         var self = this;
         for (var i = 0; i < topics.length; i++){ //
             var slider_html = " <div class='topic-container'> \
@@ -184,7 +296,6 @@ class ProfileUI extends UI{
             $("."+topics[i]['Topic']+"-right").html(topics[i]['Right']);
             
         }
-        
         // disable the sliders
         d3.selectAll(".topic-slider")
             .property("disabled", true);
@@ -195,54 +306,22 @@ class ProfileUI extends UI{
             });
     }
     
+    
+    
+    // This function calls the respective component html generators
+    // These generators make up the building blocks of the profile page
     generateHTML(){
         var self = this;
         // super.generateHTML();
-        var html = "    <div class='profile-page'> \
-                            <div class='profile-header'> \
-                                <div class='profile-bio-container'> \
-                                    <img  class='profile-donate-img' src='img/cutouts/click_donate.png' alt=/> \
-                                    <div class='profile-donate-text'> \
-                                        Donate\
-                                    </div> \
-                                </div> \
-                                <div class='profile-picture-background'> \
-                                </div> \
-                                <img class='profile-picture' src='./css/user_interfaces/profile/temp/alabama_us_senate/Richard_Shelby.png'/> \
-                                <div class='profile-name-position-container'> \
-                                    <div class='profile-name'> \
-                                        Bob Billard \
-                                    </div> \
-                                    <div class='profile-position'> \
-                                        Senator \
-                                    </div> \
-                                </div> \
-                            </div> \
-                            <div class='profile-body'>  \
-                                <div class='profile-stances-collapsible-container'> \
-                                    <div class='profile-stances-collapsible'> \
-                                        <div class='profile-stances-collapsible-text'> \
-                                            Stances \
-                                        </div> \
-                                        <div class='profile-stances-collapsible-img-div'> \
-                                            <img  class='profile-stances-collapsible-img' src='img/cutouts/stances.png' alt=/> \
-                                        </div> \
-                                    </div> \
-                                    <div class='profile-stances-collapsible-all'> \
-                                        Expand All \
-                                    </div> \
-                                </div> \
-                                <div class='profile-stances-container'> \
-                                </div> \
-                            </div> \
-                        </div> ";
-        
-        
+        var html = " <div class='profile-page'> \
+                     </div>";
         
           
         $("."+this.creator.class_name).append(html);
-        
-        self.addTopicContainers(self.topics_dict);
+        self.addHeader();
+        self.addBody();
+        self.addBioContainer();
+        self.addStanceContainer(self.topics_dict);
         self.addListeners();
         
     }

@@ -61,10 +61,8 @@ class GlobalUI extends UI{
         super(ui_class_name, creator);
         this.footer = new GlobalFooter("global-ui-footer", this);
         this.header = new GlobalHeader("global-ui-header", this);
-        
         this.us_state_map = new USMap("map-profile", this, map_features_1);
         this.profile_page = new ProfileUI("profile-page", this);
-        
         this.selected_page = this.us_state_map;
         
     }

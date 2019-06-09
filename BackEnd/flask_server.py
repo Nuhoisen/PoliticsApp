@@ -60,6 +60,11 @@ def convert_response_2_dict(res):
         prof_dict["BallotpediaURL"] = row.BallotpediaURL
         prof_dict["BillTrackURL"] = row.BillTrackURL
         prof_dict["ImageURL"] = row.ImageURL
+        prof_dict["Twitter"] = row.TwitterURL
+        prof_dict["Facebook"] = row.FacebookURL
+        prof_dict["Email"] = row.EmailAddress
+        prof_dict["Bio"] = row.Bio
+        print(prof_dict)
         prof_list.append(prof_dict)
     return prof_list
         

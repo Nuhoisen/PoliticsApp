@@ -43,6 +43,8 @@ class CongressionalMapTemplate extends MapTemplate{
     // Removes selected effects of states
     initiateZoom() {
         var self = this;
+        // Inside initiateZoon, reset the old scale factor
+        self.previous_scale = 0;
         // Define a "minzoom" whereby the "Countries" is as small possible without leaving white space at top/bottom or sides
         self.minZoom = Math.min($("#map-holder").width() / (self.w), $("#map-holder").height() / (self.h));
         // set max zoom to a suitable factor of this value
@@ -54,7 +56,7 @@ class CongressionalMapTemplate extends MapTemplate{
         var midY = ($("#map-holder").height() - self.minZoom * self.h) / 2;
         // change zoom transform to min zoom and centre offsets
         self.svg.call(self.zoom.transform, d3.zoomIdentity.translate(midX, midY).scale(self.minZoom));
-        self.previous_scale = self.minZoom;
+        // self.previous_scale = self.minZoom;
         
         
         var box = self.path.bounds(self.selected_state_data);
@@ -89,8 +91,7 @@ class CongressionalMapTemplate extends MapTemplate{
         // Make sure no gap at bottom or right of holder
         dleft = Math.max($("svg").width() - self.w * zoomScale, dleft);
         dtop = Math.max($("svg").height() - self.h * zoomScale, dtop);
-        
-        self.previous_scale = 0;
+     
         // Set zoom
         self.svg          
           .call(

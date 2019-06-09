@@ -1,7 +1,5 @@
 
 class UI {
-
-
     unfocus(){
         var self = this;
         d3.selectAll("."+self.class_name +" *")
@@ -37,7 +35,7 @@ class UI {
         self.footer.removeFooter();
         d3.selectAll(".ui-body").remove();
         d3.selectAll("." + self.class_name).remove();
-        self.ui_generated = false;
+        // self.ui_generated = false;
     }
 
     generateHTML(){
@@ -51,8 +49,8 @@ class UI {
     constructor(ui_class_name, creator, attr=null){
         this.class_name = ui_class_name;
         this.creator = creator;
-        this.ui_generated = false;
-        this.footer = NaN;
+        // this.ui_generated = false;
+        this.footer = null;
         this.attr = attr;
     }   
 }

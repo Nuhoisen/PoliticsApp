@@ -137,8 +137,10 @@ class MapTemplate extends UI {
                 .attr("d", self.path( self.meshFunction( self, us ) ) );
                 
                 
-            self.svg.call(self.zoom);
+            // Reset the view
             self.initiateZoom();
+            // Apply on scroll listener
+            self.svg.call(self.zoom);
             // On window resize
             $(window).resize(function() {
                 self.svg
