@@ -9,12 +9,17 @@
     padding: 2px 4px;
     position: fixed;
     top:15%;
-    left:45%;
+    width: 60%;
+    
+    left:20%;
+    
     border-style: solid;
     border-width: .5px;
     color: red;
     background-color: #212121;
     font-size: 12px;
+    text-align : center;
+    
 }
 
 .state-button-container{
