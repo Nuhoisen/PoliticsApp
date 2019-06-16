@@ -22,7 +22,7 @@
 
 .profile-subject-container{
     all: initial;
-    padding-top: 18px;
+    /* padding-top: 18px; */
     display: none;
     overflow: hidden;
     background-color: #f1f1f1;
@@ -127,7 +127,7 @@
   border-radius: 50%; 
   width: 25px; /* Set a specific slider handle width */
   height: 25px; /* Slider handle height */
-  background: url('./temp/alabama_us_senate/Richard_Shelby.png');  /* #4CAF50; Green background  */
+  background:  url('./temp/alabama_us_senate/Richard_Shelby.png');  /* #4CAF50; Green background  */
   background-size: 100%;
   cursor: pointer; /* Cursor on hover */
 }

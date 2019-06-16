@@ -50,19 +50,20 @@ class ProfileUI extends UI{
         console.log(modified_bio);
         // var bio_html = "<span id='lblBio'>BORN-<br/>December 16, 1949 <br/>    EDUCATION- <br/>B.S. St. Thomas Aquinas College (Social Science/Criminal Justice)<br/>M.A. Seton Hall University (Administration and Supervision)<br/>U.S. Army Command and General Staff College <br/>    OCCUPATION- <br/>Independent Consultant<br/>    PUBLIC/PARTY SERVICE- <br/>Bergen County, Undersheriff 2002-05, 1999-2001, Sheriff 2001-02<br/>    MILITARY SERVICE- <br/>U.S. Army Reserve, Major<br/>    LEGISLATIVE SERVICE- General Assembly 2002-present, Deputy Speaker 2014-present, Majority Conference Leader 2012-13, Deputy Conference Leader 2010-11</span>";                
         // $(".profile-bio-container").append(bio_html);
-        $(".profile-bio-container").append(modified_bio);
+        d3.selectAll(".profile-bio-container").html(modified_bio);
+        // $(".profile-bio-container").append(modified_bio);
         
         
         
-        addRule(".topic-slider::-moz-range-thumb", 
-        {
-            "height": "25px",
-            "border-radius": "50%", 
-            "width": "25px", 
-            "background": "url('" + profile['ImageURL'] + "')",
-            "background-size": "100%",
-            "cursor": "pointer"
-        });
+        // addRule(".topic-slider::-moz-range-thumb", 
+        // {
+            // "height": "25px",
+            // "border-radius": "50%", 
+            // "width": "25px", 
+            // "background": "url('" + profile['ImageURL'] + "')",
+            // "background-size": "100%",
+            // "cursor": "pointer"
+        // });
     }
     
     // Stances click listener
@@ -79,39 +80,46 @@ class ProfileUI extends UI{
   
    
    addListeners(){
-        d3.select(".profile-stances-collapsible-all")
+        // d3.select(".profile-stances-collapsible-all")
+        d3.selectAll(".profile-subject-collapsible-all")
             .on("click", function(){
-                    var coll = d3.select(".profile-stances-collapsible");
-                    coll.classed("active", !coll.classed("active"));
+                    // coll = d3.select(this.parentNode).select(".profile-subject-collapsible");
+                    d3.select(this.parentNode).select(".profile-subject-collapsible").classed("active", !d3.select(this.parentNode).select(".profile-subject-collapsible").classed("active"));
                     
-                    if (coll.classed("active")){
-                        d3.selectAll(".topic-body")
+                    if (d3.select(this.parentNode).select(".profile-subject-collapsible").classed("active")){
+                        // d3.selectAll(".topic-body")
+                        d3.select(this.parentNode).selectAll(".subject-display-block")
                             .style("display", "block");
                         
-                        d3.select(".profile-stances-container")
-                            .style("display", "block");
                         d3.select(this).html( "Collapse All" );
+                        // d3.select(this.parentNode).selectAll("*")
+                        // d3.select(".profile-subject-container")
+                            // .style("display", "block");
                     }
                     else{
-                        d3.selectAll(".topic-body")
-                            .style("display", "none");
+                        // d3.selectAll(".topic-body")
+                            // .style("display", "none");
                             
-                        d3.selectAll(".topic-source-list")
-                            .style("display", "none");
+                        // d3.selectAll(".topic-source-list")
+                            // .style("display", "none");
                             
-                        d3.select(".profile-stances-container")
+                        d3.select(this.parentNode).selectAll(".subject-display-block")
                             .style("display", "none");
                         d3.select(this).html( "Expand All" );
+                            
+                        // d3.select(".profile-stances-container")
+                            // .style("display", "none");
                     }
             });
         
         // Stance expand listeners
         d3.selectAll(".profile-subject-collapsible")
             .on("click", function(d, i){
-                    var coll = d3.select(this);//.select("profile-subject-collapsible")
-                    coll.classed("active", !coll.classed("active"));
+                    // var coll = d3.select(this);//.select("profile-subject-collapsible")
+                    d3.select(this).classed("active", !d3.select(this).classed("active"));
                     
-                    if (coll.classed("active")){
+                    // if (coll.classed("active")){
+                    if (d3.select(this).classed("active")){
                         d3.select(this.parentNode).select(".profile-subject-container")
                             .style("display", "block");
                         d3.select(this.parentNode).select(".profile-subject-collapsible-all").html("Collapse All");
@@ -214,7 +222,7 @@ class ProfileUI extends UI{
                                 <div class='profile-stances-collapsible-all profile-subject-collapsible-all'> \
                                     Expand All \
                                 </div> \
-                                <div class='profile-stances-container profile-subject-container'> \
+                                <div class='profile-stances-container profile-subject-container subject-display-block'> \
                                 </div> \
                             </div> \
                             <div class='profile-bio-collapsible-container profile-subject-collapsible-container'> \
@@ -229,7 +237,7 @@ class ProfileUI extends UI{
                                 <div class='profile-bio-collapsible-all profile-subject-collapsible-all'> \
                                     Expand All \
                                 </div> \
-                                <div class=' profile-bio-container profile-subject-container'> \
+                                <div class=' profile-bio-container profile-subject-container subject-display-block'> \
                                 </div> \
                             </div> \
                         </div>";
@@ -256,7 +264,7 @@ class ProfileUI extends UI{
                                     <div class='topic-collapsible replace-collapsible'>  \
                                         replace \
                                     </div> \
-                                    <div class='topic-body'> \
+                                    <div class='topic-body subject-display-block'> \
                                         <div class='topic-left replace replace-left'> \
                                             Here \
                                         </div> \
