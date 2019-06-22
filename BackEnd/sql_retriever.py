@@ -113,23 +113,30 @@ class SqlRetriever:
         cursor.execute(command)
         row_response = cursor.fetchall()
   
-        for row in row_response:
-            print(row)
   
         return row_response
-# sql_db_name ="PoliticianInfo"
-# sql_table_name = "PoliticianTable"
 
-# sql_type = SqlRetriever(sql_db_name, sql_table_name)
-# sql_type.set_up_connection()
-# sql_type.retrieve_wildcard("Pete")
-
-# sql_type.retrieve_politician_profile("Alabama", "State Representative", "Alabama House District 20")
+        
+       # Returns profile info when provided specific
+    # state, role, and district
+    def retrieve_related_articles(self, subject_list, news_company=""):
+        print(subject_list)
+        # tuple_list = [self.c_table_name, news_company]
+        tuple_list = [self.c_table_name]
+        for subject in subject_list:    
+            tuple_list.append(subject)
+        # Just append the rest with the first subject
+        for i in range(len(subject_list), 7):
+            tuple_list.append(subject_list[0])
+        
+        condition = tuple(tuple_list)
+        
+        # command = "SELECT ArticleURL from %s WHERE NewsCompany like '%%%s%%' AND (Keyword_1 like '%%%s%%' OR  Keyword_2 like '%%%s%%' OR  Keyword_3 like '%%%s%%' OR  Keyword_4 like '%%%s%%' OR  Keyword_5 like '%%%s%%' OR Keyword_6 like '%%%s%%' OR  Keyword_7 like '%%%s%%')" % condition
+        command = "SELECT ArticleURL from %s WHERE (Keyword_1 like '%%%s%%' OR  Keyword_2 like '%%%s%%' OR  Keyword_3 like '%%%s%%' OR  Keyword_4 like '%%%s%%' OR  Keyword_5 like '%%%s%%' OR Keyword_6 like '%%%s%%' OR  Keyword_7 like '%%%s%%')" % condition
+        
+        cursor = self.c_cnxn.cursor()
+        cursor.execute(command)
+        row_response = cursor.fetchall()
+        return row_response
+        
   
-# --------------EXAMPLES--------------
-# cursor.execute("INSERT INTO polyTestTable (testID, testID2) VALUES (3, 2)")   
-# cnxn.commit()
-# cursor.execute("SELECT testID2 FROM polyTestTable")
-
-# ------------------------------------
-# cursor.execute("SELECT * FROM polyTestTable")

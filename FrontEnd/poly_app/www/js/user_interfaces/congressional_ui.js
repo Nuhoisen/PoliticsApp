@@ -1,10 +1,7 @@
 
 
 class CongressionalUI extends ImageMapUI{//extends StateUI {
-    
-
-     
-     
+         
     // Gets binded to the politicians profile
     // Swaps view over to profile page
      imageListener(profile){
@@ -184,10 +181,7 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
                     self.removeUI();
                     self.creator.removeMapPaths();
                     self.creator.creator.creator.generateMapPaths(us_map_url); //us_map.generateMapPaths
-                    
                 });
-                
-                
             });
          
         

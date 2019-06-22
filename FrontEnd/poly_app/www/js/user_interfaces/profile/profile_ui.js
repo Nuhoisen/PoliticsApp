@@ -19,6 +19,36 @@ var addRule = (function (style) {
 
 class ProfileUI extends UI{
     
+    
+    
+    loadRelatedArticles(response){
+        var html_text = ""
+        response = response.replace(/\[/g, '');
+        response = response.replace(/\]/g, '');
+        response = response.split(",");
+        for(var i = 0; i < response.length; i++)
+        {
+            html_text += "<a href=";
+            html_text += response[i];
+            html_text += ">";
+            html_text += "link";
+            
+            html_text += "</a>";
+        }
+        
+        
+        d3.selectAll(".profile-news-container")
+            .html(html_text);
+    }
+    
+    requestRelatedArticles(name){
+        var self = this;
+        var last_name = name.split(" ")[1];
+        var args = "keyword=" + last_name;
+        
+        get_politician_news_articles(args,self.loadRelatedArticles.bind(self));
+    }
+    
     // Load political image
     loadPoliticianImage(profile){
         var self = this;
@@ -38,22 +68,19 @@ class ProfileUI extends UI{
         d3.selectAll(".profile-header-facebook-img-div")
             .attr("href", profile['Facebook']);
         
-      
+        self.requestRelatedArticles(profile['Name']);
+    
       
         var bio =  profile['Bio'];
         var modified_bio = "";
         bio = bio.split("<br/>");
-        console.log(bio);
         bio.forEach( function( sentence, index ) {
            modified_bio  = modified_bio + sentence + "<br/><br/>" 
         });
-        console.log(modified_bio);
         // var bio_html = "<span id='lblBio'>BORN-<br/>December 16, 1949 <br/>    EDUCATION- <br/>B.S. St. Thomas Aquinas College (Social Science/Criminal Justice)<br/>M.A. Seton Hall University (Administration and Supervision)<br/>U.S. Army Command and General Staff College <br/>    OCCUPATION- <br/>Independent Consultant<br/>    PUBLIC/PARTY SERVICE- <br/>Bergen County, Undersheriff 2002-05, 1999-2001, Sheriff 2001-02<br/>    MILITARY SERVICE- <br/>U.S. Army Reserve, Major<br/>    LEGISLATIVE SERVICE- General Assembly 2002-present, Deputy Speaker 2014-present, Majority Conference Leader 2012-13, Deputy Conference Leader 2010-11</span>";                
         // $(".profile-bio-container").append(bio_html);
         d3.selectAll(".profile-bio-container").html(modified_bio);
         // $(".profile-bio-container").append(modified_bio);
-        
-        
         
         // addRule(".topic-slider::-moz-range-thumb", 
         // {
@@ -78,7 +105,6 @@ class ProfileUI extends UI{
     }
    
   
-   
    addListeners(){
         // d3.select(".profile-stances-collapsible-all")
         d3.selectAll(".profile-subject-collapsible-all")
@@ -239,6 +265,22 @@ class ProfileUI extends UI{
                                 </div> \
                                 <div class=' profile-bio-container profile-subject-container subject-display-block'> \
                                 </div> \
+                            </div> \
+                            \
+                            <div class='profile-news-collapsible-container profile-subject-collapsible-container'> \
+                                    <div class='profile-news-collapsible profile-subject-collapsible'> \
+                                        <div class='profile-news-collapsible-text profile-subject-collapsible-text'> \
+                                            News \
+                                        </div> \
+                                        <div class='profile-News-collapsible-img-div profile-subject-collapsible-img-div'> \
+                                            <img  class='profile-subject-collapsible-img' src='img/cutouts/news.png' alt=/>  \
+                                        </div> \
+                                    </div> \
+                                    <div class='profile-news-collapsible-all profile-subject-collapsible-all'> \
+                                        Expand All \
+                                    </div> \
+                                    <div class='profile-news-container profile-subject-container subject-display-block'> \
+                                    </div> \
                             </div> \
                         </div>";
         $(".profile-page").append(body_html);

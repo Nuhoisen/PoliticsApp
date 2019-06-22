@@ -8,9 +8,12 @@ CORS(app)
 
 
 
-sql_db_name ="PoliticianInfo"
-sql_table_name = "PoliticianTable"
+politician_sql_db_name ="PoliticianInfo"
+politician_sql_table_name = "PoliticianTable"
 
+
+news_sql_db_name = "NewsArticlesDB"
+news_sql_table_name = "NewsArticlesTable"
 # Dummy Function
     
 @app.route('/request_state/<state>', methods=['GET'])    
@@ -24,7 +27,7 @@ def request_senator_profile_img():
     state = request.args.get('state')
     role = request.args.get('role')
     
-    sql_type = SqlRetriever(sql_db_name, sql_table_name)
+    sql_type = SqlRetriever(politician_sql_db_name, politician_sql_table_name)
     sql_type.set_up_connection()
     
     response = sql_type.retrieve_senators_img_url(state, role)
@@ -39,7 +42,7 @@ def request_state_politician_profile_img():
     state = request.args.get('state')
     role = request.args.get('role')
     district = request.args.get('district')
-    sql_type = SqlRetriever(sql_db_name, sql_table_name)
+    sql_type = SqlRetriever(politician_sql_db_name, politician_sql_table_name)
     sql_type.set_up_connection()
     
     response = sql_type.retrieve_state_politician_img_url(state, role, district)
@@ -73,14 +76,14 @@ def request_state_politician_profile():
     state = request.args.get('state')
     role = request.args.get('role')
     district = request.args.get('district')
-    sql_type = SqlRetriever(sql_db_name, sql_table_name)
+    sql_type = SqlRetriever(politician_sql_db_name, politician_sql_table_name)
     sql_type.set_up_connection()
     
     
-    print("making sql Call")
+    # print("making sql Call")
     response = sql_type.retrieve_politician_profile(state, role, district)
-    print("sql Call response")
-    print(response)
+    # print("sql Call response")
+    # print(response)
     
     prof_list = convert_response_2_dict(response)
     
@@ -102,13 +105,36 @@ def request_state_politician_profile():
 @app.route('/request_wildcard_match/', methods=['GET'])
 def request_wildcard_match():
     query = request.args.get('query')
-    sql_type = SqlRetriever(sql_db_name, sql_table_name)
+    sql_type = SqlRetriever(politician_sql_db_name, politician_sql_table_name)
     sql_type.set_up_connection()
     response = sql_type.retrieve_wildcard(query)
     print("SQL wildcard call response")
     prof_list = convert_response_2_dict(response)
     return json.dumps(prof_list)
     
+    
+
+
+def convert_rows_2_list(rows):
+    art_list = []
+    for row in rows:
+        art_list.append(row.ArticleURL.strip())
+    return art_list
+    
+@app.route('/request_articles/', methods=['GET'])    
+def request_articles():
+    print("in here")
+    keyword = request.args.get('keyword')
+    
+    keyword_list = [keyword]
+    sql_type = SqlRetriever(news_sql_db_name, news_sql_table_name)
+    sql_type.set_up_connection()
+    response = sql_type.retrieve_related_articles(keyword_list)
+    
+    art_list  = convert_rows_2_list(response)
+    print(art_list)
+    return json.dumps(art_list)
+
     
     
 # ---------------- MAP DATA ---------------------

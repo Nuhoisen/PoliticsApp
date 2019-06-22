@@ -8,6 +8,7 @@ function acceptFile(callBack){
     if(httpRequest.readyState === XMLHttpRequest.DONE){//done
         if(httpRequest.status === 200){
             console.log("Successful Response!");
+            console.log(httpRequest.responseText);
             callBack(httpRequest.responseText);
         }
         else{
@@ -33,37 +34,35 @@ function acceptFile(callBack){
     // console.log(url)
 // }
 
-
 function get_senator_prof_imgs(args, callback){
     httpRequest.onreadystatechange = acceptFile.bind(this, callback);
-    httpRequest.open('GET', profile_url +'/request_senator_profile_img?'+args, true);
+    httpRequest.open('GET', profile_url +'/request_senator_profile_img?'+ args, true);
     httpRequest.send();    
 }
 
 function get_state_politician_prof_img(args, callback){
     httpRequest.onreadystatechange = acceptFile.bind(this, callback);
-    httpRequest.open('GET', profile_url +'/request_state_politician_profile_img?'+args, true);
+    httpRequest.open('GET', profile_url +'/request_state_politician_profile_img?'+ args, true);
     httpRequest.send();    
 }
 
 function get_state_politician_profile(args, callback){
     httpRequest.onreadystatechange = acceptFile.bind(this, callback);
-    httpRequest.open('GET', profile_url +'/request_state_politician_profile?'+args, true);
+    httpRequest.open('GET', profile_url +'/request_state_politician_profile?'+ args, true);
     httpRequest.send();    
 }
-
 
 function get_wildcard_search(args, callback){
-    
     httpRequest.onreadystatechange = acceptFile.bind(this, callback);
-    httpRequest.open('GET', profile_url +'/request_wildcard_match?'+args, true);
+    httpRequest.open('GET', profile_url +'/request_wildcard_match?'+ args, true);
     httpRequest.send();    
 }
 
-function response_here(res){
-    console.log(res);
+function get_politician_news_articles(args, callback){
+    httpRequest.onreadystatechange = acceptFile.bind(this, callback);
+    httpRequest.open('GET', profile_url +'/request_articles?' + args, true);
+    httpRequest.send();
 }
-
 
 // var args = "state=Mississippi&role=US Senator&district=Mississippi US Senate";
 // get_state_politician_profile(args, response_here)
