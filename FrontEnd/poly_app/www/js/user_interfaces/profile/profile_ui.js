@@ -22,23 +22,52 @@ class ProfileUI extends UI{
     
     
     loadRelatedArticles(response){
-        var html_text = ""
-        response = response.replace(/\[/g, '');
-        response = response.replace(/\]/g, '');
-        response = response.split(",");
-        for(var i = 0; i < response.length; i++)
+        var html_text = "";
+        
+        var json_response = JSON.parse(response);
+        
+
+         d3.selectAll(".profile-news-container")   
+            .html("");
+
+        for(var i = 0; i < json_response.length; i++)
         {
-            html_text += "<a href=";
-            html_text += response[i];
-            html_text += ">";
-            html_text += "link";
+            d3.selectAll(".profile-news-container")   
+                .append('h1')
+                .html(json_response[i].title);
             
-            html_text += "</a>";
+            
+            d3.selectAll(".profile-news-container")
+                .append("a")
+                .attr("href", json_response[i].url)
+                .append('img')
+                .attr("src", json_response[i].top_img)
+                .attr("width", "100%");
+            
+            d3.selectAll(".profile-news-container")
+                .append("div")
+                .html(json_response[i].news_company)
+            
+            d3.selectAll(".profile-news-container")
+                .append("hr");
+                
+                
+                // .on("click", function(){window.open(json_response[i].url)});
+            
+            // d3.selectAll(".profile-news-container")
+                // .append('div')
+                // .html(json_response[i].url)
+                // .attr("class", "topic-container");
+            
         }
         
         
-        d3.selectAll(".profile-news-container")
-            .html(html_text);
+       
+            
+            // .html(html_text);
+            
+            
+            
     }
     
     requestRelatedArticles(name){

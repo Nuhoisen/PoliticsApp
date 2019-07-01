@@ -132,7 +132,7 @@ class SqlRetriever:
         condition = tuple(tuple_list)
         
         # command = "SELECT ArticleURL from %s WHERE NewsCompany like '%%%s%%' AND (Keyword_1 like '%%%s%%' OR  Keyword_2 like '%%%s%%' OR  Keyword_3 like '%%%s%%' OR  Keyword_4 like '%%%s%%' OR  Keyword_5 like '%%%s%%' OR Keyword_6 like '%%%s%%' OR  Keyword_7 like '%%%s%%')" % condition
-        command = "SELECT ArticleURL from %s WHERE (Keyword_1 like '%%%s%%' OR  Keyword_2 like '%%%s%%' OR  Keyword_3 like '%%%s%%' OR  Keyword_4 like '%%%s%%' OR  Keyword_5 like '%%%s%%' OR Keyword_6 like '%%%s%%' OR  Keyword_7 like '%%%s%%')" % condition
+        command = "SELECT * from %s WHERE (Keyword_1 like '%%%s%%' OR  Keyword_2 like '%%%s%%' OR  Keyword_3 like '%%%s%%' OR  Keyword_4 like '%%%s%%' OR  Keyword_5 like '%%%s%%' OR Keyword_6 like '%%%s%%' OR  Keyword_7 like '%%%s%%')" % condition
         
         cursor = self.c_cnxn.cursor()
         cursor.execute(command)

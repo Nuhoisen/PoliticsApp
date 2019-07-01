@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 from sql_retriever import SqlRetriever
+from newspaper import Article
 import json
 
 app = Flask(__name__)
@@ -113,12 +114,50 @@ def request_wildcard_match():
     return json.dumps(prof_list)
     
     
-
+def convert_news_company(name):
+    name= name.strip()
+    new_name = ""
+    print(name)
+    name_convert = {
+        "fox_news" : "FOX News",
+        "breitbart" : "Breitbart",
+        "cnn" : "CNN",
+        "los_angeles_times" : "Los Angeles Times",
+        "wall_street_journal" : "Wall Street Journal",
+        "oregon_live" : "Oregon Live",
+        "washington_post" : "Washington Post",
+        "politico" : "Politico",
+        "miami_herald" : "Miami Herald",
+        "new_jersey_com" : "New Jersey AP",
+        "npr" : "NPR",
+        "new_york_times": "New York Times"
+    }
+    
+    try:
+        new_name = name_convert[name]
+    except KeyError:
+        new_name = name
+    
+    
+    return new_name
+    
+    
+    
+    
 
 def convert_rows_2_list(rows):
     art_list = []
+    
     for row in rows:
-        art_list.append(row.ArticleURL.strip())
+        art_dict = {}
+        art_url = row.ArticleURL.strip()
+        
+        art_dict['url'] = art_url
+        art_dict['top_img'] = row.ArticleImgURL
+        art_dict['title'] = row.Title
+        art_dict['news_company'] = convert_news_company(row.NewsCompany)
+        art_list.append(art_dict)
+    print(art_list)
     return art_list
     
 @app.route('/request_articles/', methods=['GET'])    
@@ -132,14 +171,12 @@ def request_articles():
     response = sql_type.retrieve_related_articles(keyword_list)
     
     art_list  = convert_rows_2_list(response)
-    print(art_list)
+    
     return json.dumps(art_list)
 
     
     
 # ---------------- MAP DATA ---------------------
-
-
 @app.route('/request_map/<map_name>', methods=['GET'])
 def request_map(map_name):
     f = open(map_name, 'r')
