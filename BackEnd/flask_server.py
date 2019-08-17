@@ -10,11 +10,11 @@ CORS(app)
 
 
 politician_sql_db_name ="PoliticianInfo"
-politician_sql_table_name = "PoliticianTable"
+politician_sql_table_name = "politiciantable"
 
 
-news_sql_db_name = "NewsArticlesDB"
-news_sql_table_name = "NewsArticlesTable"
+news_sql_db_name = "newsarticlesdb"
+news_sql_table_name = "newsarticlestable"
 # Dummy Function
     
 @app.route('/request_state/<state>', methods=['GET'])    
@@ -33,8 +33,6 @@ def request_senator_profile_img():
     
     response = sql_type.retrieve_senators_img_url(state, role)
     
-    
-    
     return response
     
 
@@ -47,8 +45,6 @@ def request_state_politician_profile_img():
     sql_type.set_up_connection()
     
     response = sql_type.retrieve_state_politician_img_url(state, role, district)
-    
-    
     
     return response
     
@@ -132,12 +128,11 @@ def convert_news_company(name):
         "npr" : "NPR",
         "new_york_times": "New York Times"
     }
-    
+
     try:
         new_name = name_convert[name]
     except KeyError:
         new_name = name
-    
     
     return new_name
     
@@ -150,8 +145,11 @@ def convert_rows_2_list(rows):
     
     for row in rows:
         art_dict = {}
+        print(row)
         art_url = row.ArticleURL.strip()
         
+        art_dict['top_img'] = article.top_img
+
         art_dict['url'] = art_url
         art_dict['top_img'] = row.ArticleImgURL
         art_dict['title'] = row.Title

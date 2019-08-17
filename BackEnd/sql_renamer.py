@@ -10,7 +10,6 @@ class SqlStorer:
     c_table_name = None
     c_db_name = None
     
-    
     # CONSTRUCTOR
     def __init__(self, db_name="PoliticianInfo", table_name = "TestPoliticianTable"):
         self.c_query = ""
@@ -30,7 +29,6 @@ class SqlStorer:
     def insert_entries(self, state, role):
         formatted_entry = (self.c_table_name, state,role)
         command = "INSERT INTO %s (State, Role) VALUES ('%s', '%s')" % formatted_entry
-        print(command)
         cursor = self.c_cnxn.cursor()
         cursor.execute(command)
         self.c_cnxn.commit()

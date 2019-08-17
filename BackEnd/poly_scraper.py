@@ -82,7 +82,7 @@ class PolyScraper:
                     years_committees.append(committee_name.string)
                 
                 formatted_committees.append({"year_id": i, "committees": years_committees})
-                #update committees
+                # update committees
                 i+=1
             except AttributeError:
                 break
