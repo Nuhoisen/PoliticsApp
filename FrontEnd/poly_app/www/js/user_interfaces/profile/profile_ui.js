@@ -72,8 +72,9 @@ class ProfileUI extends UI{
     
     requestRelatedArticles(name){
         var self = this;
+        console.log(name);
         var last_name = name.split(" ")[1];
-        var args = "keyword=" + last_name;
+        var args = "keyword=" + name;
         
         get_politician_news_articles(args,self.loadRelatedArticles.bind(self));
     }
@@ -319,9 +320,6 @@ class ProfileUI extends UI{
    
    addBioContainer(){
         var self = this;
-       
-      
-       
     }
    
    
