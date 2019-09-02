@@ -2,7 +2,7 @@
     position:relative;
     width: 100%;  
     top: 9%;
-    height: 40%;
+    height: 51%;
     /* border: 1px solid #ccc; */
     /* border-radius: 16px;  */
 }
@@ -64,7 +64,8 @@
 
 
 .profile-name{
-    font: 30px Arial;
+    padding-left: 6px;
+    font: 6vw Arial;
     color: black;
     display: inline-block;
     width: 67%;
@@ -117,6 +118,7 @@
 }
 
 .profile-position{
+    padding-left: 6px;
     /* display: inline-block; */
     /* float: right; */
 }

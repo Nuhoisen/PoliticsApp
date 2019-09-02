@@ -8,7 +8,7 @@ function acceptFile(callBack){
     if(httpRequest.readyState === XMLHttpRequest.DONE){//done
         if(httpRequest.status === 200){
             console.log("Successful Response!");
-            console.log(httpRequest.responseText)
+           
             callBack(httpRequest.responseText);
         }
         else{

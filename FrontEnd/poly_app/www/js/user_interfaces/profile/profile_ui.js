@@ -19,7 +19,12 @@ var addRule = (function (style) {
 
 class ProfileUI extends UI{
     
-    
+    unfocus(){
+        super.unfocus();
+        // Specialized behavior
+        d3.selectAll(".profile-subject-collapsible-all")
+            .html("Expand All");
+    }
     
     loadRelatedArticles(response){
         var html_text = "";
@@ -72,8 +77,9 @@ class ProfileUI extends UI{
     
     requestRelatedArticles(name){
         var self = this;
+        console.log(name);
         var last_name = name.split(" ")[1];
-        var args = "keyword=" + last_name;
+        var args = "keyword=" + name;
         
         get_politician_news_articles(args,self.loadRelatedArticles.bind(self));
     }
@@ -157,7 +163,6 @@ class ProfileUI extends UI{
                             
                         // d3.selectAll(".topic-source-list")
                             // .style("display", "none");
-                            
                         d3.select(this.parentNode).selectAll(".subject-display-block")
                             .style("display", "none");
                         d3.select(this).html( "Expand All" );
@@ -319,9 +324,6 @@ class ProfileUI extends UI{
    
    addBioContainer(){
         var self = this;
-       
-      
-       
     }
    
    

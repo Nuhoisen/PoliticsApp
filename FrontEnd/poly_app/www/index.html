@@ -30,8 +30,11 @@
     <script type="text/javascript" src="js/d3/d3-fetch.v1.min.js"></script>
     <!-- font-awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-
-
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    
+    <!-- for debug purposes -->
+    <meta http-equiv="Cache-control" content="no-cache">
+    
         
 </head>
 
@@ -42,8 +45,8 @@
         });
         
 
-        var server_ip = "http://157.230.246.242";
-        <!-- var server_ip = "http://localhost"; -->
+ var server_ip = "http://206.189.79.205";
+	<!-- var server_ip = "http://localhost"; -->
         var us_map_url = server_ip+":5000/request_map/new_simpler_us_topo.json"
         var profile_url = server_ip+ ":5000";//"http://localhost:5000"
     </script>

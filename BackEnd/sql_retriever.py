@@ -2,7 +2,6 @@ import pyodbc
 
 class SqlRetriever:
 
-    c_cnxn = None
     c_query = None
     c_table_name = None
     c_db_name = None
@@ -12,19 +11,30 @@ class SqlRetriever:
     def __init__(self, db_name="PoliticianInfo", table_name = "test"):
         self.c_query = ""
         self.c_table_name = table_name
-        self.c_db_name = db_name
-                 
+        self.c_db_name = db_name         
+        self.c_cnxn = None
                  
     # Connection SETUP
     def set_up_connection(self):
-        command  = "DRIVER={ODBC Driver 13 for SQL Server};" \
-                    "SERVER=ANDROIDPHONE\POLY_SQLEXPRESS;" \
+        command  = "DRIVER={MySQL ODBC 8.0 Driver};" \
+                    "SERVER=localhost;" \
                     "DATABASE=%s;" \
                     "Trusted_Connection=yes;" \
-                    "UID=ANDROIDPHONE\Kelly" \
-                    "PWD=microsoftSucks123!" % self.c_db_name
+                    "UID=root;" \
+                    "PWD=sqlPW123!" % self.c_db_name
+
+
+#        command = "Login Prompt=False; \
+#                   User ID=root; \
+#                   Password=root; \
+#                   Data Source=localhost; \
+#                   Database=test; \
+#                   CHARSET=UTF8; "
+	#pyodbc.connect('DRIVER={MySQL}; DATABASE=test; SOCKET=/var/lib/mysql/mysql.sock')
         self.c_cnxn = pyodbc.connect(command)
-                      
+        self.c_cnxn.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
+#        c_cnxn.setdecoding(encoding='uft-8')
+
 
     # Table CREATION
     # def create_table(self):
