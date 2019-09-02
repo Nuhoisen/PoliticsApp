@@ -118,7 +118,10 @@ class SqlRetriever:
     def retrieve_wildcard(self, query):
         condition = (self.c_table_name, query)
         
-        command = "SELECT TOP(200) * from " + self.c_table_name +" WHERE Name LIKE '" + query + "%' OR Name LIKE '% "  + query  + "%'"
+        command = "SELECT * from " + self.c_table_name +" \
+                    WHERE Name LIKE '" + query +"%' \
+                    OR Name LIKE '% "  + query +"%' \
+                    OR District LIKE '% " + query + "%' LIMIT 200"
         cursor = self.c_cnxn.cursor()
         cursor.execute(command)
         row_response = cursor.fetchall()
@@ -127,26 +130,42 @@ class SqlRetriever:
         return row_response
 
         
-       # Returns profile info when provided specific
-    # state, role, and district
-    def retrieve_related_articles(self, subject_list, news_company=""):
-        print(subject_list)
-        # tuple_list = [self.c_table_name, news_company]
-        tuple_list = [self.c_table_name]
-        for subject in subject_list:    
-            tuple_list.append(subject)
-        # Just append the rest with the first subject
-        for i in range(len(subject_list), 7):
-            tuple_list.append(subject_list[0])
         
-        condition = tuple(tuple_list)
+    def retrieve_related_articles(self, politician_name, news_company=""):
+        # tuple_list = [self.c_table_name, news_company]
+
+        
+        condition = (self.c_table_name, politician_name)
         
         # command = "SELECT ArticleURL from %s WHERE NewsCompany like '%%%s%%' AND (Keyword_1 like '%%%s%%' OR  Keyword_2 like '%%%s%%' OR  Keyword_3 like '%%%s%%' OR  Keyword_4 like '%%%s%%' OR  Keyword_5 like '%%%s%%' OR Keyword_6 like '%%%s%%' OR  Keyword_7 like '%%%s%%')" % condition
-        command = "SELECT * from %s WHERE (Keyword_1 like '%%%s%%' OR  Keyword_2 like '%%%s%%' OR  Keyword_3 like '%%%s%%' OR  Keyword_4 like '%%%s%%' OR  Keyword_5 like '%%%s%%' OR Keyword_6 like '%%%s%%' OR  Keyword_7 like '%%%s%%')" % condition
+        command = "SELECT * from %s WHERE (Politician like '%s' )" % condition
         
         cursor = self.c_cnxn.cursor()
         cursor.execute(command)
         row_response = cursor.fetchall()
-        return row_response
+        print(row_response)
+        return row_response    
+    
+       # Returns profile info when provided specific
+    # state, role, and district
+    # def retrieve_related_articles(self, subject_list, news_company=""):
+        # print(subject_list)
+        # # tuple_list = [self.c_table_name, news_company]
+        # tuple_list = [self.c_table_name]
+        # for subject in subject_list:    
+            # tuple_list.append(subject)
+        # # Just append the rest with the first subject
+        # for i in range(len(subject_list), 7):
+            # tuple_list.append(subject_list[0])
+        
+        # condition = tuple(tuple_list)
+        
+        # # command = "SELECT ArticleURL from %s WHERE NewsCompany like '%%%s%%' AND (Keyword_1 like '%%%s%%' OR  Keyword_2 like '%%%s%%' OR  Keyword_3 like '%%%s%%' OR  Keyword_4 like '%%%s%%' OR  Keyword_5 like '%%%s%%' OR Keyword_6 like '%%%s%%' OR  Keyword_7 like '%%%s%%')" % condition
+        # command = "SELECT * from %s WHERE (Keyword_1 like '%%%s%%' OR  Keyword_2 like '%%%s%%' OR  Keyword_3 like '%%%s%%' OR  Keyword_4 like '%%%s%%' OR  Keyword_5 like '%%%s%%' OR Keyword_6 like '%%%s%%' OR  Keyword_7 like '%%%s%%')" % condition
+        
+        # cursor = self.c_cnxn.cursor()
+        # cursor.execute(command)
+        # row_response = cursor.fetchall()
+        # return row_response
         
   

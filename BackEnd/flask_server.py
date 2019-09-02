@@ -14,12 +14,11 @@ politician_sql_table_name = "politiciantable"
 
 
 news_sql_db_name = "newsarticlesdb"
-news_sql_table_name = "newsarticlestable"
+news_sql_table_name = "politician_based_newsarticlestable"
 # Dummy Function
     
 @app.route('/request_state/<state>', methods=['GET'])    
 def request_state(state):
-    print(state)
     return state
     
     
@@ -64,7 +63,6 @@ def convert_response_2_dict(res):
         prof_dict["Facebook"] = row.FacebookURL
         prof_dict["Email"] = row.EmailAddress
         prof_dict["Bio"] = row.Bio
-        print(prof_dict)
         prof_list.append(prof_dict)
     return prof_list
         
@@ -76,26 +74,11 @@ def request_state_politician_profile():
     sql_type = SqlRetriever(politician_sql_db_name, politician_sql_table_name)
     sql_type.set_up_connection()
     
-    
-    # print("making sql Call")
     response = sql_type.retrieve_politician_profile(state, role, district)
-    # print("sql Call response")
-    # print(response)
+
     
     prof_list = convert_response_2_dict(response)
     
-    
-    # for row in response:
-        # prof_dict = {}
-        # prof_dict["State"] = row.State
-        # prof_dict["District"] = row.District
-        # prof_dict["Name"] = row.Name
-        # prof_dict["Id"] = row.Id
-        # prof_dict["FollowMoneyURL"] = row.FollowMoneyURL
-        # prof_dict["BallotpediaURL"] = row.BallotpediaURL
-        # prof_dict["BillTrackURL"] = row.BillTrackURL
-        # prof_dict["ImageURL"] = row.ImageURL
-        # prof_list.append(prof_dict)
     
     return json.dumps(prof_list)
 
@@ -105,7 +88,6 @@ def request_wildcard_match():
     sql_type = SqlRetriever(politician_sql_db_name, politician_sql_table_name)
     sql_type.set_up_connection()
     response = sql_type.retrieve_wildcard(query)
-    print("SQL wildcard call response")
     prof_list = convert_response_2_dict(response)
     return json.dumps(prof_list)
     
@@ -113,7 +95,6 @@ def request_wildcard_match():
 def convert_news_company(name):
     name= name.strip()
     new_name = ""
-    print(name)
     name_convert = {
         "fox_news" : "FOX News",
         "breitbart" : "Breitbart",
@@ -145,28 +126,25 @@ def convert_rows_2_list(rows):
     
     for row in rows:
         art_dict = {}
-        print(row)
         art_url = row.ArticleURL.strip()
         
-        art_dict['top_img'] = article.top_img
+        art_dict['top_img'] = row.ArticleImgURL
 
         art_dict['url'] = art_url
         art_dict['top_img'] = row.ArticleImgURL
         art_dict['title'] = row.Title
         art_dict['news_company'] = convert_news_company(row.NewsCompany)
         art_list.append(art_dict)
-    print(art_list)
     return art_list
     
 @app.route('/request_articles/', methods=['GET'])    
 def request_articles():
-    print("in here")
     keyword = request.args.get('keyword')
     
-    keyword_list = [keyword]
+    
     sql_type = SqlRetriever(news_sql_db_name, news_sql_table_name)
     sql_type.set_up_connection()
-    response = sql_type.retrieve_related_articles(keyword_list)
+    response = sql_type.retrieve_related_articles(keyword)
     
     art_list  = convert_rows_2_list(response)
     
