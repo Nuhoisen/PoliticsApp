@@ -7,6 +7,10 @@ class UI {
         d3.selectAll("."+self.class_name)
             .style("display","none");
             
+            
+            
+
+            
     }
 
     refocus(){

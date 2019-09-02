@@ -19,7 +19,12 @@ var addRule = (function (style) {
 
 class ProfileUI extends UI{
     
-    
+    unfocus(){
+        super.unfocus();
+        // Specialized behavior
+        d3.selectAll(".profile-subject-collapsible-all")
+            .html("Expand All");
+    }
     
     loadRelatedArticles(response){
         var html_text = "";
@@ -158,7 +163,6 @@ class ProfileUI extends UI{
                             
                         // d3.selectAll(".topic-source-list")
                             // .style("display", "none");
-                            
                         d3.select(this.parentNode).selectAll(".subject-display-block")
                             .style("display", "none");
                         d3.select(this).html( "Expand All" );

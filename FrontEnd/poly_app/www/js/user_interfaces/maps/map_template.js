@@ -61,9 +61,7 @@ class MapTemplate extends UI {
         // Set zoom
         
         self.svg
-        
           .transition()
-          // .duration(1000)   
           .call(
             self.zoom.transform,
             d3.zoomIdentity.translate(dleft, dtop).scale(zoomScale)

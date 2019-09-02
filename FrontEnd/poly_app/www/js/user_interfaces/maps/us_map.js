@@ -15,7 +15,7 @@ class USMap extends MapTemplate {
         var t = d3
             .event
             .transform;
-            
+        
         if( self.previous_scale > t.k ){
             self.removeStateSelection();
             self.previous_scale = 0;
