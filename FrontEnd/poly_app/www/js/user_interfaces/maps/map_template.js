@@ -15,17 +15,17 @@ var statePartisanClassifier = function (response_text){
         {
            
             d3.select("#" + key.replace(" ", "-"))
-                .style("fill", "red");
+                .style("fill", "url(#republicans)");
         }
         else if(response_json[key].includes('DD')) // BLUE
         {
             d3.select("#" + key.replace(" ", "-"))
-                .style("fill", "blue");
+                .style("fill", "url(#democrats)");
         }
         if(response_json[key].includes('DR') || response_json[key].includes('RD')) // PURPLE
         {
             d3.select("#" + key.replace(" ", "-"))
-                .style("fill", "purple");
+                .style("fill", "url(#mixed)");
         }
         
         
@@ -209,6 +209,55 @@ class MapTemplate extends UI {
             .attr("width", $("#map-holder").width())//"#map-holder").width())
             .attr("height", $("#map-holder").height())//"#map-holder").height())
             .call(self.zoom);
+            
+            
+        self.svg_def = d3.select("svg").append("defs");
+        self.svg_def_democrat_pattern = self.svg_def.append("pattern")
+            .attr("id", "democrats")
+            .attr("x", "1")
+            .attr("y", "1")
+            .attr("width", "4")
+            .attr("height", "4")
+            .attr("patternUnits", "userSpaceOnUse");
+       
+            self.svg_def_democrat_pattern.append("path")
+                .attr("d"," M-1,1 l2,-2 \
+                            M0,4 l4,-4 \
+                            M3,5 l2,-2")
+                .style("stroke", "blue")
+                .style("stroke-width", "1")
+                
+         self.svg_def_republican_pattern = self.svg_def.append("pattern")
+            .attr("id", "republicans")
+            .attr("x", "1")
+            .attr("y", "1")
+            .attr("width", "4")
+            .attr("height", "4")
+            .attr("patternUnits", "userSpaceOnUse");
+       
+            self.svg_def_republican_pattern.append("path")
+                .attr("d"," M-1,1 l2,-2 \
+                            M0,4 l4,-4 \
+                            M3,5 l2,-2")
+                .style("stroke", "red")
+                .style("stroke-width", "1");
+                
+        self.svg_def_mixed_pattern = self.svg_def.append("pattern")
+            .attr("id", "mixed")
+            .attr("x", "1")
+            .attr("y", "1")
+            .attr("width", "4")
+            .attr("height", "4")
+            .attr("patternUnits", "userSpaceOnUse");
+       
+            self.svg_def_mixed_pattern.append("path")
+                .attr("d"," M-1,1 l2,-2 \
+                            M0,4 l4,-4 \
+                            M3,5 l2,-2")
+                .style("stroke", "purple")
+                .style("stroke-width", "1");
+
+                
     }
    
     generateMapG(){
