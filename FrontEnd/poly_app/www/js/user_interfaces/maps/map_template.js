@@ -5,12 +5,49 @@ var genericMeshFunction = function(self, us){
 
 // var meshFunction = genericMeshFunction;
 
+var statePartisanClassifier = function (response_text){
+	response_json = JSON.parse(response_text);
+	console.log(response_json);
+	
+	for (var key in response_json) {
+        // self.selected_state_id =  //id;
+        if(response_json[key].includes('RR')) // RED
+        {
+           
+            d3.select("#" + key.replace(" ", "-"))
+                .style("fill", "red");
+        }
+        else if(response_json[key].includes('DD')) // BLUE
+        {
+            d3.select("#" + key.replace(" ", "-"))
+                .style("fill", "blue");
+        }
+        if(response_json[key].includes('DR') || response_json[key].includes('RD')) // PURPLE
+        {
+            d3.select("#" + key.replace(" ", "-"))
+                .style("fill", "purple");
+        }
+        
+        
+        if(response_json[key].includes('DR') || response_json[key].includes('RD')) // PURPLE
+        {
+            d3.select("#" + key.replace(" ", "-"))
+                .style("stroke", "black");
+        }
+        
+    }
+
+}
+
 class MapTemplate extends UI {
     
     zoomed(self){}
     
     initiateZoom() {}
      // Resets map while performing half-second transition
+	 
+	
+	
     zoomOut(){
         var self = this;
         self.minZoom = Math.min($( "#map-holder").width() / (self.w), $( "#map-holder").height() / (self.h)); //#map-holder
@@ -107,9 +144,9 @@ class MapTemplate extends UI {
         return self.countriesGroup.select("#"+id);
     }
     
-   meshFunction(self, us){
+	meshFunction(self, us){
         return genericMeshFunction(self, us);
-   };
+	};
     
     generateMapPaths(file_name){
         var self = this;
@@ -187,6 +224,8 @@ class MapTemplate extends UI {
         self.generateMapSVG();
         self.generateMapG();
         self.generateMapPaths(this.map_file_name);
+        // Call to CLIENT
+		get_state_partisanships("", statePartisanClassifier);
     }
     
     constructor(ui_class_name, creator,  attr){

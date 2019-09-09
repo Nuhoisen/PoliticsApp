@@ -84,8 +84,7 @@ class StateUI extends ImageMapUI{
         //MODIFICATIONS
         // $(".us-map").addClass("state-ui");
         $(".map-profile").append(html);
-        // $(".ui-body").addClass("state-ui");
-        // $(".ui-body").append(html);
+
         
         // Add State Name to the Label
         self.addLabel(self.selected_state_id);

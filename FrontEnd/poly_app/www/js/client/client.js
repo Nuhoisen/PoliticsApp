@@ -64,6 +64,13 @@ function get_politician_news_articles(args, callback){
     httpRequest.send();
 }
 
+function get_state_partisanships(args, callback){
+	httpRequest.onreadystatechange = acceptFile.bind(this, callback);
+    httpRequest.open('GET', profile_url +'/request_state_partisanships?' + args, true);
+    httpRequest.send();
+	
+}
+
 // var args = "state=Mississippi&role=US Senator&district=Mississippi US Senate";
 // get_state_politician_profile(args, response_here)
 

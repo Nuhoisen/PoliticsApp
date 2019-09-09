@@ -92,6 +92,25 @@ def request_wildcard_match():
     return json.dumps(prof_list)
     
     
+@app.route('/request_state_partisanships/', methods=['GET'])
+def request_state_partisanship():
+    query = ""
+    sql_type = SqlRetriever(politician_sql_db_name, politician_sql_table_name)
+    sql_type.set_up_connection()
+    response = sql_type.retrieve_state_partisanships(query)
+    partisan_dict = {}
+    
+    
+    for row in response:
+        if row.State not in partisan_dict.keys():
+            partisan_dict[row.State] = ""
+        partisan_dict[row.State] += row.PartyAffiliation
+        
+        
+    print(partisan_dict)
+    # prof_list = convert_response_2_dict(response)
+    return json.dumps(partisan_dict)
+    
 def convert_news_company(name):
     name= name.strip()
     new_name = ""

@@ -72,7 +72,7 @@ class SqlRetriever:
         
         
     def retrieve_senators_img_url(self, state, role):
-        condition = (self.c_table_name, state, role)
+        condition = ( self.c_table_name, state, role )
         command = "SELECT ImageURL from %s WHERE State='%s' AND Role='%s'" %condition
         print(command)
         cursor = self.c_cnxn.cursor()
@@ -130,6 +130,15 @@ class SqlRetriever:
         return row_response
 
         
+    def retrieve_state_partisanships(self, query):
+        command = "SELECT State, PartyAffiliation from " + self.c_table_name +" \
+                    WHERE Role LIKE 'US Senator'"
+        cursor = self.c_cnxn.cursor()
+        cursor.execute(command)
+        row_response = cursor.fetchall()
+        for row in row_response:
+            print(row)
+        return row_response
         
     def retrieve_related_articles(self, politician_name, news_company=""):
         # tuple_list = [self.c_table_name, news_company]
