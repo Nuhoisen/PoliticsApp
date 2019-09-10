@@ -27,6 +27,49 @@ class USMap extends MapTemplate {
         self.bordersGroup.attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");
     }
     
+    
+     
+    generatePartisanList(){
+        var self = this;
+        var args = "role=US Senator&district_type=State";
+        if (self.partisan_list){
+            self.statePartisanClassifier(self.partisan_list);
+        }
+        else{
+            args = ""
+            get_state_partisanships("", self.statePartisanClassifier.bind(this));
+        }   
+    }
+    
+    statePartisanClassifier (response_text){
+        var self = this;
+        var response_json;
+        console.log("In the child");
+        self.partisan_list = response_text;
+        response_json = JSON.parse(self.partisan_list);
+        
+        
+        for (var key in response_json) {
+            // self.selected_state_id =  //id;
+            if(response_json[key].includes('RR')) // RED
+            {
+               
+                d3.select("#" + key.replace(" ", "-"))
+                    .style("fill", "url(#republicans)");
+            }
+            else if(response_json[key].includes('DD')) // BLUE
+            {
+                d3.select("#" + key.replace(" ", "-"))
+                    .style("fill", "url(#democrats)");
+            }
+            else if(response_json[key].includes('DR') || response_json[key].includes('RD')) // PURPLE
+            {
+                d3.select("#" + key.replace(" ", "-"))
+                    .style("fill", "url(#mixed)");
+            }
+            
+        }
+    }
      // Function that calculates zoom/pan limits and sets zoom to default value 
     initiateZoom() {
         var self = this;

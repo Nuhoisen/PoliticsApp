@@ -5,39 +5,7 @@ var genericMeshFunction = function(self, us){
 
 // var meshFunction = genericMeshFunction;
 
-var statePartisanClassifier = function (response_text){
-	response_json = JSON.parse(response_text);
-	console.log(response_json);
-	
-	for (var key in response_json) {
-        // self.selected_state_id =  //id;
-        if(response_json[key].includes('RR')) // RED
-        {
-           
-            d3.select("#" + key.replace(" ", "-"))
-                .style("fill", "url(#republicans)");
-        }
-        else if(response_json[key].includes('DD')) // BLUE
-        {
-            d3.select("#" + key.replace(" ", "-"))
-                .style("fill", "url(#democrats)");
-        }
-        if(response_json[key].includes('DR') || response_json[key].includes('RD')) // PURPLE
-        {
-            d3.select("#" + key.replace(" ", "-"))
-                .style("fill", "url(#mixed)");
-        }
-        
-        
-        if(response_json[key].includes('DR') || response_json[key].includes('RD')) // PURPLE
-        {
-            d3.select("#" + key.replace(" ", "-"))
-                .style("stroke", "black");
-        }
-        
-    }
 
-}
 
 class MapTemplate extends UI {
     
@@ -59,6 +27,13 @@ class MapTemplate extends UI {
             .duration(1000)
             .call(self.zoom.transform, d3.zoomIdentity.translate(midX, midY).scale(self.minZoom));
     }
+    
+    
+    
+    
+    
+    
+    
     
     // Define map zoom behaviour
     // zoom to show a bounding box, with optional additional padding as percentage of box size
@@ -148,6 +123,15 @@ class MapTemplate extends UI {
         return genericMeshFunction(self, us);
 	};
     
+    statePartisanClassifier(response_text){
+        console.log("In the parent");
+        console.log(response_text)
+    }
+    
+    generatePartisanList(){
+        
+    }
+    
     generateMapPaths(file_name){
         var self = this;
         self.map_file_name = file_name;
@@ -187,6 +171,10 @@ class MapTemplate extends UI {
                 ;
                 self.initiateZoom();
             });  
+            
+            
+            // Call to CLIENT
+            self.generatePartisanList();
         })
     }
     
@@ -273,8 +261,6 @@ class MapTemplate extends UI {
         self.generateMapSVG();
         self.generateMapG();
         self.generateMapPaths(this.map_file_name);
-        // Call to CLIENT
-		get_state_partisanships("", statePartisanClassifier);
     }
     
     constructor(ui_class_name, creator,  attr){
@@ -293,6 +279,7 @@ class MapTemplate extends UI {
         this.previous_scale  = 0;
         this.path_ids = [];
         this.ui = NaN;
+        this.partisan_list = false;
         var self = this;
         
         // DEFINE FUNCTIONS/OBJECTS
