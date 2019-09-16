@@ -214,6 +214,20 @@ class MapTemplate extends UI {
                 .style("stroke", "blue")
                 .style("stroke-width", "1")
                 
+
+                
+            // self.svg_def_democrat_pattern.append("path")
+                // .attr("d"," M4,4 l-4, -4")
+                // .style("stroke", "yellow")
+                // .style("stroke-width", "1")                
+                
+            // self.svg_def_democrat_pattern.append("path")
+                // .attr("d"," M0,2 l2, -2 \
+                            // M2,4 l2, -2")
+                // .style("stroke", "green")
+                // .style("stroke-width", "1")
+        
+                
          self.svg_def_republican_pattern = self.svg_def.append("pattern")
             .attr("id", "republicans")
             .attr("x", "1")

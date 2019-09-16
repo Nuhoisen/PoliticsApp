@@ -22,7 +22,7 @@ class ProfileUI extends UI{
     unfocus(){
         super.unfocus();
         // Specialized behavior
-        d3.selectAll(".profile-subject-collapsible-all")
+        d3.selectAll(".profile-subject-tab-all")
             .html("Expand All");
     }
     
@@ -132,7 +132,7 @@ class ProfileUI extends UI{
     stancesClick(){
         var self = this;
         
-        var coll = document.getElementsByClassName("profile-stances-collapsible")[0];
+        var coll = document.getElementsByClassName("profile-stances-tab")[0];
         var fold = document.getElementsByClassName("profile-stances-container")[0];
         
         coll.classList.toggle("stances-active");
@@ -141,13 +141,13 @@ class ProfileUI extends UI{
    
   
    addListeners(){
-        // d3.select(".profile-stances-collapsible-all")
-        d3.selectAll(".profile-subject-collapsible-all")
+        // d3.select(".profile-stances-tab-all")
+        d3.selectAll(".profile-subject-tab-all")
             .on("click", function(){
-                    // coll = d3.select(this.parentNode).select(".profile-subject-collapsible");
-                    d3.select(this.parentNode).select(".profile-subject-collapsible").classed("active", !d3.select(this.parentNode).select(".profile-subject-collapsible").classed("active"));
+                    // coll = d3.select(this.parentNode).select(".profile-subject-tab");
+                    d3.select(this.parentNode).select(".profile-subject-tab").classed("active", !d3.select(this.parentNode).select(".profile-subject-tab").classed("active"));
                     
-                    if (d3.select(this.parentNode).select(".profile-subject-collapsible").classed("active")){
+                    if (d3.select(this.parentNode).select(".profile-subject-tab").classed("active")){
                         // d3.selectAll(".topic-body")
                         d3.select(this.parentNode).selectAll(".subject-display-block")
                             .style("display", "block");
@@ -173,31 +173,31 @@ class ProfileUI extends UI{
             });
         
         // Stance expand listeners
-        d3.selectAll(".profile-subject-collapsible")
+        d3.selectAll(".profile-subject-tab")
             .on("click", function(d, i){
-                    // var coll = d3.select(this);//.select("profile-subject-collapsible")
+                    // var coll = d3.select(this);//.select("profile-subject-tab")
                     d3.select(this).classed("active", !d3.select(this).classed("active"));
                     
                     // if (coll.classed("active")){
                     if (d3.select(this).classed("active")){
                         d3.select(this.parentNode).select(".profile-subject-container")
                             .style("display", "block");
-                        d3.select(this.parentNode).select(".profile-subject-collapsible-all").html("Collapse All");
+                        d3.select(this.parentNode).select(".profile-subject-tab-all").html("Collapse All");
                     }
                     else{
                         d3.select(this.parentNode).select(".profile-subject-container")
                             .style("display", "none");
-                        d3.select(this.parentNode).select(".profile-subject-collapsible-all").html("Expand All");
+                        d3.select(this.parentNode).select(".profile-subject-tab-all").html("Expand All");
                     }
                 });
          
-         d3.selectAll(".topic-collapsible")
+         d3.selectAll(".topic-tab")
             .on("click", function(){
                  var som = d3.select(this.nextElementSibling);
                  ( som.style("display") == "block" ) ? som.style("display", "none") : som.style("display", "block");        
             });
             
-        d3.selectAll(".topic-stance-sources-collapsible")
+        d3.selectAll(".topic-stance-sources-tab")
             .on("click", function(){
                 var src_lst = d3.select(this.nextElementSibling);
                 ( src_lst.style("display") == "block" ) ? src_lst.style("display", "none") : src_lst.style("display", "block");
@@ -270,48 +270,39 @@ class ProfileUI extends UI{
    
    addBody(){
        var body_html = "<div class='profile-body'> \
-                            <div class='profile-stances-collapsible-container profile-subject-collapsible-container'> \
-                                <div class='profile-stances-collapsible profile-subject-collapsible'> \
-                                    <div class='profile-stances-collapsible-text profile-subject-collapsible-text'> \
+                            <div class='profile-stances-tab-container profile-subject-tab-container'> \
+                                <div class='profile-stances-tab profile-subject-tab'> \
+                                    <div class='profile-stances-tab-text profile-subject-tab-text'> \
                                         Stances \
                                     </div> \
-                                    <div class='profile-stances-collapsible-img-div profile-subject-collapsible-img-div'> \
-                                        <img  class='profile-subject-collapsible-img' src='img/cutouts/stances.png' alt=/> \
+                                    <div class='profile-stances-tab-img-div profile-subject-tab-img-div'> \
+                                        <img  class='profile-subject-tab-img' src='img/cutouts/stances.png' alt=/> \
                                     </div> \
-                                </div> \
-                                <div class='profile-stances-collapsible-all profile-subject-collapsible-all'> \
-                                    Expand All \
                                 </div> \
                                 <div class='profile-stances-container profile-subject-container subject-display-block'> \
                                 </div> \
                             </div> \
-                            <div class='profile-bio-collapsible-container profile-subject-collapsible-container'> \
-                                <div class='profile-bio-collapsible profile-subject-collapsible'> \
-                                    <div class='profile-bio-collapsible-text profile-subject-collapsible-text'> \
+                            <div class='profile-bio-tab-container profile-subject-tab-container'> \
+                                <div class='profile-bio-tab profile-subject-tab'> \
+                                    <div class='profile-bio-tab-text profile-subject-tab-text'> \
                                         Bio \
                                     </div> \
-                                    <div class='profile-bio-collapsible-img-div profile-subject-collapsible-img-div'> \
-                                        <img  class='profile-subject-collapsible-img' src='img/cutouts/bio.png' alt=/>  \
+                                    <div class='profile-bio-tab-img-div profile-subject-tab-img-div'> \
+                                        <img  class='profile-subject-tab-img' src='img/cutouts/bio.png' alt=/>  \
                                     </div> \
-                                </div> \
-                                <div class='profile-bio-collapsible-all profile-subject-collapsible-all'> \
-                                    Expand All \
                                 </div> \
                                 <div class=' profile-bio-container profile-subject-container subject-display-block'> \
                                 </div> \
                             </div> \
                             \
-                            <div class='profile-news-collapsible-container profile-subject-collapsible-container'> \
-                                    <div class='profile-news-collapsible profile-subject-collapsible'> \
-                                        <div class='profile-news-collapsible-text profile-subject-collapsible-text'> \
+                            <div class='profile-news-tab-container profile-subject-tab-container'> \
+                                    <div class='profile-news-tab profile-subject-tab'> \
+                                        <div class='profile-news-tab-text profile-subject-tab-text'> \
                                             News \
                                         </div> \
-                                        <div class='profile-News-collapsible-img-div profile-subject-collapsible-img-div'> \
-                                            <img  class='profile-subject-collapsible-img' src='img/cutouts/news.png' alt=/>  \
+                                        <div class='profile-News-tab-img-div profile-subject-tab-img-div'> \
+                                            <img  class='profile-subject-tab-img' src='img/cutouts/news.png' alt=/>  \
                                         </div> \
-                                    </div> \
-                                    <div class='profile-news-collapsible-all profile-subject-collapsible-all'> \
-                                        Expand All \
                                     </div> \
                                     <div class='profile-news-container profile-subject-container subject-display-block'> \
                                     </div> \
@@ -334,7 +325,7 @@ class ProfileUI extends UI{
         var self = this;
         for (var i = 0; i < topics.length; i++){ //
             var slider_html = " <div class='topic-container'> \
-                                    <div class='topic-collapsible replace-collapsible'>  \
+                                    <div class='topic-tab replace-tab'>  \
                                         replace \
                                     </div> \
                                     <div class='topic-body subject-display-block'> \
@@ -348,7 +339,7 @@ class ProfileUI extends UI{
                                             <input type='range' min='1' max='100' value='50' class='topic-slider replace replace-slider'> \
                                         </div> \
                                         <div class='topic-stance-source-container replace replace-stance-source-container'> \
-                                                <div class='topic-stance-sources-collapsible replace replace-stance-sources-collapsible'>\
+                                                <div class='topic-stance-sources-tab replace replace-stance-sources-tab'>\
                                                     Sources \
                                                 </div> \
                                                 <ul class='topic-source-list replace replace-source-list'> \
@@ -381,7 +372,7 @@ class ProfileUI extends UI{
         d3.selectAll(".topic-slider")
             .property("disabled", true);
             
-        d3.select(".profile-stances-collapsible")
+        d3.select(".profile-stances-tab")
             .on("click", function(){
                 self.stancesClick();
             });

@@ -1,8 +1,8 @@
-.stances-active, .profile-subject-collapsible:active{
+.stances-active, .profile-subject-tab:active{
       background-color: #ccc;
 }
 
-.profile-subject-collapsible-all{
+.profile-subject-tab-all{
     color: #07C;
     display: inline-block;
     width: 24%;
@@ -15,7 +15,7 @@
     
 }
 
-.stances-active, .profile-subject-collapsible-all:active{
+.stances-active, .profile-subject-tab-all:active{
       background-color: #ccc;
 }
 
@@ -48,7 +48,7 @@
    border-radius: 20px;
 }
 
-.topic-collapsible{
+.topic-tab{
     text-align:center;
     color: black;
     background-color: beige;
@@ -58,7 +58,7 @@
     
 }
 
-.topic-active, .topic-collapsible:hover{
+.topic-active, .topic-tab:hover{
       background-color: #ccc;
       display: block;
 }
@@ -147,10 +147,10 @@
     display: inline-block;
     width: 66%;
 }
-.topic-stance-sources-collapsible{
+.topic-stance-sources-tab{
     
 }
-.topic-stance-sources-collapsible:hover{
+.topic-stance-sources-tab:hover{
       background-color: #ccc;
 }
 
@@ -170,11 +170,11 @@
     position: absolute;
 }
 
-.profile-subject-collapsible-img-div{
+.profile-subject-tab-img-div{
     display: inline-block;
 }
 
-.profile-subject-collapsible-img{
+.profile-subject-tab-img{
     width: auto;
     height: 5vh;
     
