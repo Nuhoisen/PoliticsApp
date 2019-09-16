@@ -1,0 +1,2 @@
+term name=.*Firearms.*
+<name>Firearms.*</name>

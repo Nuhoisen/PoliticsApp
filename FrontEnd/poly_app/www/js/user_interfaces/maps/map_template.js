@@ -24,7 +24,6 @@ class MapTemplate extends UI {
         // change zoom transform to min zoom and centre offsets
         return self.svg
             .transition()
-            .duration(1000)
             .call(self.zoom.transform, d3.zoomIdentity.translate(midX, midY).scale(self.minZoom));
     }
     
@@ -88,7 +87,7 @@ class MapTemplate extends UI {
     removeStateSelection(){
         d3.select("g.states").selectAll("path")
             .transition()
-            .duration(1000)
+            
             .style("opacity", 1)
             .attr("class", null);
     }
