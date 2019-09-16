@@ -38,8 +38,12 @@ svg rect {
 
 
 
-.state-selected{
+/* .state-selected{
     fill: blue;
+} */
+
+.state-republicans{
+    fill: url(#republicans);
 }
 
 /* .state-unselected{   

@@ -64,7 +64,13 @@ class StateUI extends ImageMapUI{
                     // </div> 
                     
                     
-        var html = "<div class='state-ui state-label'>Text</div> \
+        var html = "<div class=' state-ui state-flag-img-container' >\
+                        <img class='state-flag-img'\
+                            alt='triangle with all three sides equal' \
+                            height='100%' \
+                            width='100%'/> \
+                    </div >\
+                    <div class='state-ui state-label'>Text</div> \
                     <div class='state-ui senate-img-div-left senate-img-div'> \
                         <img src='' alt='' class='senator-img-left senator-img state-ui'/> \
                          <div href='' class='senator-img-left-name  senator-img-name  state-ui'></div> \
@@ -88,6 +94,10 @@ class StateUI extends ImageMapUI{
         
         // Add State Name to the Label
         self.addLabel(self.selected_state_id);
+        
+        // Add State Flag to banner
+        self.addFlag(self.selected_state_id);
+        
         // Generate Footer
         self.footer.generateHTML();
         
@@ -103,7 +113,13 @@ class StateUI extends ImageMapUI{
     }
     
 
-    
+    addFlag(id=this.selected_state_id){
+        var self = this;
+        var state_file_name = self.selected_state_id.replace(/ /g,"_").toLowerCase();
+        self.setLocationInfo(id);
+        d3.select(".state-flag-img")
+            .attr("src", "flag_data/"+state_file_name+".svg");
+    }
     
     setLocationInfo(id){
         var self = this;
