@@ -11,5 +11,3 @@ pro_choice_index = 0
 
 for subject in subject_list:
     os.system(command + subject)
-
-                    
