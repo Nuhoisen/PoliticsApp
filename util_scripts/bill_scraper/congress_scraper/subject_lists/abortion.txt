@@ -1,2 +1,4 @@
 <name>abortion.*</name>
 term name=.*abortion.*
+"subjects".*[.*abortion.*].*
+abortion
