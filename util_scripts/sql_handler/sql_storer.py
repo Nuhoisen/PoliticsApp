@@ -25,8 +25,8 @@ class SqlStorer:
                     "UID=root;" \
                     "PWD=sqlPW123!" % self.c_db_name
         self.c_cnxn = pyodbc.connect(command)
-        self.c_cnxn.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
-                      
+        # self.c_cnxn.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
+        self.c_cnxn.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-16')
 
     # Table CREATION
     def create_table(self):
@@ -46,9 +46,34 @@ class SqlStorer:
         except Exception:
             print("Table: %s exists"% self.c_table_name)
             
+    # This function performs a wilcard search on database
+    # Search conditions are provided in a dictioanry, where the column 
+    # is the key, and the row_value is the dict value
     
+    # Function returns none if the query fails
+    def retrieve_by_wildcard_and(self, wildcard_dict):
+        select_query = "SELECT * from %s where " % self.c_table_name
+        count = 0
+        for key,value in wildcard_dict.items():
+            temp = "%s like '%%%s%%' " % (key, value) 
+            select_query += temp
+            count +=1 
+            # If last condition in set, don't add an AND condition
+            if(count == len(wildcard_dict)): 
+                   break
+            select_query += " AND " 
 
-    def retrieve_by_wildcard(self, wildcard_dict):
+
+        self.c_query = select_query
+        cursor = self.c_cnxn.cursor()
+        res = cursor.execute(self.c_query)
+        if cursor.rowcount == 0:
+            return None
+        return res
+        
+        
+    # Function returns none if the query fails
+    def retrieve_by_wildcard_or(self, wildcard_dict):
         select_query = "SELECT * from %s where " % self.c_table_name
         count = 0
         for key,value in wildcard_dict.items():
@@ -58,12 +83,36 @@ class SqlStorer:
                # If last condition in set, don't add an AND condition
                if(count == len(wildcard_dict)): 
                        break
-               select_query += " AND " 
+               select_query += " OR " 
 
-#        print(select_query)
+
         self.c_query = select_query
         cursor = self.c_cnxn.cursor()
         res = cursor.execute(self.c_query)
+        if cursor.rowcount == 0:
+            return None
+        return res
+
+
+    # Function returns none if the query fails
+    def retrieve_by_null_value_wildcard(self, wildcard_dict):
+        select_query = "SELECT * from %s where " % self.c_table_name
+        count = 0
+        for key,value in wildcard_dict.items():
+               temp = "%s is NULL " % (key) #, value) 
+               select_query += temp
+               count +=1 
+               # If last condition in set, don't add an AND condition
+               if(count == len(wildcard_dict)): 
+                       break
+               select_query += " AND " 
+
+
+        self.c_query = select_query
+        cursor = self.c_cnxn.cursor()
+        res = cursor.execute(self.c_query)
+        if cursor.rowcount == 0:
+            return None
         return res
 
         
@@ -120,8 +169,14 @@ class SqlStorer:
                if(count == len(wc_condition)): 
                        break
                condition_query += " AND " 
-                
+         
         print(update_query + entry + condition_query )
+        final_query = update_query + entry + condition_query
+        self.c_query = final_query
+        cursor = self.c_cnxn.cursor()
+        res = cursor.execute(self.c_query)
+        self.c_cnxn.commit()
+        return res
 
     # ADD ENTRY
     def add_formatted_entry(self, entry):
