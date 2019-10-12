@@ -7,6 +7,9 @@ from keras.layers import LSTM
 from keras.layers.embeddings import Embedding
 from keras.preprocessing import sequence
 
+# Hashes
+import hashlib
+
 # Math
 from math import floor
 from math import ceil
@@ -36,17 +39,25 @@ top_words = 5000
 entry_list = []
 label_list = []
 
+hash_set = set()
+
 with open("abortion_data_and_labels.pkl", 'rb') as pkl_fp:
     content_list = pickle.load(pkl_fp)
     for entry in content_list:
         try:
             if(entry["content"]):   # Only add entry if it is string
-                # print(entry["content"])
-                entry_list.append(entry["content"])
-                
-                # print(entry["label"])
-                label_list.append(entry["label"])
-                # print(entry["file_path"])
+                content = entry["content"].encode('utf-8')
+                # Take a hash of the content to check that if there 
+                # are duplicates
+                hash_object = hashlib.md5(content)
+                hash_digest  = hash_object.hexdigest()
+                if hash_digest not in hash_set:
+                    hash_set.add(hash_digest)
+                    # If the content is new (no collision)
+                    # add it to the list
+                    entry_list.append(entry["content"])                    
+                    label_list.append(entry["label"])
+
         except KeyError:
                 continue
 
@@ -55,7 +66,7 @@ with open("abortion_data_and_labels.pkl", 'rb') as pkl_fp:
 embedding = "https://tfhub.dev/google/tf2-preview/gnews-swivel-20dim/1"
 hub_layer = hub.KerasLayer(embedding, input_shape=[], dtype=tf.string, trainable=True)
 
-hub_layer(entry_list[:3])
+print(len(entry_list))
 
 # Build the model
 model = tf.keras.Sequential()
@@ -81,12 +92,16 @@ model.compile(optimizer='adam',
                 metrics=['accuracy'])
                 
 
-model.fit(  train_data, 
-            train_labels, 
+model.fit(  x=train_data, 
+            y=train_labels, 
             epochs=10, 
             batch_size=32,
-            verbose=1)
+            verbose=1 )
             
+results = model.evaluate( x=test_data, y=test_labels, batch_size=32, verbose=2)
+for name, value in zip(model.metrics_names, results):
+    print("%s: %.3f" %(name, value))
+
 
 # print(len(label_list))
 # print(len(entry_list))
