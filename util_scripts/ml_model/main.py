@@ -33,11 +33,8 @@ model = None
 
 # CHECKPOINT PATH
 checkpoint_path = os.getcwd() + "\checkpoint.ckpt"
-# fix random seed for reproducibility
-numpy.random.seed(7)
 
-train_validation_split = tfds.Split.TRAIN.subsplit([6, 4])
-
+# <<<<<<< HEAD
 
 # Tensorflow examples
 dataset, info = tfds.load('imdb_reviews/subwords8k', with_info=True,
@@ -45,6 +42,7 @@ dataset, info = tfds.load('imdb_reviews/subwords8k', with_info=True,
 train_dataset, test_dataset = dataset['train'], dataset['test']
 
 encoder = info.features['text'].encoder
+
 
 
 # load the dataset but only keep the top n words, zero the rest
@@ -55,6 +53,7 @@ entry_list = []
 label_list = []
 
 encoded_entry_list = []
+
 hash_set = set()
 
 with open("abortion_data_and_labels.pkl", 'rb') as pkl_fp:
@@ -74,6 +73,7 @@ with open("abortion_data_and_labels.pkl", 'rb') as pkl_fp:
                     entry_list.append(entry["content"])  
                     encoded_entry_list.append( encoder.encode( entry["content"] ) )
                     # tf.Tensor(entry["content"], shape =(len(entry["content"]), ) )
+
                     label_list.append(entry["label"])
 
         except KeyError:
@@ -212,3 +212,4 @@ for arg in sys.argv:
         print("\t\t 1 : create_model")
         print("\t\t 2 : load_saved_model")
         print("\t\t 3 : load_saved_model_no_weights")
+
