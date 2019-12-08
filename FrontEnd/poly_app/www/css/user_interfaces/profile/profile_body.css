@@ -17,33 +17,39 @@
       font-size: 11px;
       box-shadow: 0px 0px 2px gray;
       background: #ffffd4;
-      display:inline-block;
-      width:32%;
+      /* display:inline-block; */
+      /* width:32%; */
 
 }
 
 .profile-subject-tab{
       display: inline-block;
-      width: 73%;
+      width: 32%;
       padding-top: 5px;
       padding-left: 5px;
       padding-bottom: 5px;
+      background: inherit;
+}
+
+.profile-subject-tab.active{
+      background: #c4b57b;
 }
 
 .profile-subject-tab-text{
-    display: inline-block;
+    display: block;
+    text-align: center;
 }
 
 .profile-subject-tab-img-div{
-    display: inline-block;
+    display: block;
 }
 
 .profile-subject-tab-img{
     width: auto;
     height: 5vh;
     
-    margin-left: auto;
-    margin-right: auto;
+    display:block;
+    margin: auto;
 }
 
 

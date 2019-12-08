@@ -170,14 +170,14 @@
     position: absolute;
 }
 
-.profile-subject-tab-img-div{
-    display: inline-block;
-}
+/* .profile-subject-tab-img-div{ */
+    /* display: inline-block; */
+/* } */
 
-.profile-subject-tab-img{
-    width: auto;
-    height: 5vh;
+/* .profile-subject-tab-img{ */
+    /* width: auto; */
+    /* height: 5vh; */
     
-    margin-left: auto;
-    margin-right: auto;
-}
+    /* margin-left: auto; */
+    /* margin-right: auto; */
+/* } */
