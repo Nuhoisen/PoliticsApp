@@ -37,24 +37,29 @@ class ProfileUI extends UI{
 
         for(var i = 0; i < json_response.length; i++)
         {
-            d3.selectAll(".profile-news-container")   
-                .append('h1')
+            
+
+            
+            
+            var news_panel_piece = d3.selectAll(".profile-news-container")
+                .append("div");
+                
+            news_panel_piece.attr("class", "news-panel-piece-container");
+                
+            news_panel_piece.append('h1')
                 .html(json_response[i].title);
-            
-            
-            d3.selectAll(".profile-news-container")
-                .append("a")
+                
+            news_panel_piece.append("a")
                 .attr("href", json_response[i].url)
                 .append('img')
                 .attr("src", json_response[i].top_img)
                 .attr("width", "100%");
             
-            d3.selectAll(".profile-news-container")
+            news_panel_piece
                 .append("div")
                 .html(json_response[i].news_company)
             
-            d3.selectAll(".profile-news-container")
-                .append("hr");
+
                 
                 
                 // .on("click", function(){window.open(json_response[i].url)});
@@ -142,6 +147,11 @@ class ProfileUI extends UI{
   
    addListeners(){
         // d3.select(".profile-stances-tab-all")
+        // d3.selectAll(".profile-stances-tab")
+            // .on("click", function(){
+                    // var test_obj = d3.select(this);
+            // })
+            
         d3.selectAll(".profile-subject-tab-all")
             .on("click", function(){
                     // coll = d3.select(this.parentNode).select(".profile-subject-tab");
@@ -176,19 +186,30 @@ class ProfileUI extends UI{
         d3.selectAll(".profile-subject-tab")
             .on("click", function(d, i){
                     // var coll = d3.select(this);//.select("profile-subject-tab")
-                    d3.select(this).classed("active", !d3.select(this).classed("active"));
+                    d3.selectAll(".profile-subject-tab").classed("active", false);
+                    d3.select(this).classed("active", true);
                     
-                    // if (coll.classed("active")){
-                    if (d3.select(this).classed("active")){
-                        d3.select(this.parentNode).select(".profile-subject-container")
+                    // Hide all display containers, before showing new one.
+                    d3.selectAll(".profile-subject-container")
+                        .style("display", "none");
+                    
+                    var test_obj = d3.select(this).node();
+                    if(test_obj.className.includes("stances")){
+                        d3.select(".profile-stances-container")
                             .style("display", "block");
-                        d3.select(this.parentNode).select(".profile-subject-tab-all").html("Collapse All");
                     }
-                    else{
-                        d3.select(this.parentNode).select(".profile-subject-container")
-                            .style("display", "none");
-                        d3.select(this.parentNode).select(".profile-subject-tab-all").html("Expand All");
+                    
+                    if(test_obj.className.includes("bio")){
+                        d3.select(".profile-bio-container")
+                            .style("display", "block");
                     }
+                    
+                    if(test_obj.className.includes("news")){
+                        d3.select(".profile-news-container")
+                            .style("display", "block");
+                    }
+                        
+                   
                 });
          
          d3.selectAll(".topic-tab")
@@ -230,32 +251,32 @@ class ProfileUI extends UI{
    addHeader(){
        var self = this;
        var header_html =  "<div class='profile-header'> \
-                                <div class='profile-donate-container'> \
-                                    <img  class='profile-donate-img' src='img/cutouts/click_donate.png' alt=/> \
-                                    <div class='profile-donate-text'> \
-                                        Donate\
-                                    </div> \
-                                </div> \
                                 <div class='profile-picture-background'> \
                                 </div> \
                                 <div class = 'profile-picture-container'> \
                                     <img class='profile-picture' src='./css/user_interfaces/profile/temp/alabama_us_senate/Richard_Shelby.png'/> \
                                 </div> \
+                                <div class='profile-header-social-media-container'> \
+                                    <a class='profile-header-facebook-img-div' href='http://www.facebook.com/kimthatcheroregon'> \
+                                        <img class='profile-header-facebook-img' src='img/cutouts/facebook.png' alt=/>  \
+                                    </a> \
+                                    <a class='profile-header-twitter-img-div' > \
+                                        <img  class='profile-header-twitter-img' src='img/cutouts/twitter.png' alt=/>  \
+                                    </a>\
+                                    <a class='profile-header-email-img-div' > \
+                                        <img  class='profile-header-email-img' src='img/cutouts/email.png' alt=/>  \
+                                    </a>\
+                                    <a class='profile-donate-container'> \
+                                        <img  class='profile-donate-img' src='img/cutouts/click_donate.png' alt=/> \
+                                        <div class='profile-donate-text'> \
+                                            Donate\
+                                        </div> \
+                                    </a> \
+                                </div> \
                                 <div class='profile-name-position-container'> \
-                                    <div class='profile-name-and-social-media-container'>\
+                                    <div class='profile-name-container'>\
                                         <div class='profile-name'> \
                                             Bob Billard \
-                                        </div> \
-                                        <div class='profile-header-social-media-container'> \
-                                            <a class='profile-header-facebook-img-div' href='http://www.facebook.com/kimthatcheroregon'> \
-                                                <img class='profile-header-facebook-img' src='img/cutouts/facebook.png' alt=/>  \
-                                            </a> \
-                                            <a class='profile-header-twitter-img-div' > \
-                                                <img  class='profile-header-twitter-img' src='img/cutouts/twitter.png' alt=/>  \
-                                            </a>\
-                                            <a class='profile-header-email-img-div' > \
-                                                <img  class='profile-header-email-img' src='img/cutouts/email.png' alt=/>  \
-                                            </a>\
                                         </div> \
                                     </div>\
                                     <div class='profile-position'> \
@@ -269,45 +290,81 @@ class ProfileUI extends UI{
    }
    
    addBody(){
-       var body_html = "<div class='profile-body'> \
+       
+        var body_html = "<div class='profile-body'> \
                             <div class='profile-stances-tab-container profile-subject-tab-container'> \
                                 <div class='profile-stances-tab profile-subject-tab'> \
-                                    <div class='profile-stances-tab-text profile-subject-tab-text'> \
-                                        Stances \
-                                    </div> \
                                     <div class='profile-stances-tab-img-div profile-subject-tab-img-div'> \
                                         <img  class='profile-subject-tab-img' src='img/cutouts/stances.png' alt=/> \
                                     </div> \
-                                </div> \
-                                <div class='profile-stances-container profile-subject-container subject-display-block'> \
-                                </div> \
-                            </div> \
-                            <div class='profile-bio-tab-container profile-subject-tab-container'> \
-                                <div class='profile-bio-tab profile-subject-tab'> \
-                                    <div class='profile-bio-tab-text profile-subject-tab-text'> \
-                                        Bio \
+                                    <div class='profile-stances-tab-text profile-subject-tab-text'> \
+                                        Stances \
                                     </div> \
+                                </div>  \
+                                 <div class='profile-bio-tab profile-subject-tab'> \
                                     <div class='profile-bio-tab-img-div profile-subject-tab-img-div'> \
                                         <img  class='profile-subject-tab-img' src='img/cutouts/bio.png' alt=/>  \
                                     </div> \
+                                    <div class='profile-bio-tab-text profile-subject-tab-text'> \
+                                        Bio \
+                                    </div> \
                                 </div> \
-                                <div class=' profile-bio-container profile-subject-container subject-display-block'> \
-                                </div> \
-                            </div> \
-                            \
-                            <div class='profile-news-tab-container profile-subject-tab-container'> \
-                                    <div class='profile-news-tab profile-subject-tab'> \
-                                        <div class='profile-news-tab-text profile-subject-tab-text'> \
-                                            News \
-                                        </div> \
+                                <div class='profile-news-tab profile-subject-tab'> \
                                         <div class='profile-News-tab-img-div profile-subject-tab-img-div'> \
                                             <img  class='profile-subject-tab-img' src='img/cutouts/news.png' alt=/>  \
                                         </div> \
-                                    </div> \
-                                    <div class='profile-news-container profile-subject-container subject-display-block'> \
-                                    </div> \
+                                        <div class='profile-news-tab-text profile-subject-tab-text'> \
+                                            News \
+                                        </div> \
+                                </div> \
+                            </div> \
+                            <div class='profile-stances-container profile-subject-container subject-display-block'> \
+                            </div> \
+                            <div class=' profile-bio-container profile-subject-container subject-display-block'> \
+                            </div> \
+                            <div class='profile-news-container profile-subject-container subject-display-block'> \
                             </div> \
                         </div>";
+       
+       // var body_html = "<div class='profile-body'> \
+                            // <div class='profile-stances-tab-container profile-subject-tab-container'> \
+                                // <div class='profile-stances-tab profile-subject-tab'> \
+                                    // <div class='profile-stances-tab-text profile-subject-tab-text'> \
+                                        // Stances \
+                                    // </div> \
+                                    // <div class='profile-stances-tab-img-div profile-subject-tab-img-div'> \
+                                        // <img  class='profile-subject-tab-img' src='img/cutouts/stances.png' alt=/> \
+                                    // </div> \
+                                // </div> \
+                                // <div class='profile-stances-container profile-subject-container subject-display-block'> \
+                                // </div> \
+                            // </div> \
+                            // <div class='profile-bio-tab-container profile-subject-tab-container'> \
+                                // <div class='profile-bio-tab profile-subject-tab'> \
+                                    // <div class='profile-bio-tab-text profile-subject-tab-text'> \
+                                        // Bio \
+                                    // </div> \
+                                    // <div class='profile-bio-tab-img-div profile-subject-tab-img-div'> \
+                                        // <img  class='profile-subject-tab-img' src='img/cutouts/bio.png' alt=/>  \
+                                    // </div> \
+                                // </div> \
+                                // <div class=' profile-bio-container profile-subject-container subject-display-block'> \
+                                // </div> \
+                            // </div> \
+                            // \
+                            // <div class='profile-news-tab-container profile-subject-tab-container'> \
+                                    // <div class='profile-news-tab profile-subject-tab'> \
+                                        // <div class='profile-news-tab-text profile-subject-tab-text'> \
+                                            // News \
+                                        // </div> \
+                                        // <div class='profile-News-tab-img-div profile-subject-tab-img-div'> \
+                                            // <img  class='profile-subject-tab-img' src='img/cutouts/news.png' alt=/>  \
+                                        // </div> \
+                                    // </div> \
+                                    // <div class='profile-news-container profile-subject-container subject-display-block'> \
+                                    // </div> \
+                            // </div> \
+                        // </div>";
         $(".profile-page").append(body_html);
        
    }
