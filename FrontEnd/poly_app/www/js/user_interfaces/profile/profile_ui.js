@@ -37,24 +37,29 @@ class ProfileUI extends UI{
 
         for(var i = 0; i < json_response.length; i++)
         {
-            d3.selectAll(".profile-news-container")   
-                .append('h1')
+            
+
+            
+            
+            var news_panel_piece = d3.selectAll(".profile-news-container")
+                .append("div");
+                
+            news_panel_piece.attr("class", "news-panel-piece-container");
+                
+            news_panel_piece.append('h1')
                 .html(json_response[i].title);
-            
-            
-            d3.selectAll(".profile-news-container")
-                .append("a")
+                
+            news_panel_piece.append("a")
                 .attr("href", json_response[i].url)
                 .append('img')
                 .attr("src", json_response[i].top_img)
                 .attr("width", "100%");
             
-            d3.selectAll(".profile-news-container")
+            news_panel_piece
                 .append("div")
                 .html(json_response[i].news_company)
             
-            d3.selectAll(".profile-news-container")
-                .append("hr");
+
                 
                 
                 // .on("click", function(){window.open(json_response[i].url)});
