@@ -2,7 +2,7 @@
     position:relative;
     width: 100%;  
     top: 9%;
-    height: 32%;
+    height: 27%;
     /* border: 1px solid #ccc; */
     /* border-radius: 16px;  */
 }
@@ -30,33 +30,20 @@
     box-shadow: 0px 1px 5px gray;
 }
 
-
-
-/* .profile-donate-container{ */
-    /* display: inline-block; */
-    /* margin: 10px; */
-    /* /* float: right; */ */
-    
-    
-    /* position: absolute; */
-    /* right:5%; */
-    
-/* } */
-
-
-
 .profile-name-position-container{
     position: absolute;
-    top: 4%;
+    top: 10%;
     left: 4%;
     width: 100%;
 }
 
 
 
+
+
 .profile-name{
-    padding-left: 6px;
-    font: 6vw Arial;
+    /* padding-left: 6px; */
+    font: 7vw Arial;
     color: black;
     display: inline-block;
     width: 67%;
@@ -134,8 +121,8 @@
     margin-right: auto;
 }
 
-.profile-position{
-    padding-left: 6px;
+/* .profile-position{ */
+    /* padding-left: 6px; */
     /* display: inline-block; */
     /* float: right; */
-}
+/* } */
