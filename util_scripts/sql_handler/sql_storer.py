@@ -72,11 +72,20 @@ class SqlStorer:
         return res
         
         
+
+    def fix_format(self, value):
+        value = value.replace("'", "''")
+        value = value.replace('"', '""')
+        value = value.replace('%', '%%')
+        return value
+        
     # Function returns none if the query fails
     def retrieve_by_wildcard_or(self, wildcard_dict):
         select_query = "SELECT * from %s where " % self.c_table_name
         count = 0
         for key,value in wildcard_dict.items():
+               key = self.fix_format(key)      
+               value = self.fix_format(value)      
                temp = "%s like '%%%s%%' " % (key, value) 
                select_query += temp
                count +=1 
@@ -151,6 +160,8 @@ class SqlStorer:
         entry = " SET " 
         count= 0
         for key,value in wc_entry.items():
+               key = self.fix_format(key)      
+               value = self.fix_format(value)    
                temp = " %s='%s'" % (key, value) 
                entry += temp
                count +=1 
@@ -161,6 +172,8 @@ class SqlStorer:
 
         count= 0 
         for key,value in wc_condition.items():
+               key = self.fix_format(key)      
+               value = self.fix_format(value)    
                temp = "%s like '%%%s%%' " % (key, value) 
                condition_query += temp
                count +=1 
