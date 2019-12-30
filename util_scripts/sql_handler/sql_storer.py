@@ -50,26 +50,7 @@ class SqlStorer:
     # Search conditions are provided in a dictioanry, where the column 
     # is the key, and the row_value is the dict value
     
-    # Function returns none if the query fails
-    def retrieve_by_wildcard_and(self, wildcard_dict):
-        select_query = "SELECT * from %s where " % self.c_table_name
-        count = 0
-        for key,value in wildcard_dict.items():
-            temp = "%s like '%%%s%%' " % (key, value) 
-            select_query += temp
-            count +=1 
-            # If last condition in set, don't add an AND condition
-            if(count == len(wildcard_dict)): 
-                   break
-            select_query += " AND " 
-
-
-        self.c_query = select_query
-        cursor = self.c_cnxn.cursor()
-        res = cursor.execute(self.c_query)
-        if cursor.rowcount == 0:
-            return None
-        return res
+  
         
         
 
@@ -79,13 +60,45 @@ class SqlStorer:
         value = value.replace('%', '%%')
         return value
         
+    
+    
+    # Function returns none if the query fails
+    def retrieve_by_wildcard_and(self, wildcard_dict, verbose=True):
+        select_query = "SELECT * from %s where " % self.c_table_name
+        count = 0
+        for key,value in wildcard_dict.items():
+            # Fix format
+            key = self.fix_format(key)      
+            value = self.fix_format(value)  
+            #
+            
+            temp = "%s like '%%%s%%' " % (key, value) 
+            select_query += temp
+            count +=1 
+            # If last condition in set, don't add an AND condition
+            if(count == len(wildcard_dict)): 
+                   break
+            select_query += " AND " 
+
+        if verbose:
+            print(select_query)
+        self.c_query = select_query
+        cursor = self.c_cnxn.cursor()
+        res = cursor.execute(self.c_query)
+        if cursor.rowcount == 0:
+            return None
+        return res
+        
     # Function returns none if the query fails
     def retrieve_by_wildcard_or(self, wildcard_dict):
         select_query = "SELECT * from %s where " % self.c_table_name
         count = 0
         for key,value in wildcard_dict.items():
+               # Fix format
                key = self.fix_format(key)      
                value = self.fix_format(value)      
+               #
+               
                temp = "%s like '%%%s%%' " % (key, value) 
                select_query += temp
                count +=1 
@@ -124,13 +137,50 @@ class SqlStorer:
             return None
         return res
 
+
+     # Function returns none if the query fails
+    def retrieve_by_null_value_plus_valid_and_wildcard(self, null_wildcard_dict, valid_wildcard_dict, verbose= True):
+        select_query = "SELECT * from %s where " % self.c_table_name
+        count = 0
+        for key,value in null_wildcard_dict.items():
+               temp = "%s is NULL " % (key) #, value) 
+               select_query += temp
+               count +=1 
+               # If last condition in set, don't add an AND condition
+               # if(count == len(null_wildcard_dict)): 
+                       # break
+               select_query += " AND " 
+               
+        count = 0
+        for key,value in valid_wildcard_dict.items():
+            temp = "%s like '%%%s%%' " % (key, value) 
+            select_query += temp
+            count +=1
+            if (count == len( valid_wildcard_dict)):
+                break
+            select_query += " AND "
+        if verbose:
+            print(select_query)
+
         
-    def add_wildcard_entry(self, wc_entry):
+        self.c_query = select_query
+        cursor = self.c_cnxn.cursor()
+        res = cursor.execute(self.c_query)
+        if cursor.rowcount == 0:
+            return None
+        return res
+
+        
+    def add_wildcard_entry(self, wc_entry, verbose= True):
         # Update & Condition 
         column_query =  "INSERT INTO %s (" % self.c_table_name
         value_query = " VALUES(" 
         count= 0
         for key,value in wc_entry.items():
+               # Fix Format
+               key = self.fix_format(key)      
+               value = self.fix_format(value)    
+               # 
                column_query += key
                value_query = value_query + "'"+ value + "'"
                count +=1 
@@ -143,8 +193,8 @@ class SqlStorer:
         column_query += " ) " 
         value_query += " ) " 
         final_query = column_query + value_query
-        
-        print(final_query)
+        if verbose:
+            print(final_query)
         # Query
         self.c_query = final_query
         cursor = self.c_cnxn.cursor()
@@ -152,7 +202,7 @@ class SqlStorer:
         self.c_cnxn.commit()
         return res
 
-    def add_wildcard_entry_by_wildcard_condition(self, wc_entry, wc_condition):
+    def add_wildcard_entry_by_wildcard_condition(self, wc_entry, wc_condition, verbose= True):
         # Update & Condition 
         update_query = "UPDATE %s " % self.c_table_name
         condition_query  = " WHERE "
@@ -182,8 +232,8 @@ class SqlStorer:
                if(count == len(wc_condition)): 
                        break
                condition_query += " AND " 
-         
-        print(update_query + entry + condition_query )
+        if verbose:
+            print(update_query + entry + condition_query )
         final_query = update_query + entry + condition_query
         self.c_query = final_query
         cursor = self.c_cnxn.cursor()
@@ -192,14 +242,15 @@ class SqlStorer:
         return res
 
     # ADD ENTRY
-    def add_formatted_entry(self, entry):
+    def add_formatted_entry(self, entry, verbose= True):
         formatted_entry = (self.c_table_name, entry["Id"], entry["Name"], entry["State"], \
                             entry["Role"], entry["District"], entry["FollowMoneyURL"], entry["BallotpediaURL"], \
                             entry["BillTrackURL"], entry["ImageURL"], entry["ThomasID"] \
                             )
         self.c_query = "INSERT INTO %s (Id, Name, State, Role, District, FollowMoneyURL, BallotpediaURL, BillTrackURL, ImageURL) \
                         VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');" % formatted_entry 
-        print(self.c_query)      
+        if verbose :
+            print(self.c_query)      
         cursor = self.c_cnxn.cursor()
         cursor.execute(self.c_query)
         self.c_cnxn.commit()
@@ -228,37 +279,41 @@ class SqlStorer:
 
         return rows
         
-    def update_with_social_media(self, entry):
+    def update_with_social_media(self, entry, verbose = True):
         formatted_entry = (self.c_table_name,  entry['Twitter'], entry['Facebook'],entry['Email'], entry['BillTrack'] )
         self.c_query = "UPDATE %s SET TwitterURL = '%s', FacebookURL = '%s', EmailAddress = '%s' WHERE BillTrackURL = '%s'; " % formatted_entry
-        print(self.c_query)
+        if verbose:
+            print(self.c_query)
         cursor = self.c_cnxn.cursor()
         cursor.execute(self.c_query)
         self.c_cnxn.commit()
     
-    def update_with_bio(self, entry):
+    def update_with_bio(self, entry, verbose = True):
         formatted_entry = (self.c_table_name,  entry['Bio'], entry['BillTrack'] )
         self.c_query = "UPDATE %s SET Bio = '%s' WHERE BillTrackURL = '%s'; " % formatted_entry
-        print(self.c_query)
+        if verbose:
+            print(self.c_query)
         cursor = self.c_cnxn.cursor()
         cursor.execute(self.c_query)
         self.c_cnxn.commit()
 
-    def update_with_party(self, entry):
+    def update_with_party(self, entry, verbose= True):
     
         formatted_entry = (self.c_table_name, entry['Party'], entry['BillTrack'] )
         self.c_query = "UPDATE %s SET PartyAffiliation = '%s' WHERE BillTrackURL = '%s'; " % formatted_entry
-        print(self.c_query)
+        if verbose:
+            print(self.c_query)
         cursor = self.c_cnxn.cursor()
         cursor.execute(self.c_query)
         self.c_cnxn.commit()
         
         
-    def update_with_office_status(self, entry):
+    def update_with_office_status(self, entry, verbose= True):
     
         formatted_entry = (self.c_table_name, entry['InOffice'], entry['BillTrack'] )
         self.c_query = "UPDATE %s SET InOffice = '%s' WHERE BillTrackURL = '%s'; " % formatted_entry
-        print(self.c_query)
+        if verbose:
+            print(self.c_query)
         cursor = self.c_cnxn.cursor()
         cursor.execute(self.c_query)
         self.c_cnxn.commit()
