@@ -6,16 +6,29 @@ import urllib3
 import sys, os
 
 
-ENABLE_EXCEPTION_DEBUG = False
-ENABLE_CANDIDATE_DEBUG = True
+ENABLE_EXCEPTION_DEBUG = True
+
+# Print Messages of exact matches and close matches
+ENABLE_CANDIDATE_DEBUG = False
 ENABLE_CAND_EXACT_MATCH_DEBUG = False
 ENABLE_CAND_CLOSE_MATCH_DEBUG = False
 
+# Print Messages of mismatches and anomolies 
 ENABLE_CAND_ANOMOLGY_DEBUG = False
-ENABLE_CAND_MISMATCH_DEBUG = True
+ENABLE_CAND_MISMATCH_DEBUG = False
+
+# Enable commiting exact and close matches
+COMMIT_EXACT_MATCHES = False
+COMMIT_CLOSE_MATCHES = False
 
 
+# Print a message for every entry checked
+DEBUG_SQL_UPDATE_ENTRIES = False
+
+# Print out the URLs that are processed 
 DEBUG_VOTESMART_API_CALLS = True
+
+DEBUG_SQL_CAND_IDS = False
 
 http = urllib3.PoolManager()
 
@@ -53,6 +66,11 @@ wild_card_valid_query = {  "State": "" ,
 
 
 
+
+update_wild_card_entry      = { "VoteSmartID": "",
+                                "VoteSmartDistrictID": ""}
+update_wild_card_condition  = { "Name": "",
+                                "Id" : "" }
 # role_translation = { "State Representative" : "State House",
                      # "State Senator" : "State Senate" }
 
@@ -147,7 +165,7 @@ for key,value in name_2_abbrev.items():
         # Extract just the representatives
         for candidate in cand_list:
             try:
-                if candidate["officeName"] == "State House":
+                if candidate["officeName"] == "State House" or candidate["officeName"] == "State Assembly":
                     candidate["officeDistrictName"] = int(candidate["officeDistrictName"])
                     refined_cand_list.append(candidate)
             except ValueError as e:
@@ -160,7 +178,6 @@ for key,value in name_2_abbrev.items():
         sorted_vs_cand_list = sorted(refined_cand_list, key = lambda i: int(i["officeDistrictName"]))
         
         
-        
         # Pull results where Cands are null from a certain state
         sql_results = sql_store.retrieve_by_wildcard_and(wild_card_valid_query, verbose=True)
         # sql_results = sql_store.retrieve_by_null_value_plus_valid_and_wildcard(wild_card_null_query, wild_card_valid_query, verbose=False)
@@ -170,15 +187,14 @@ for key,value in name_2_abbrev.items():
         # Form a dictionary to compare
         temp = {}
         
-        
         for row in sql_results:
             try:
                 cand_district_num   = row.District.split()[-1]
                 cand_name           = row.Name
                 
-                
-                temp["LastName"] = cand_name.split()[-1]
-                temp["Name"] = cand_name
+                temp["Id"]          = row.Id
+                temp["LastName"]    = cand_name.split()[-1]
+                temp["Name"]        = cand_name
                 temp["District"] = int(cand_district_num)
                 
                 # Add entry to list
@@ -186,6 +202,7 @@ for key,value in name_2_abbrev.items():
                 
                 # clear the dictionary entry
                 temp.clear()
+                
             except ValueError as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 if ENABLE_EXCEPTION_DEBUG:
@@ -213,18 +230,45 @@ for key,value in name_2_abbrev.items():
                
                 # Votesmart Candiate Name
                 vs_cand_name = "%s %s" % (vs_match_cand["firstName"], vs_match_cand["lastName"])
+                vs_cand_id      = vs_match_cand["candidateId"]
+                vs_cand_dist_id = vs_match_cand["officeDistrictId"]
+                
                 
                 # SQL Candidate Name
                 sql_cand_name = sql_cand["Name"]
-
                 
-                # print( "EXECUTING MATCH: Votesmart Cand: %s, SQL Cand: %s  " %  (vs_cand_name, sql_cand_name) )
-                
-                
-             
+                #SQL Cand Id 
+                sql_cand_id = 0 
+                sql_cand_id   = sql_cand["Id"]
                 
                 
+                
+                
+                # Set up dictionaries for entry
+                update_wild_card_entry.clear()
+                update_wild_card_condition.clear()
+                
+                
+                if DEBUG_SQL_CAND_IDS:
+                    print("sql cand id: %s" % sql_cand_id)
+                
+                update_wild_card_entry["VoteSmartID"] =         str(vs_cand_id)
+                update_wild_card_entry["VoteSmartDistrictID"] = str(vs_cand_dist_id)
+                
+                update_wild_card_condition["Name"] = sql_cand_name
+                update_wild_card_condition["Id"] = str(sql_cand_id)
+                
+                
+                if DEBUG_SQL_UPDATE_ENTRIES:
+                    print("Entry to Update: \n\tName: %s \n\t SQL ID: %s \n\t VoteSmart ID: %s \n\t VoteSmart District ID: %s \n\t"
+                                        % ( update_wild_card_condition["Name"],
+                                            update_wild_card_condition["Id"],
+                                            update_wild_card_entry["VoteSmartID"],
+                                            update_wild_card_entry["VoteSmartDistrictID"]) )
+                
+                #MAYBE Throw Away
                 identified_match = False
+        
                 
                 # First check if Levenshtein on both full names, if less than 3, we can assume perfect
                 if iterative_levenshtein(sql_cand_name, vs_cand_name) < 3:
@@ -232,13 +276,22 @@ for key,value in name_2_abbrev.items():
                     if ENABLE_CANDIDATE_DEBUG and ENABLE_CAND_EXACT_MATCH_DEBUG:
                         print( "EXACT MATCH FOUND: \n\tVotesmart Cand: %s, \tSQL Cand: %s, \n\tState: %s, \n\tPosition: %s, \n\tDistrict: %s , \n\tVoteSmartID: %s" %  (vs_cand_name, sql_cand_name, key, vs_match_cand["officeName"], vs_match_cand["officeDistrictName"], vs_match_cand["candidateId"] ) )
                     
+                    # SQL Commit 
+                    if COMMIT_EXACT_MATCHES:
+                        sql_store.add_wildcard_entry_by_wildcard_condition(update_wild_card_entry, update_wild_card_condition)
+                        
                 # If not, check if their first name is the issue
                 elif search_last_name( vs_cand_name, sql_cand["LastName"]):
                     # Perform an excessive levenshtein check to confirm
                     if iterative_levenshtein(sql_cand_name, vs_cand_name) < 5:
-                        identified_match = True
+                        
                         if ENABLE_CANDIDATE_DEBUG and ENABLE_CAND_CLOSE_MATCH_DEBUG:
                             print( "MATCH FOUND: \n\tVotesmart Cand: %s, \tSQL Cand: %s, \n\tState: %s, \n\tPosition: %s, \n\tDistrict: %s , \n\tVoteSmartID: %s" %  (vs_cand_name, sql_cand_name, key, vs_match_cand["officeName"], vs_match_cand["officeDistrictName"], vs_match_cand["candidateId"] ) )
+                        
+                        # SQL Commit 
+                        if COMMIT_CLOSE_MATCHES:
+                            sql_store.add_wildcard_entry_by_wildcard_condition(update_wild_card_entry, update_wild_card_condition)
+                
                     else:
                         if ENABLE_CANDIDATE_DEBUG and ENABLE_CAND_ANOMOLGY_DEBUG:
                             print( "ANOMOLY FOUND: \n\tVotesmart Cand: %s, \tSQL Cand: %s, \n\tState: %s, \n\tPosition: %s, \n\tDistrict: %s , \n\tVoteSmartID: %s" %  (vs_cand_name, sql_cand_name, key, vs_match_cand["officeName"], vs_match_cand["officeDistrictName"], vs_match_cand["candidateId"] ) )
@@ -247,9 +300,12 @@ for key,value in name_2_abbrev.items():
                 # If fails, it could be problem with sql last name, perform last name match using vs id
                 elif search_last_name( sql_cand_name, vs_match_cand["lastName"]):
                     if iterative_levenshtein(sql_cand_name, vs_cand_name) < 5:
-                        identified_match = True
                         if ENABLE_CANDIDATE_DEBUG and ENABLE_CAND_CLOSE_MATCH_DEBUG:
                             print( "MATCH FOUND: \n\tVotesmart Cand: %s, \tSQL Cand: %s, \n\tState: %s, \n\tPosition: %s, \n\tDistrict: %s , \n\tVoteSmartID: %s" %  (vs_cand_name, sql_cand_name, key, vs_match_cand["officeName"], vs_match_cand["officeDistrictName"], vs_match_cand["candidateId"] ) )
+                            
+                        # SQL Commit 
+                        if COMMIT_CLOSE_MATCHES:
+                            sql_store.add_wildcard_entry_by_wildcard_condition(update_wild_card_entry, update_wild_card_condition)
                     else:
                         if ENABLE_CANDIDATE_DEBUG and ENABLE_CAND_ANOMOLGY_DEBUG:
                             print( "ANOMOLY FOUND: \n\tVotesmart Cand: %s, \tSQL Cand: %s, \n\tState: %s, \n\tPosition: %s, \n\tDistrict: %s , \n\tVoteSmartID: %s" %  (vs_cand_name, sql_cand_name, key, vs_match_cand["officeName"], vs_match_cand["officeDistrictName"], vs_match_cand["candidateId"] ) )
