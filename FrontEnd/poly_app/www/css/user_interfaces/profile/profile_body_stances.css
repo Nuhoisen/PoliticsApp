@@ -111,7 +111,7 @@
   border-radius: 50%; 
   width: 25px; /* Set a specific slider handle width */
   height: 25px; /* Slider handle height */
-  background: url('./temp/alabama_us_senate/Richard_Shelby.png'); /*#4CAF50;  Green background */ 
+  background: url('./contrasticon.png'); /*#4CAF50;  Green background */  
   background-size: 100%;
   cursor: pointer; /* Cursor on hover */
 }
@@ -128,7 +128,8 @@
   border-radius: 50%; 
   width: 25px; /* Set a specific slider handle width */
   height: 25px; /* Slider handle height */
-  background:  url('./temp/alabama_us_senate/Richard_Shelby.png');  /* #4CAF50; Green background  */
+
+  background:  url('./contrasticon.png');  /*#4CAF50; Green background  */
   background-size: 100%;
   cursor: pointer; /* Cursor on hover */
 }
