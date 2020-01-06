@@ -26,6 +26,13 @@ class ProfileUI extends UI{
             .html("Expand All");
     }
     
+	
+	////////////////////////////////////////////////
+	// This function handles the 		////////////
+	// response from the http call		////////////
+	// and loads the information into 	////////////
+	// the HTML page					////////////
+	////////////////////////////////////////////////
     loadRelatedArticles(response){
         var html_text = "";
         
@@ -80,17 +87,107 @@ class ProfileUI extends UI{
             
     }
     
+
+	
+	// This function sets up the arguments and makes 
+	// a call to the client functions
+	// lastly, binds the loadRelatedArticles as 
+	// a call back
     requestRelatedArticles(name){
         var self = this;
-        console.log(name);
+        
         var last_name = name.split(" ")[1];
         var args = "keyword=" + name;
         
         get_politician_news_articles(args,self.loadRelatedArticles.bind(self));
     }
     
+	////////////////////////////////////////////////
+	// This function retrieves bill information ////
+	// from the server and loads it into the 	////
+	// HTML										////
+	////////////////////////////////////////////////
+	loadRelatedBills(response){
+		
+		// var html_text = "";
+		console.log("First");
+		var html_text  = ""
+        
+        var json_response = JSON.parse(response);
+		
+		
+		var html_header_text = "<div class='topic-source-list-bill-title-header replace replace-source-list-bill-title-header'> \
+									Title:  \
+								</div> \
+								<div class='topic-source-list-bill-vote-header replace replace-source-list-bill-vote-header'> \
+									Vote:  \
+								</div> ";
+		
+		$(".Abortion-source-list").append(html_header_text);
+		
+		for(var i = 0; i < json_response.length; i++)
+        {
+			console.log(json_response[i]);
+			
+			
+		   	html_text = "	<div class='topic-source-list-bill replace replace-source-list-bill'> \
+								<div class='topic-source-list-bill-title replace replace-source-list-bill-title'> \
+									SR 1242 \
+								</div> \
+								<div class='topic-source-list-bill-vote replace replace-source-list-bill-vote'> \
+									Yea \
+								</div> \
+								<div class='topic-source-list-bill-analysis replace replace-source-list-bill-analysis'> \
+									Conclusion: Voted across the aisle \
+								</div> \
+								<div class='topic-source-list-bill-details replace replace-source-list-bill-details source-list-bill-details-replace'> \
+									<div class='topic-source-list-bill-number replace replace-source-list-bill-number'> \
+									</div> \
+									<div class='topic-source-list-bill-highlights replace replace-source-list-bill-bill-highlights'> \
+									</div> \
+									<div class='topic-source-list-bill-synopsis replace replace-source-list-bill-synopsis'> \
+									</div> \
+								</div> \
+								<div class='topic-source-list-bill-expand-tab replace replace-source-list-bill-expand-tab'> \
+									Details \
+								</div> \
+							</div>" ;
+							
+			html_text = html_text.replace(/replace/g, json_response[i]['VoteSmartBillID']);
+			
+			$(".Abortion-source-list").append(html_text);
+			// Fill in the fields
+			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-title").html(json_response[i]['BillTitle']);
+			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-vote").html(json_response[i]['PoliticianVote']);
+			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-number").html(json_response[i]['BillNumber']);
+			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-highlights").html(json_response[i]['BillHighlights']);
+			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-synopsis").html(json_response[i]['BillSynopsis']);
+		}
+		
+		d3.selectAll(".topic-source-list-bill-expand-tab")
+			.on("click", function(){
+				var details_class_id = this.classList[1].split('-')[0];
+				details_class_id = "source-list-bill-details-" + details_class_id;
+				console.log(details_class_id);
+				var details_pane = d3.select("." + details_class_id);
+					details_pane.classed("active", !details_pane.classed("active"));
+			});
+	}
+	
+	// This function sets up the arguments and makes 
+	// a call to the client functions
+	// lastly, binds the loadRelatedBills as 
+	// a call back
+	requestRelatedBills(voteSmartId){
+		var self = this;
+		var args = "VoteSmartCandID=" + voteSmartId;
+		get_politician_bills(args, self.loadRelatedBills.bind(self));
+		
+	}
+	
+	
     // Load political image
-    loadPoliticianImage(profile){
+    loadPoliticianInfo(profile){
         var self = this;
         
         d3.selectAll(".profile-picture")
@@ -110,6 +207,8 @@ class ProfileUI extends UI{
         
         self.requestRelatedArticles(profile['Name']);
     
+		self.requestRelatedBills(profile['VoteSmartID']);
+	
       
         var bio =  profile['Bio'];
         var modified_bio = "";
@@ -144,13 +243,7 @@ class ProfileUI extends UI{
         fold.style.display = ( fold.style.display == "block" ) ? "none" : "block";
     }
    
-  
-   addListeners(){
-        // d3.select(".profile-stances-tab-all")
-        // d3.selectAll(".profile-stances-tab")
-            // .on("click", function(){
-                    // var test_obj = d3.select(this);
-            // })
+    addListeners(){
             
         d3.selectAll(".profile-subject-tab-all")
             .on("click", function(){
@@ -245,10 +338,10 @@ class ProfileUI extends UI{
                 var self = d3.select(this);
                 console.log(self.attr("class"));
             })
-       
+	   
    }
    
-   addHeader(){
+    addHeader(){
        var self = this;
        var header_html =  "<div class='profile-header'> \
                                 <div class='profile-picture-background'> \
@@ -289,7 +382,7 @@ class ProfileUI extends UI{
        
    }
    
-   addBody(){
+    addBody(){
        
         var body_html = "<div class='profile-body'> \
                             <div class='profile-stances-tab-container profile-subject-tab-container'> \
@@ -369,45 +462,10 @@ class ProfileUI extends UI{
        
    }
    
-   
-   addBioContainer(){
+    addBioContainer(){
         var self = this;
     }
-   
-   
-   
-   
-   addStanceSources(topic){
-	   var source_html  = ""
-	   // Change this later
-	   for (var i = 0 ; i < 1; i++) {
-		   	source_html += "	<div class='topic-source-list-item-title-header replace replace-source-list-item-title-header'> \
-									Title:  \
-								</div> \
-								<div class='topic-source-list-item-vote-header replace replace-source-list-item-vote-header'> \
-									Kims Vote:  \
-								</div> \
-								<div class='topic-source-list-item replace replace-source-list-item'> \
-									<div class='topic-source-list-item-title replace replace-source-list-item-title'> \
-										SR 1242 \
-									</div> \
-									<div class='topic-source-list-item-vote replace replace-source-list-item-title'> \
-										Yea \
-									</div> \
-									<div class='topic-source-list-item-analysis replace replace-source-list-item-analysis'> \
-										Conclusion: Voted across the aisle \
-									</div> \
-									<div class='topic-source-list-item-expand replace replace-source-list-item-expand'> \
-										More Info \
-									</div> \
-								</div>" ;
-		   
-	   }
-		   
-	   $("."+topic + "-source-list").append(source_html);
-	   
-   }
-   
+    
     // Topic containers
     addStanceContainer(topics){
         var self = this;
@@ -454,8 +512,6 @@ class ProfileUI extends UI{
             $("."+topics[i]['Topic']+"-right").html(topics[i]['Right']);
             
 			
-			self.addStanceSources( topics[i]['Topic'] );
-			
         }
         // disable the sliders
         d3.selectAll(".topic-slider")
@@ -468,9 +524,9 @@ class ProfileUI extends UI{
     }
     
     
-    
     // This function calls the respective component html generators
     // These generators make up the building blocks of the profile page
+	// This function executes before the bills are loaded from the SQL DB
     generateHTML(){
         var self = this;
         // super.generateHTML();
@@ -525,9 +581,6 @@ class ProfileUI extends UI{
                         ];
     }
     
-    
-    
-
 }
 
 

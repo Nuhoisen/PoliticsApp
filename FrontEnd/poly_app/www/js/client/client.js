@@ -64,6 +64,12 @@ function get_politician_news_articles(args, callback){
     httpRequest.send();
 }
 
+function get_politician_bills(args, callback){
+	httpRequest.onreadystatechange = acceptFile.bind(this, callback);
+	httpRequest.open('GET', profile_url +'/request_candidates_bills?' + args, true);
+	httpRequest.send();
+}
+
 function get_state_partisanships(args, callback){
 	httpRequest.onreadystatechange = acceptFile.bind(this, callback);
     httpRequest.open('GET', profile_url +'/request_state_partisanships?' + args, true);

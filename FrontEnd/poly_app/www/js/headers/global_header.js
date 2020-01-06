@@ -61,7 +61,7 @@ class GlobalHeader extends Header{
         closeAllLists();
         document.getElementById("global-search-id").value = profile["Name"];//
         
-        self.creator.profile_page.loadPoliticianImage(profile);
+        self.creator.profile_page.loadPoliticianInfo(profile);
         self.creator.toggleActivePage("news");
     }
     
