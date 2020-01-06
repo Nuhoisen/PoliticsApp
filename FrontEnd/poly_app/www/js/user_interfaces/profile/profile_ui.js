@@ -377,6 +377,37 @@ class ProfileUI extends UI{
    
    
    
+   addStanceSources(topic){
+	   var source_html  = ""
+	   // Change this later
+	   for (var i = 0 ; i < 1; i++) {
+		   	source_html += "	<div class='topic-source-list-item-title-header replace replace-source-list-item-title-header'> \
+									Title:  \
+								</div> \
+								<div class='topic-source-list-item-vote-header replace replace-source-list-item-vote-header'> \
+									Kims Vote:  \
+								</div> \
+								<div class='topic-source-list-item replace replace-source-list-item'> \
+									<div class='topic-source-list-item-title replace replace-source-list-item-title'> \
+										SR 1242 \
+									</div> \
+									<div class='topic-source-list-item-vote replace replace-source-list-item-title'> \
+										Yea \
+									</div> \
+									<div class='topic-source-list-item-analysis replace replace-source-list-item-analysis'> \
+										Conclusion: Voted across the aisle \
+									</div> \
+									<div class='topic-source-list-item-expand replace replace-source-list-item-expand'> \
+										More Info \
+									</div> \
+								</div>" ;
+		   
+	   }
+		   
+	   $("."+topic + "-source-list").append(source_html);
+	   
+   }
+   
     // Topic containers
     addStanceContainer(topics){
         var self = this;
@@ -395,22 +426,16 @@ class ProfileUI extends UI{
                                         <div class='topic-slide-container replace replace-slide-container'> \
                                             <input type='range' min='1' max='100' value='50' class='topic-slider replace replace-slider'> \
                                         </div> \
+										 <div class='topic-perceived-stance replace replace-perceived-stance'> \
+                                            Perceived Stance \
+                                        </div> \
                                         <div class='topic-stance-source-container replace replace-stance-source-container'> \
                                                 <div class='topic-stance-sources-tab replace replace-stance-sources-tab'>\
                                                     Sources \
                                                 </div> \
-                                                <ul class='topic-source-list replace replace-source-list'> \
-                                                    <li> \
-                                                        Source \
-                                                    </li> \
-                                                    <li> \
-                                                        Source \
-                                                    </li> \
-                                                </ul> \
-                                        </div> \
-                                        <div class='topic-perceived-stance replace replace-perceived-stance'> \
-                                            Perceived Stance \
-                                        </div> \
+												<div class='topic-source-list replace replace-source-list'> \
+												</div>\
+										</div> \
                                     </div>  \
                                 </div>";
             
@@ -419,11 +444,18 @@ class ProfileUI extends UI{
             
            
             
+			
+			
+
             slider_html = slider_html.replace(/replace/g, topics[i]['Topic']);
+						
             $(".profile-stances-container").append(slider_html);
             $("."+topics[i]['Topic']+"-left").html(topics[i]['Left']);
             $("."+topics[i]['Topic']+"-right").html(topics[i]['Right']);
             
+			
+			self.addStanceSources( topics[i]['Topic'] );
+			
         }
         // disable the sliders
         d3.selectAll(".topic-slider")
