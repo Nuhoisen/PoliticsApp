@@ -245,7 +245,7 @@ target_bill = {}
 # 
 try:
     for row in sql_res:
-        
+        print( " RUNNING THROUGH CANDIDATE: %s  , Vote Smart ID: %s" % (row.Name , row.VoteSmartID) ) 
         bills = get_cand_bills(row.VoteSmartID)
         
         for bill in bills:
@@ -268,7 +268,7 @@ try:
                     target_bill['VoteSmartBillId']  = bill_id
                     
                     bill_title                      = bill['title']
-                    target_bill['BillTitle']        = bill_title
+                    target_bill['BillTitle']        = bill_title.encode('ascii', 'ignore').decode('utf-8')
                     
                     bill_number                     = bill['billNumber']
                     target_bill['BillNumber']       = bill_number
@@ -298,21 +298,24 @@ try:
                     
                     ########################################
                     ############### CATEGORIES #############
-                    if bill_details['categories']['category']:
-                        # 
-                        bill_categories                                     = bill_details['categories']['category']
-                        
-                        try:
-                            target_bill["VoteSmartPrimaryCategoryId"]       = bill_categories[0]['categoryId']            
-                            target_bill["VoteSmartPrimaryCategoryName"]     = bill_categories[0]['name']    
+                    try:
+                        if bill_details['categories']['category']:
+                            # 
+                            bill_categories                                     = bill_details['categories']['category']
                             
-                            target_bill["VoteSmartSecondaryCategoryId"]     = bill_categories[1]['categoryId']            
-                            target_bill["VoteSmartSecondaryCategoryName"]   = bill_categories[1]['name']
-                            
-                        except KeyError as e:
-                            target_bill["VoteSmartPrimaryCategoryId"]       = bill_categories['categoryId']            
-                            target_bill["VoteSmartPrimaryCategoryName"]     = bill_categories['name']    
-                            pass
+                            try:
+                                target_bill["VoteSmartPrimaryCategoryId"]       = bill_categories[0]['categoryId']            
+                                target_bill["VoteSmartPrimaryCategoryName"]     = bill_categories[0]['name']    
+                                
+                                target_bill["VoteSmartSecondaryCategoryId"]     = bill_categories[1]['categoryId']            
+                                target_bill["VoteSmartSecondaryCategoryName"]   = bill_categories[1]['name']
+                                
+                            except KeyError as e:
+                                target_bill["VoteSmartPrimaryCategoryId"]       = bill_categories['categoryId']            
+                                target_bill["VoteSmartPrimaryCategoryName"]     = bill_categories['name']    
+                                pass
+                    except TypeError as e:
+                        print( "TYPE ERROR OCCURRED: No Bill categories found")
                         ########################################
                         ########################################
                         
