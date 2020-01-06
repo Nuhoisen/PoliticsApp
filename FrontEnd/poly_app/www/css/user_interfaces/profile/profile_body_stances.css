@@ -145,8 +145,9 @@
     cursor: pointer;
     color: black;
     padding: 5px;
-    display: inline-block;
-    width: 66%;
+    display: block;
+    /* display: inline-block; */
+    /* width: 66%; */
 }
 .topic-stance-sources-tab{
     
@@ -156,19 +157,95 @@
 }
 
 .topic-source-list{
-        font-size: 90%;
-        display: none;
+	font-size: 90%;
+	display: none;
 }
 
+
+.topic-source-list-item-title-header {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	padding: 10px;
+	font-weight:bold;
+	/* margin: 10px; */
+	/* border-radius: 10px; */
+	border-top-left-radius: 10px;
+	display: inline-block;
+	margin-right: -3px;
+	width: 39%;
+}
+
+
+
+
+.topic-source-list-item-vote-header{
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	padding: 10px;
+	font-weight:bold;
+	/* margin: 10px; */
+	border-top-right-radius: 10px;
+	display: inline-block;
+	width: 59%;
+}
+
+.topic-source-list-item{
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	/* padding: 10px; */
+	/* margin: 10px; */
+	border-radius: 10px;
+	
+}
+
+.topic-source-list-item-title {
+	
+	/* border-bottom-left-radius: 10px; */
+	/* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+	/* border-bottom-right-radius: 10px; */
+	border-right: 1px solid rgba(0, 0, 0, 0.2);
+	padding: 10px;
+	width: 39%;
+	margin-right: -3px;
+	display: inline-block;
+}
+
+.topic-source-list-item-vote {
+	
+	/* border-bottom-left-radius: 10px; */
+	/* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+	/* border-bottom-right-radius: 10px; */
+	padding: 10px;
+	width: 59%;
+	
+	display: inline-block;
+	
+}
+.topic-source-list-item-analysis{
+	/* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+	
+	padding: 10px;
+	background: #fbe467;
+
+}
+.topic-source-list-item-expand{
+
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	/* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+	
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	/* background: #fbe467; */
+}
 
 .topic-perceived-stance{
     cursor: pointer;
     color: black;
     text-align: right;
     padding: 5px;
-    display: inline-block;
-    width: 33%;
-    position: absolute;
+    /* display: inline-block; */
+    display: block;
+    /* width: 33%; */
+    /* position: absolute;  */
 }
 
 /* .profile-subject-tab-img-div{ */
