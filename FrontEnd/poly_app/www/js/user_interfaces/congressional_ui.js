@@ -7,7 +7,7 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
      imageListener(profile){
         var self = this;
         // var img_url = this.src;
-        self.creator.creator.creator.creator.profile_page.loadPoliticianImage(profile);
+        self.creator.creator.creator.creator.profile_page.loadPoliticianInfo(profile);
         self.creator.creator.creator.creator.toggleActivePage("news");
         // self.removeUI();
     }

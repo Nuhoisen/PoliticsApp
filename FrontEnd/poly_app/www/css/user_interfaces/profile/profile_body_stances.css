@@ -190,7 +190,8 @@
 .topic-source-list-bill{
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 	/* padding: 10px; */
-	/* margin: 10px; */
+	margin-bottom: 10px;
+	margin-top: 10px;
 	border-radius: 10px;
 	
 }
@@ -224,9 +225,11 @@
 	padding: 10px;
 	background: #fbe467;
 	
-	border-top: 1px solid #bfbfbf;
+	/* border-top: 1px solid #bfbfbf; */
 }
 
+
+/* list expand tab */
 .topic-source-list-bill-expand-tab{
 
 	border-bottom-right-radius: 10px;
@@ -239,7 +242,11 @@
 	
 	border-top: 1px dotted #bfbfbf;
 	
-	/* background: #fbe467; */
+	color: inherit;
+}
+
+.topic-source-list-bill-expand-tab.active{
+	color: #e91e63;
 }
 
 .topic-source-list-bill-details{
@@ -250,6 +257,44 @@
 	display: block;	
 }
 
+.topic-source-list-bill-number{
+	padding: 10px;
+	border-top: 1px solid #bfbfbf;
+}
+
+.topic-source-list-bill-synopsis{
+	padding: 10px;
+	border-top: 1px solid #bfbfbf;
+}
+/*********************/
+
+/* Highlights */
+
+.topic-source-list-bill-expand-highlights-tab{
+	color: inherit;
+	
+	
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	
+	border-top: 1px dotted #bfbfbf;
+	border-bottom: 1px dotted #bfbfbf;
+}
+
+.topic-source-list-bill-expand-highlights-tab.active{
+	color: #e91e63;
+}
+
+.topic-source-list-bill-highlights{
+	display: none;
+	padding-right: 10px;
+}
+
+.topic-source-list-bill-highlights.active{
+	display: block;
+}
+/*********************/
 
 .topic-perceived-stance{
     cursor: pointer;
