@@ -100,15 +100,20 @@ def get_bill_details(bill_json):
 
 # Takes a candidate ID, specific year (optional)
 def get_cand_bills(cand_id, year= None):
-    search_url = get_bills_by_official_url % cand_id
-    
-    if year:
-        search_url += ("&year=%s" % year)
-    
-    bills_json = json_request(search_url)
-    
-    return bills_json["bills"]["bill"]
-
+    try:
+        search_url = get_bills_by_official_url % cand_id
+        
+        if year:
+            search_url += ("&year=%s" % year)
+        
+        bills_json = json_request(search_url)
+        
+        return bills_json["bills"]["bill"]
+    # If a json error occurs here, it indicates that the candidate API call 
+    # was corrupted. Return an empty list in order to skip
+    except json.decoder.JSONDecodeError:
+        print("JSON ERROR OCCURRED: Vote Smart Cand ID: %s" % cand_id )
+        return []
 
 
 # Keep track of politicians 
@@ -262,9 +267,9 @@ try:
                     # Reset the entry dictionary to contain all necessary keys
                     # target_bill = dict.fromkeys(prototype_target_bill.keys())
                     
-                    ########################################
-                    ########### Collect Fields #############
-                    
+                    ##################################################
+                    ########### Collect Immediate Fields #############
+                    ##################################################
                     target_bill['VoteSmartBillId']  = bill_id
                     
                     bill_title                      = bill['title']
@@ -275,14 +280,16 @@ try:
                     
                     target_bill['State']            = row.State
                     
-                    ########################################
-                    ########################################
+                    ##################################################
+                    ##################################################
                     
                     
 
                         
                         
-                        
+                    ##################################################
+                    ########### Collect Secondary Fields #############
+                    ##################################################
                     # Get bill details
                     bill_details            = get_bill_details(bill)
                     
@@ -298,6 +305,7 @@ try:
                     
                     ########################################
                     ############### CATEGORIES #############
+                    ########################################
                     try:
                         if bill_details['categories']['category']:
                             # 
@@ -316,15 +324,13 @@ try:
                                 pass
                     except TypeError as e:
                         print( "TYPE ERROR OCCURRED: No Bill categories found")
-                        ########################################
-                        ########################################
+                    ########################################
+                    ########################################
                         
                     
-                    
-                    # Pull out actions from bill
-                    # All Bill actions are retrieved from a bill Detail API call
-                    bill_actions = bill_details["actions"]["action"]
-                    
+                    ########################################
+                    ############### SPONSORS ###############
+                    ########################################
                     # Pull out bill sponsors 
                     # Sponsors are retrieved from a billDetail API Call
                     bill_sponsors = None
@@ -342,73 +348,99 @@ try:
                         print(bill_sponsors)
                         sponsor = bill_sponsors
                         politician_sponsor_set.add(sponsor["candidateId"])
-                    
-                    # This is on the BILL DETAIL LEVEL
-                    # Collect the yeas and nays  
-                    for bill_action in bill_actions:
-                        if bill_action['stage'] == "Passage" :
-             
-                            # Get the yeas/ nays
-                            if bill_action['level'] == 'House':
-                                target_bill['HouseYea'] = bill_action['yea'] 
-                                target_bill['HouseNay'] = bill_action['nay'] 
-                                
-                                ########################################
-                                ###### Convert any empty votes up ######
-                                if not target_bill['HouseYea'].isdigit():
-                                    target_bill['HouseYea'] = str(0)
-                                
-                                if not target_bill['HouseNay'].isdigit():
-                                    target_bill['HouseNay'] = str(0) 
-                                ########################################
-                                ########################################
-                                
-                                # Tally Partisan Lines
-                                rep_yeas, rep_nays, dem_yeas, dem_nays = tally_partisan_votes( bill_action['actionId'], bill_id )
-                                
-                                ########################################
-                                ########################################
-                                target_bill["HouseRepublicanYea"] = str(rep_yeas)
-                                target_bill["HouseRepublicanNay"] = str(rep_nays)
-                                
-                                target_bill["HouseDemocratYea" ] = str(dem_yeas)
-                                target_bill["HouseDemocratNay" ] = str(dem_nays)
-                                ########################################
-                                ########################################
-                                
-                            elif bill_action['level'] == 'Senate':
-                                target_bill['SenateYea'] = bill_action['yea'] 
-                                target_bill['SenateNay'] = bill_action['nay'] 
-                    
-                                ########################################
-                                ###### Convert any empty votes up ######
-                                if not target_bill['SenateYea'].isdigit():
-                                    target_bill['SenateYea'] = str(0)
-                                
-                                if not target_bill['SenateNay'].isdigit():
-                                    target_bill['SenateNay'] = str(0) 
-                                ########################################
-                                ########################################
-                                
-                                
-                                # Tally the partisan lines
-                                rep_yeas, rep_nays, dem_yeas, dem_nays = tally_partisan_votes( bill_action['actionId'], bill_id )
-                                
-                                ########################################
-                                ########################################
-                                target_bill["SenateRepublicanYea"] =    str(rep_yeas)
-                                target_bill["SenateRepublicanNay"] =    str(rep_nays)
-                                
-                                target_bill["SenateDemocratYea" ] =     str(dem_yeas)
-                                target_bill["SenateDemocratNay" ] =     str(dem_nays)
-                                ########################################
-                                ########################################
-                                
-                        elif bill_action['stage'] == "Introduced" :
-                            target_bill['DateIntroduced']   = bill_action['statusDate']
-                            target_bill['IntroducedIn']     = bill_action['level']
+                    ########################################
+                    ########################################
                     
                     
+                    
+                    ########################################
+                    ############ BILL ACTIONS ##############
+                    ########################################
+                    # Pull out actions from bill
+                    # All Bill actions are retrieved from a bill detail API call
+                    if bill_details["actions"]:
+                        
+                        bill_actions = bill_details["actions"]["action"]
+                        # If there is only one action
+                        # it will be a dict. Convert 
+                        # it to a list
+                        if type(bill_actions) is dict:
+                            bill_actions = [bill_actions]
+                    
+                    
+                        # This is on the BILL DETAIL LEVEL
+                        # Collect the yeas and nays  
+                        for bill_action in bill_actions:
+                            if bill_action['stage'] == "Passage" :
+                 
+                                # Get the yeas/ nays
+                                if bill_action['level'] == 'House':
+                                    target_bill['HouseYea'] = bill_action['yea'] 
+                                    target_bill['HouseNay'] = bill_action['nay'] 
+                                    
+                                    ########################################
+                                    ###### Convert any empty votes up ######
+                                    if not target_bill['HouseYea'].isdigit():
+                                        target_bill['HouseYea'] = str(0)
+                                    
+                                    if not target_bill['HouseNay'].isdigit():
+                                        target_bill['HouseNay'] = str(0) 
+                                    ########################################
+                                    ########################################
+                                    
+                                    # Tally Partisan Lines
+                                    rep_yeas, rep_nays, dem_yeas, dem_nays = tally_partisan_votes( bill_action['actionId'], bill_id )
+                                    
+                                    ########################################
+                                    ########################################
+                                    target_bill["HouseRepublicanYea"] = str(rep_yeas)
+                                    target_bill["HouseRepublicanNay"] = str(rep_nays)
+                                    
+                                    target_bill["HouseDemocratYea" ] = str(dem_yeas)
+                                    target_bill["HouseDemocratNay" ] = str(dem_nays)
+                                    ########################################
+                                    ########################################
+                                    
+                                elif bill_action['level'] == 'Senate':
+                                    target_bill['SenateYea'] = bill_action['yea'] 
+                                    target_bill['SenateNay'] = bill_action['nay'] 
+                        
+                                    ########################################
+                                    ###### Convert any empty votes up ######
+                                    if not target_bill['SenateYea'].isdigit():
+                                        target_bill['SenateYea'] = str(0)
+                                    
+                                    if not target_bill['SenateNay'].isdigit():
+                                        target_bill['SenateNay'] = str(0) 
+                                    ########################################
+                                    ########################################
+                                    
+                                    
+                                    # Tally the partisan lines
+                                    rep_yeas, rep_nays, dem_yeas, dem_nays = tally_partisan_votes( bill_action['actionId'], bill_id )
+                                    
+                                    ########################################
+                                    ########################################
+                                    target_bill["SenateRepublicanYea"] =    str(rep_yeas)
+                                    target_bill["SenateRepublicanNay"] =    str(rep_nays)
+                                    
+                                    target_bill["SenateDemocratYea" ] =     str(dem_yeas)
+                                    target_bill["SenateDemocratNay" ] =     str(dem_nays)
+                                    ########################################
+                                    ########################################
+                                    
+                            elif bill_action['stage'] == "Introduced" :
+                                target_bill['DateIntroduced']   = bill_action['statusDate']
+                                target_bill['IntroducedIn']     = bill_action['level']
+                        
+                    ########################################
+                    ########################################
+                    
+                    
+                    
+                    ########################################
+                    ######### SYNOPSIS & HIGHLIGHTS ########
+                    ########################################
                     # Get synopsis and highlights
                     for bill_action in bill_actions:
                         action_details_json = get_bill_action(bill_action)
@@ -422,6 +454,8 @@ try:
                             encoded_synopsis  = action_details_json["synopsis"]
                             target_bill["BillSynopsis"] = ( encoded_synopsis.encode( 'ascii', 'ignore' ) ).decode('utf-8')
                             break
+                    ########################################
+                    ########################################
                         
                     
                     if DEBUG_DICTIONARY_FIELDS:

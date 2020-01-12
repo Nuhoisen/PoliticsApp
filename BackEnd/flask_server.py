@@ -52,8 +52,12 @@ def request_state_politician_profile_img():
     response = sql_type.retrieve_state_politician_img_url(state, role, district)
     
     return response
-    
-def convert_response_2_dict(res):
+
+
+# This function is used to convert 
+# a pyodbc Politician profile response    
+# to a JSON convertable dictionary
+def convert_politician_response_2_dict(res):
     prof_list = []
     for row in res:
         prof_dict = {}
@@ -84,7 +88,7 @@ def request_state_politician_profile():
     response = sql_type.retrieve_politician_profile(state, role, district)
 
     
-    prof_list = convert_response_2_dict(response)
+    prof_list = convert_politician_response_2_dict(response)
     
     
     return json.dumps(prof_list)
@@ -97,7 +101,7 @@ def request_wildcard_match():
     sql_type = SqlRetriever(politician_sql_db_name, politician_sql_table_name)
     sql_type.set_up_connection()
     response = sql_type.retrieve_wildcard(query)
-    prof_list = convert_response_2_dict(response)
+    prof_list = convert_politician_response_2_dict(response)
     return json.dumps(prof_list)
     
     
@@ -116,8 +120,6 @@ def request_state_partisanship():
         partisan_dict[row.State] += row.PartyAffiliation
         
         
-    print(partisan_dict)
-    # prof_list = convert_response_2_dict(response)
     return json.dumps(partisan_dict)
 
 
@@ -162,49 +164,49 @@ def convert_bills_response_2_detailed_dict(cand_bill_record_res):
         ################################################
         bill_dict['PoliticianVote']             = cand_bill_record_row.Vote
         bill_dict['PoliticianSponsored']        = cand_bill_record_row.Sponsored
-        bill_dict['VoteSmartBillID']            = cand_bill_record_row.VoteSmartBillID
+        bill_dict['VoteSmartBillID']            = cand_bill_record_row.VoteSmartBillId
         ################################################
         ########## Set Up The Wild Card Query ##########
         ################################################
-        wild_card_query['VoteSmartBillId']      = cand_bill_record_row.VoteSmartBillID
-        bill_res = bill_info_sql_retriever.retrieve_by_wildcard_and(wild_card_query)
+        # wild_card_query['VoteSmartBillId']      = cand_bill_record_row.VoteSmartBillId
+        # bill_res = bill_info_sql_retriever.retrieve_by_wildcard_and(wild_card_query)
         
         ################################################
         ######## This should only iterate once #########
         ################################################
-        for bill_row in bill_res:
-            bill_dict['BillTitle']                      = bill_row.BillTitle
-            bill_dict['BillNumber']                     = bill_row.BillNumber
-            bill_dict['BillHighlights']                 = bill_row.BillHighlights
-            bill_dict['BillSynopsis']                   = bill_row.BillSynopsis
-            bill_dict['BillType']                       = bill_row.BillType
-            bill_dict['State']                          = bill_row.State
-            
-            bill_dict['VoteSmartPrimaryCategoryId']     = bill_row.VoteSmartPrimaryCategoryId
-            bill_dict['VoteSmartPrimaryCategoryName']   = bill_row.VoteSmartPrimaryCategoryName
-            bill_dict['DateIntroduced']                 = bill_row.DateIntroduced
-            bill_dict['IntroducedIn']                   = bill_row.IntroducedIn
-            
-            bill_dict['SenateYea']                      = bill_row.SenateYea
-            bill_dict['SenateNay']                      = bill_row.SenateNay
-            bill_dict['SenateDemocratYea']              = bill_row.SenateDemocratYea
-            bill_dict['SenateDemocratNay']              = bill_row.SenateDemocratNay
-            bill_dict['SenateRepublicanYea']            = bill_row.SenateRepublicanYea
-            bill_dict['SenateRepublicanNay']            = bill_row.SenateRepublicanNay
-            
-            bill_dict['HouseYea']                       = bill_row.HouseYea
-            bill_dict['HouseNay']                       = bill_row.HouseNay
-            bill_dict['HouseDemocratYea']               = bill_row.HouseDemocratYea
-            bill_dict['HouseDemocratNay']               = bill_row.HouseDemocratNay
-            bill_dict['HouseRepublicanYea']             = bill_row.HouseRepublicanYea
-            bill_dict['HouseRepublicanNay']             = bill_row.HouseRepublicanNay
-            break
+        # for cand_bill_record_row in bill_res:
+        bill_dict['BillTitle']                      = cand_bill_record_row.BillTitle
+        bill_dict['BillNumber']                     = cand_bill_record_row.BillNumber
+        bill_dict['BillHighlights']                 = cand_bill_record_row.BillHighlights
+        bill_dict['BillSynopsis']                   = cand_bill_record_row.BillSynopsis
+        bill_dict['BillType']                       = cand_bill_record_row.BillType
+        bill_dict['State']                          = cand_bill_record_row.State
+        
+        bill_dict['VoteSmartPrimaryCategoryId']     = cand_bill_record_row.VoteSmartPrimaryCategoryId
+        bill_dict['VoteSmartPrimaryCategoryName']   = cand_bill_record_row.VoteSmartPrimaryCategoryName
+        bill_dict['DateIntroduced']                 = cand_bill_record_row.DateIntroduced
+        bill_dict['IntroducedIn']                   = cand_bill_record_row.IntroducedIn
+        
+        bill_dict['SenateYea']                      = cand_bill_record_row.SenateYea
+        bill_dict['SenateNay']                      = cand_bill_record_row.SenateNay
+        bill_dict['SenateDemocratYea']              = cand_bill_record_row.SenateDemocratYea
+        bill_dict['SenateDemocratNay']              = cand_bill_record_row.SenateDemocratNay
+        bill_dict['SenateRepublicanYea']            = cand_bill_record_row.SenateRepublicanYea
+        bill_dict['SenateRepublicanNay']            = cand_bill_record_row.SenateRepublicanNay
+        
+        bill_dict['HouseYea']                       = cand_bill_record_row.HouseYea
+        bill_dict['HouseNay']                       = cand_bill_record_row.HouseNay
+        bill_dict['HouseDemocratYea']               = cand_bill_record_row.HouseDemocratYea
+        bill_dict['HouseDemocratNay']               = cand_bill_record_row.HouseDemocratNay
+        bill_dict['HouseRepublicanYea']             = cand_bill_record_row.HouseRepublicanYea
+        bill_dict['HouseRepublicanNay']             = cand_bill_record_row.HouseRepublicanNay
+            # break
         
         bills_list.append(bill_dict.copy())
         bill_dict.clear()
             
         
-    return bills_list       
+    return bills_list     
  
 # ------------------------------------
 # ---- Used for date time conversion
@@ -213,16 +215,29 @@ def myconverter(o):
     if isinstance(o, datetime.datetime):
         return o.__str__() 
 
+
 @app.route('/request_candidates_bills/', methods=['GET'])
 def request_candidates_bills():
     wild_card_query = {}
+    bills_list = []
+    
     cand_id = request.args.get("VoteSmartCandID")
-    wild_card_query['VoteSmartCandID'] = cand_id
+    category_id = request.args.get("VoteSmartPrimaryCategoryId")
+    print("Candidate ID: %s " % cand_id)
+    print("Category ID: %s "  % category_id)
     
-    response = poly_voting_record_sql_retriever.retrieve_by_wildcard_and(wild_card_query)
+    # Specialized raw request query
+    raw_query = "   SELECT  B.*,V.* FROM    PoliticianInfo.bill_info_table B \
+                    inner join              PoliticianInfo.politician_voting_record_table V ON \
+                    B.VoteSmartBillId = V.VoteSmartBillId \
+                    where V.VoteSmartCandID LIKE '%s' and B.VoteSmartPrimaryCategoryId LIKE '%s' " % (cand_id, category_id);  
     
-    bills_list = convert_bills_response_2_detailed_dict(response)
+    response = poly_voting_record_sql_retriever.execute_raw_query(raw_query)
     
+    if response:
+        bills_list = convert_bills_response_2_detailed_dict(response)
+    
+        
     return json.dumps(bills_list, default = myconverter)
     
     
