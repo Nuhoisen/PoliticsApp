@@ -160,8 +160,10 @@ def init_prompt():
             start_index = 372
             end_index   = 558
         else:
+            print("-----------------------")
             print("INVALID SELECTION.")
             print("SELECT AGAIN.")
+            print("-----------------------")
             user_selected = False
 
     return start_index, end_index
