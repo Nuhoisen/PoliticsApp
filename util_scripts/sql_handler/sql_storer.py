@@ -294,9 +294,54 @@ class SqlStorer:
             print(final_query )
         self.c_query = final_query
         cursor = self.c_cnxn.cursor()
-        res = cursor.execute(self.c_query)
-        self.c_cnxn.commit()
+        # res = cursor.execute(self.c_query)
+        # self.c_cnxn.commit()
         return res
+    
+    def add_wildcard_entry_by_wildcard_condition_exact_match(self, wc_entry, wc_condition, verbose= True):
+        # Update & Condition 
+        update_query = "UPDATE %s " % self.c_table_name
+        condition_query  = " WHERE "
+        # Entry
+        entry = " SET " 
+        count= 0
+        for key,value in wc_entry.items():
+               key = self.fix_format(key)      
+               value = self.fix_format(value)    
+               temp = " %s='%s'" % (key, value) 
+               entry += temp
+               count +=1 
+               # If last condition in set, don't add an AND condition
+               if(count == len(wc_entry)): 
+                       break
+               entry += ", " 
+
+        count= 0 
+        for key,value in wc_condition.items():
+               key = self.fix_format(key)      
+               value = self.fix_format(value)    
+               temp = "%s='%s' " % (key, value) 
+               condition_query += temp
+               count +=1 
+
+               # If last condition in set, don't add an AND condition
+               if(count == len(wc_condition)): 
+                       break
+               condition_query += " AND " 
+        final_query = update_query + entry + condition_query
+        if verbose:
+            print(final_query ) 
+            
+        ###############
+        ## UNCOMMENT ##
+        ###############
+
+        # self.c_query = final_query
+        # cursor = self.c_cnxn.cursor()
+        # res = cursor.execute(self.c_query)
+        # self.c_cnxn.commit()
+        # return res
+
 
 
     # ADD ENTRY
