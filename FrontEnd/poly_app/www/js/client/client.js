@@ -8,7 +8,7 @@ function acceptFile(callBack){
     if(httpRequest.readyState === XMLHttpRequest.DONE){//done
         if(httpRequest.status === 200){
             console.log("Successful Response!");
-           
+			console.log(httpRequest.responseText);
             callBack(httpRequest.responseText);
         }
         else{
@@ -64,10 +64,33 @@ function get_politician_news_articles(args, callback){
     httpRequest.send();
 }
 
-function get_politician_bills(args, callback){
-	httpRequest.onreadystatechange = acceptFile.bind(this, callback);
-	httpRequest.open('GET', profile_url +'/request_candidates_bills?' + args, true);
-	httpRequest.send();
+function get_politician_bills(args, call_Back){
+	let localHttpRequest = new XMLHttpRequest();
+	
+	localHttpRequest.onreadystatechange = function(callBack){
+		if(localHttpRequest.readyState === XMLHttpRequest.DONE){//done
+			if(localHttpRequest.status === 200){
+				console.log("Successful Response!");
+				console.log(localHttpRequest.responseText);
+				callBack(localHttpRequest.responseText);
+			}
+			else{
+				console.log("Error. Status:");
+				console.log(localHttpRequest.status);
+			}
+		}
+		else{//not done
+			console.log("Not Done. Server Status:");
+			console.log(localHttpRequest.readyState);        
+		}
+	}.bind(this, call_Back)
+	//acceptFile.bind(this, callback);
+	
+	
+	
+	localHttpRequest.open('GET', profile_url +'/request_candidates_bills?' + args, true);
+	localHttpRequest.send();	
+	
 }
 
 function get_state_partisanships(args, callback){
