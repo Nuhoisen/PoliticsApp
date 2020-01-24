@@ -113,7 +113,6 @@ def request_state_partisanship():
     response = sql_type.retrieve_state_partisanships(query)
     partisan_dict = {}
     
-    
     for row in response:
         if row.State not in partisan_dict.keys():
             partisan_dict[row.State] = ""
@@ -201,11 +200,11 @@ def convert_bills_response_2_detailed_dict(cand_bill_record_res):
         bill_dict['HouseRepublicanYea']             = cand_bill_record_row.HouseRepublicanYea
         bill_dict['HouseRepublicanNay']             = cand_bill_record_row.HouseRepublicanNay
             # break
+        print(bill_dict['BillNumber'])
         
         bills_list.append(bill_dict.copy())
         bill_dict.clear()
             
-        
     return bills_list     
  
 # ------------------------------------
@@ -221,8 +220,8 @@ def request_candidates_bills():
     wild_card_query = {}
     bills_list = []
     
-    cand_id = request.args.get("VoteSmartCandID")
-    category_id = request.args.get("VoteSmartPrimaryCategoryId")
+    cand_id =       request.args.get("VoteSmartCandID")
+    category_id =   request.args.get("VoteSmartPrimaryCategoryId")
     print("Candidate ID: %s " % cand_id)
     print("Category ID: %s "  % category_id)
     
@@ -232,12 +231,12 @@ def request_candidates_bills():
                     B.VoteSmartBillId = V.VoteSmartBillId \
                     where V.VoteSmartCandID LIKE '%s' and B.VoteSmartPrimaryCategoryId LIKE '%s' " % (cand_id, category_id);  
     
-    response = poly_voting_record_sql_retriever.execute_raw_query(raw_query)
+    response = poly_voting_record_sql_retriever.execute_raw_query(raw_query, verbose=False)
     
     if response:
         bills_list = convert_bills_response_2_detailed_dict(response)
     
-        
+    # print(bills_list)
     return json.dumps(bills_list, default = myconverter)
     
     
@@ -293,15 +292,23 @@ def convert_rows_2_list(rows):
         art_dict['news_company'] = convert_news_company(row.NewsCompany)
         art_list.append(art_dict)
     return art_list
-    
+
+
+
+# Tets out using a sql_storer instead here
+# SQL Retriever
+news_retrieval_sql_retriever = SqlStorer(db_name=news_sql_db_name, table_name=news_sql_table_name)
+news_retrieval_sql_retriever.set_up_connection()
+
 @app.route('/request_articles/', methods=['GET'])    
 def request_articles():
-    keyword = request.args.get('keyword')
+    # Form a query dict that contains the politicians name
+    query_dict = {}
+    politician_name = request.args.get('keyword')
+    query_dict["Politician"] = politician_name
     
-    
-    sql_type = SqlRetriever(news_sql_db_name, news_sql_table_name)
-    sql_type.set_up_connection()
-    response = sql_type.retrieve_related_articles(keyword)
+    # Then execute that query
+    response = news_retrieval_sql_retriever.retrieve_by_wildcard_and(query_dict)
     
     art_list  = convert_rows_2_list(response)
     
@@ -314,7 +321,7 @@ def request_articles():
 # ------------------------------------------------
 @app.route('/request_map/<map_name>', methods=['GET'])
 def request_map(map_name):
-    print("Request_made")
+    # print("Request_made")
     f = open(map_name, 'r')
     f_data = f.read()
     return f_data
