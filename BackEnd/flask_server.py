@@ -79,16 +79,16 @@ def convert_politician_response_2_dict(res):
         
 @app.route('/request_state_politician_profile/', methods=['GET'])    
 def request_state_politician_profile():
-    state = request.args.get('state')
-    role = request.args.get('role')
-    district = request.args.get('district')
-    sql_type = SqlRetriever(politician_sql_db_name, politician_sql_table_name)
+    state       = request.args.get('state')
+    role        = request.args.get('role')
+    district    = request.args.get('district')
+    sql_type    = SqlRetriever(politician_sql_db_name, politician_sql_table_name)
     sql_type.set_up_connection()
     
-    response = sql_type.retrieve_politician_profile(state, role, district)
+    response    = sql_type.retrieve_politician_profile(state, role, district)
 
     
-    prof_list = convert_politician_response_2_dict(response)
+    prof_list   = convert_politician_response_2_dict(response)
     
     
     return json.dumps(prof_list)
@@ -129,18 +129,18 @@ def request_state_partisanship():
 # ---------------- BILL DATA ---------------------       
 # ------------------------------------------------
 # ------------------------------------------------
-cand_bills_db_name = "PoliticianInfo"
-cand_bills_table_name = "politician_voting_record_table"
+# cand_bills_db_name = "PoliticianInfo"
+# cand_bills_table_name = "politician_voting_record_table"
 
-bill_info_table_name = "bill_info_table"
+# bill_info_table_name = "bill_info_table"
 
 
-# SQL Retriever
-poly_voting_record_sql_retriever = SqlStorer(db_name=cand_bills_db_name, table_name=cand_bills_table_name)
-poly_voting_record_sql_retriever.set_up_connection()
+# # SQL Retriever
+# poly_voting_record_sql_retriever = SqlStorer(db_name=cand_bills_db_name, table_name=cand_bills_table_name)
+# poly_voting_record_sql_retriever.set_up_connection()
 
-bill_info_sql_retriever = SqlStorer(db_name=cand_bills_db_name, table_name=bill_info_table_name)
-bill_info_sql_retriever.set_up_connection() 
+# bill_info_sql_retriever = SqlStorer(db_name=cand_bills_db_name, table_name=bill_info_table_name)
+# bill_info_sql_retriever.set_up_connection() 
  
  
 def convert_bills_response_2_detailed_dict(cand_bill_record_res):
@@ -206,6 +206,17 @@ def convert_bills_response_2_detailed_dict(cand_bill_record_res):
         bill_dict.clear()
             
     return bills_list     
+
+
+# ------------------------------------------------
+# ------------------------------------------------
+# ---------------- BILL DATA ---------------------       
+# ------------------------------------------------
+# ------------------------------------------------ 
+cand_bills_db_name = "PoliticianInfo"
+cand_bills_table_name = "politician_voting_record_table"
+
+bill_info_table_name = "bill_info_table" 
  
 # ------------------------------------
 # ---- Used for date time conversion
@@ -217,6 +228,12 @@ def myconverter(o):
 
 @app.route('/request_candidates_bills/', methods=['GET'])
 def request_candidates_bills():
+
+    # SQL Retriever
+    poly_voting_record_sql_retriever = SqlStorer(db_name=cand_bills_db_name, table_name=cand_bills_table_name)
+    poly_voting_record_sql_retriever.set_up_connection()
+    
+    # ----------------------
     wild_card_query = {}
     bills_list = []
     
@@ -229,14 +246,13 @@ def request_candidates_bills():
     raw_query = "   SELECT  B.*,V.* FROM    PoliticianInfo.bill_info_table B \
                     inner join              PoliticianInfo.politician_voting_record_table V ON \
                     B.VoteSmartBillId = V.VoteSmartBillId \
-                    where V.VoteSmartCandID LIKE '%s' and B.VoteSmartPrimaryCategoryId LIKE '%s' " % (cand_id, category_id);  
+                    where V.VoteSmartCandID='%s' and B.VoteSmartPrimaryCategoryId='%s' " % (cand_id, category_id);  
     
     response = poly_voting_record_sql_retriever.execute_raw_query(raw_query, verbose=False)
     
     if response:
         bills_list = convert_bills_response_2_detailed_dict(response)
     
-    # print(bills_list)
     return json.dumps(bills_list, default = myconverter)
     
     
@@ -361,4 +377,4 @@ def request_state_senate(state_id):
 # ------------------------------------------------
 
 # Remove when run with gunicorn    
-app.run(host='0.0.0.0')    
+app.run(host='0.0.0.0', threaded=True)    
