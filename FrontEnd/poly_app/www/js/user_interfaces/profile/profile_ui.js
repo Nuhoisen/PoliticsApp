@@ -45,19 +45,18 @@ class ProfileUI extends UI{
 
         for(var i = 0; i < json_response.length; i++)
         {
-            
-
-            
-            
+                    
             var news_panel_piece = d3.selectAll(".profile-news-container")
-                .append("div");
+					.append("div");
                 
             news_panel_piece.attr("class", "news-panel-piece-container");
                 
-            news_panel_piece.append('h1')
+            news_panel_piece
+				.append('h1')
                 .html(json_response[i].title);
                 
-            news_panel_piece.append("a")
+            news_panel_piece
+				.append("a")
                 .attr("href", json_response[i].url)
                 .append('img')
                 .attr("src", json_response[i].top_img)
@@ -87,6 +86,47 @@ class ProfileUI extends UI{
         get_politician_news_articles(args,self.loadRelatedArticles.bind(self));
     }
     
+	
+	
+	////////////////////////////////////////////////
+	// This function retrieves handles UI 		////
+	// interaction with bills 				 	////
+	////////////////////////////////////////////////
+	addBillEventListeners(){
+		// ---------------------------------------------
+		// ------------- Expand Bills ------------------
+		// ---------------------------------------------
+		d3.selectAll(".topic-source-list-bill-expand-tab")
+			.on("click", function(){
+				var details_class_id = this.classList[1].split('-')[0];
+				details_class_id = ".source-list-bill-details-" + details_class_id;
+				
+				var details_pane = d3.select(details_class_id);
+					details_pane.classed("active", !details_pane.classed("active"));
+					
+					
+				var details_tab = d3.select(this);
+					details_tab.classed("active", !details_tab.classed("active"));
+			});
+		
+		
+		// ---------------------------------------------
+		// ------------- Expand highlights -------------
+		// ---------------------------------------------
+		d3.selectAll(".topic-source-list-bill-expand-highlights-tab")
+			.on("click", function(){
+				var highlights_class_id = this.classList[1].split('-')[0];
+				highlights_class_id = ".source-list-bill-highlights-" + highlights_class_id;
+				
+				var highlights_pane = d3.select(highlights_class_id);
+					highlights_pane.classed("active", !highlights_pane.classed("active"));
+					
+				var highlights_tab = d3.select(this);
+					highlights_tab.classed("active", !highlights_tab.classed("active"));
+			});	
+		
+	}
+	
 	////////////////////////////////////////////////
 	// This function retrieves bill information ////
 	// from the server and loads it into the 	////
@@ -94,20 +134,17 @@ class ProfileUI extends UI{
 	////////////////////////////////////////////////
 	loadRelatedBills(category, response){
 
-		
+		var self = this;
 		var html_text  = ""
         
         var json_response = JSON.parse(response);
 		
 		
 		for(var i = 0; i < json_response.length; i++)
-        {
-			
-			console.log(json_response[i]);
-			
+        {			
 		   	html_text = "	<div class='topic-source-list-bill replace replace-source-list-bill'> \
 								<div class='topic-source-list-bill-title replace replace-source-list-bill-title'> \
-									SR 1242 \
+									Empty BillName Placeholder\
 								</div> \
 								<div class='topic-source-list-bill-vote replace replace-source-list-bill-vote'> \
 									Yea \
@@ -142,47 +179,21 @@ class ProfileUI extends UI{
 			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-synopsis").html(json_response[i]['BillSynopsis']);
 		}
 		
-		d3.selectAll(".topic-source-list-bill-expand-tab")
-			.on("click", function(){
-				var details_class_id = this.classList[1].split('-')[0];
-				details_class_id = ".source-list-bill-details-" + details_class_id;
-				
-				var details_pane = d3.select(details_class_id);
-					details_pane.classed("active", !details_pane.classed("active"));
-					
-					
-				var details_tab = d3.select(this);
-					details_tab.classed("active", !details_tab.classed("active"));
-			});
+		// Bill event listeners
+		self.addBillEventListeners();
 		
-		
-		// ---------------------------------------------
-		// ------------- Expand highlights -------------
-		// ---------------------------------------------
-		d3.selectAll(".topic-source-list-bill-expand-highlights-tab")
-			.on("click", function(){
-				var highlights_class_id = this.classList[1].split('-')[0];
-				highlights_class_id = ".source-list-bill-highlights-" + highlights_class_id;
-				
-				var highlights_pane = d3.select(highlights_class_id);
-					highlights_pane.classed("active", !highlights_pane.classed("active"));
-					
-				var highlights_tab = d3.select(this);
-					highlights_tab.classed("active", !highlights_tab.classed("active"));
-			});
 	}
 	
 	
-	
-	// This function sets up the arguments and makes 
-	// a call to the client functions
-	// lastly, binds the loadRelatedBills as 
-	// a call back
+	///////////////////////////////////////////////////////
+	// This function sets up the arguments and makes //////
+	// a call to the client functions				 //////
+	// lastly, binds the loadRelatedBills as 		 //////
+	// a call back									 //////
+	///////////////////////////////////////////////////////
 	requestRelatedBills(voteSmartId){
 		var self = this;
-
 		var args = "";
-		
 		
 		self.vs_topic_dict = {
 			"Abortion" : [75, 2],
@@ -196,7 +207,7 @@ class ProfileUI extends UI{
 		
 		// this.topics_list = ["Abortion", "Guns", "Economics", "Education", "Environment", "Health Care"]
        
-	    for (var key in self.vs_topic_dict){
+	    for ( var key in self.vs_topic_dict ){
 			
 			// Iterate through each potential category id in the category
 			for ( var i = 0 ; i < self.vs_topic_dict[key].length; i += 1){
@@ -205,20 +216,20 @@ class ProfileUI extends UI{
 				
 				// Pass the argument into the bound callback function
 				get_politician_bills(args, self.loadRelatedBills.bind(self, key));
-			}
-			
+			}	
 		}
-		
 	}
 	
+	///////////////////////////////////////
+    // Load political information	 //////
+	// This includes profile picture //////
+	// The politicians name			 //////
+	// Their position				 //////
+	// Their Social Media information//////
+	// All related articles			 //////
+	// The corresponding votesmart id//////
+	///////////////////////////////////////
 	
-    // Load political information
-	// This includes profile picture
-	// The politicians name
-	// Their position
-	// Their Social Media information
-	// All related articles
-	// The corresponding votesmart id
     loadPoliticianInfo(profile){
         var self = this;
         
