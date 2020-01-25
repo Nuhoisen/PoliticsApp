@@ -102,11 +102,11 @@ class ProfileUI extends UI{
 				details_class_id = ".source-list-bill-details-" + details_class_id;
 				
 				var details_pane = d3.select(details_class_id);
-					details_pane.classed("active", !details_pane.classed("active"));
-					
+				details_pane.classed("active", !details_pane.classed("active"));
 					
 				var details_tab = d3.select(this);
-					details_tab.classed("active", !details_tab.classed("active"));
+				details_tab.classed("active", !details_tab.classed("active"));
+				
 			});
 		
 		
@@ -124,8 +124,153 @@ class ProfileUI extends UI{
 				var highlights_tab = d3.select(this);
 					highlights_tab.classed("active", !highlights_tab.classed("active"));
 			});	
+			
+			
+			
+		// ---------------------------------------------
+		// ------------- Expand Analysis -------------
+		// ---------------------------------------------
+		d3.selectAll(".topic-source-list-bill-analysis-tab")
+			.on("click", function(){
+				var analysis_class_id = this.classList[1].split('-')[0];
+				analysis_class_id = ".source-list-bill-analysis-" + analysis_class_id;
+				
+				var analysis_pane = d3.select(analysis_class_id);
+					analysis_pane.classed("active", !analysis_pane.classed("active"));
+					
+				var analysis_tab = d3.select(this);
+					analysis_tab.classed("active", !analysis_tab.classed("active"));
+			});	
 		
 	}
+	
+	
+	generateBarGraph(bill_data , graph_class, graph_title, parent_container_class){
+		
+		//  Create the svg w/class name
+		d3.select("." + parent_container_class)
+			.append("svg")
+			.attr("class", graph_class) //"analysis-senate-graph-" + bill_id)
+			.attr("width", 300)
+			.attr("height", 300);
+			
+			
+		// select fields from svg
+		var svg = d3.select("." + graph_class),
+            width = svg.attr("width"),
+            height = svg.attr("height"),
+            radius = Math.min(width, height) / 2;
+        
+        var g = svg.append("g")
+                   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+        var color = d3.scaleOrdinal(['#4daf4a','#377eb8','#ff7f00','#984ea3','#e41a1c']);
+
+        var pie = d3.pie().value(function(d) { 
+                return d.vote_count; 
+            });
+
+        var path = d3.arc()
+                     .outerRadius(radius - 10)
+                     .innerRadius(0);
+
+        var label = d3.arc()
+                      .outerRadius(radius)
+                      .innerRadius(radius - 80);
+
+        
+		var arc = g.selectAll(".arc")
+				   .data(pie(bill_data))
+				   .enter().append("g")
+				   .attr("class", "arc");
+
+		arc.append("path")
+		   .attr("d", path)
+		   .attr("fill", function(d) { return color(d.data.field); });
+	
+		// console.log(arc)
+	
+		arc.append("text")
+		   .attr("transform", function(d) { 
+					return "translate(" + label.centroid(d) + ")"; 
+			})
+		   .text(function(d) { return d.data.field + " : " + d.data.vote_count ; });
+
+		svg.append("g")
+		   .attr("transform", "translate(" + (width / 2 - 120) + "," + 20 + ")")
+		   .append("text")
+		   .text(graph_title)
+		   .attr("class", "title");
+	}
+	
+	loadBillAnalysis(bill_json){
+		console.log(bill_json);
+		var self = this;
+
+
+		
+
+		
+		var container_class = "";
+		var graph_title = "";
+		var graph_class = "";
+		// var senate_class = "";
+		
+		if (bill_json["HouseYea"] || bill_json["SenateYea"]){d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID']).html("");}
+		//////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////
+		//////////////////////HOUSE VOTES/////////////////////////
+		//////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////
+		if(bill_json["HouseYea"]){
+			
+			var house_votes = [
+				{"field": "Yeas" , "vote_count" : bill_json["HouseYea"]},
+				{"field": "Nays",  "vote_count" : bill_json["HouseNay"]},
+			];
+		
+			// Set the house votes item
+			container_class = "source-list-bill-analysis-house-votes-" + bill_json['VoteSmartBillID'];
+			graph_class = "analysis-house-graph-" + bill_json['VoteSmartBillID'];
+			graph_title = "House Votes";
+			
+
+			// Append the div to the selector
+			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID'])
+				.append("div")
+				.attr("class", container_class);
+			
+			self.generateBarGraph(house_votes, graph_class, graph_title, container_class);
+		}
+		
+		//////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////
+		//////////////////////SENATE VOTES////////////////////////
+		//////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////
+		if(bill_json["SenateYea"]){
+			
+			var senate_votes= [
+				{"field": "Yeas" , "vote_count" : bill_json["SenateYea"]},
+				{"field": "Nays",  "vote_count" : bill_json["SenateNay"]},
+			];
+		
+			// Set the senate votes item
+			container_class = "source-list-bill-analysis-senate-votes-" + bill_json['VoteSmartBillID'];
+			graph_class = "analysis-senate-graph-" + bill_json['VoteSmartBillID']
+			graph_title = "Senate Votes";
+				
+			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID'])
+				.append("div")
+				.attr("class", container_class);
+				
+			self.generateBarGraph(senate_votes, graph_class, graph_title, container_class);
+		}
+	
+	}
+	
+	
+	
 	
 	////////////////////////////////////////////////
 	// This function retrieves bill information ////
@@ -143,40 +288,63 @@ class ProfileUI extends UI{
 		for(var i = 0; i < json_response.length; i++)
         {			
 		   	html_text = "	<div class='topic-source-list-bill replace replace-source-list-bill'> \
-								<div class='topic-source-list-bill-title replace replace-source-list-bill-title'> \
-									Empty BillName Placeholder\
+								<div class='topic-source-list-bill-number replace replace-source-list-bill-number'> \
 								</div> \
 								<div class='topic-source-list-bill-vote replace replace-source-list-bill-vote'> \
 									Yea \
 								</div> \
 								<div class='topic-source-list-bill-details replace replace-source-list-bill-details source-list-bill-details-replace'> \
-									<div class='topic-source-list-bill-number replace replace-source-list-bill-number'> \
+									<div class='topic-source-list-bill-title replace replace-source-list-bill-title'> \
+										Empty BillName Placeholder\
 									</div> \
 									<div class='topic-source-list-bill-synopsis replace replace-source-list-bill-synopsis'> \
+										Bill Synopsis: See Highlights\
+									</div> \
+									<div class='topic-source-list-bill-highlights replace replace-source-list-bill-highlights source-list-bill-highlights-replace'> \
+										No Bill Highlights \
 									</div> \
 									<div class='topic-source-list-bill-expand-highlights-tab replace replace-source-list-bill-expand-highlights-tab'> \
 										Bill Highlights \
 									</div> \
-									<div class='topic-source-list-bill-highlights replace replace-source-list-bill-highlights source-list-bill-highlights-replace'> \
+									<div class='topic-source-list-bill-analysis replace replace-source-list-bill-analysis source-list-bill-analysis-replace'> \
+										No Analysis Available \
 									</div> \
-									<div class='topic-source-list-bill-analysis replace replace-source-list-bill-analysis'> \
-										Conclusion: Voted across the aisle \
+									<div class='topic-source-list-bill-analysis-tab replace replace-source-list-bill-analysis-tab'> \
+										Analysis \
 									</div> \
 								</div> \
 								<div class='topic-source-list-bill-expand-tab replace replace-source-list-bill-expand-tab'> \
 									Details \
 								</div> \
 							</div>" ;
+
+			
 							
 			html_text = html_text.replace(/replace/g, json_response[i]['VoteSmartBillID']);
 			
+			// Add all the text
 			$("." + category + "-source-list").append(html_text);
+			
 			// Fill in the fields
-			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-title").html(json_response[i]['BillTitle']);
+			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-title").html("Title: " + json_response[i]['BillTitle']);
 			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-vote").html(json_response[i]['PoliticianVote']);
 			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-number").html(json_response[i]['BillNumber']);
-			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-highlights").html(json_response[i]['BillHighlights']);
-			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-synopsis").html(json_response[i]['BillSynopsis']);
+			
+			// Bill Highlights
+			if ( json_response[i]['BillHighlights'] != null ) {
+				$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-highlights").html("Highlights: " + json_response[i]['BillHighlights']);
+			}
+			
+			// Bill Synopsis
+			if ( json_response[i]['BillSynopsis'] != null ) {
+				$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-synopsis").html(json_response[i]['BillSynopsis']);
+			}
+			
+			// Bill Analysis
+			// if( i == 0) {				
+			self.loadBillAnalysis(json_response[i]);
+			// }
+			
 		}
 		
 		// Bill event listeners

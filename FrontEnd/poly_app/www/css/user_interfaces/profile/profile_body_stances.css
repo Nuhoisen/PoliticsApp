@@ -196,38 +196,50 @@
 	
 }
 
-.topic-source-list-bill-title {
-	
+.topic-source-list-bill-title{
+	padding: 10px;
+	border-top: 1px solid #bfbfbf;
+}
+
+
+
+
+
+
+.topic-source-list-bill-vote{
 	/* border-bottom-left-radius: 10px; */
 	/* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 	/* border-bottom-right-radius: 10px; */
-	border-right: 1px solid rgba(0, 0, 0, 0.2);
 	padding: 10px;
-	width: 39%;
-	margin-right: -3px;
+	width: 59%;	
 	display: inline-block;
 }
 
-.topic-source-list-bill-vote {
-	
-	/* border-bottom-left-radius: 10px; */
-	/* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
-	/* border-bottom-right-radius: 10px; */
-	padding: 10px;
-	width: 59%;
-	
-	display: inline-block;
-	
+
+.topic-source-list-bill-analysis-tab{
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	color: blue;
 }
+
+.topic-source-list-bill-analysis-tab.active{
+	color: #e91e63;
+}
+
 .topic-source-list-bill-analysis{
-	/* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
-	
-	padding: 10px;
-	background: #fbe467;
-	
-	/* border-top: 1px solid #bfbfbf; */
+	display: none;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
+
+.topic-source-list-bill-analysis.active{
+	display: block;
+}
 
 /* list expand tab */
 .topic-source-list-bill-expand-tab{
@@ -242,7 +254,7 @@
 	
 	border-top: 1px dotted #bfbfbf;
 	
-	color: inherit;
+	color: blue;
 }
 
 .topic-source-list-bill-expand-tab.active{
@@ -257,9 +269,18 @@
 	display: block;	
 }
 
-.topic-source-list-bill-number{
+/* .topic-source-list-bill-number{ */
+	/* padding: 10px; */
+	/* border-top: 1px solid #bfbfbf; */
+/* } */
+
+.topic-source-list-bill-number{	
+	
+	border-right: 1px solid rgba(0, 0, 0, 0.2);
 	padding: 10px;
-	border-top: 1px solid #bfbfbf;
+	width: 39%;
+	margin-right: -3px;
+	display: inline-block;
 }
 
 .topic-source-list-bill-synopsis{
@@ -271,8 +292,11 @@
 /* Highlights */
 
 .topic-source-list-bill-expand-highlights-tab{
-	color: inherit;
+	color: blue;
 	
+	cursor:pointer;
+    /* color:blue; */
+    /* text-decoration:underline; */
 	
 	padding-left: 10px;
 	padding-top: 5px;
@@ -283,12 +307,17 @@
 }
 
 .topic-source-list-bill-expand-highlights-tab.active{
+	border-top: none;
 	color: #e91e63;
 }
 
 .topic-source-list-bill-highlights{
 	display: none;
 	padding-right: 10px;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-top: 1px dotted #bfbfbf;
 }
 
 .topic-source-list-bill-highlights.active{

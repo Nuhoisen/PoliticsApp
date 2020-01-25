@@ -123,7 +123,6 @@ class MapTemplate extends UI {
 	};
     
     statePartisanClassifier(response_text){
-        console.log("In the parent");
         console.log(response_text)
     }
     
