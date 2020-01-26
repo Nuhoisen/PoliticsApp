@@ -145,71 +145,80 @@ class ProfileUI extends UI{
 	}
 	
 	
-	generateBarGraph(bill_data , graph_class, graph_title, parent_container_class){
+	generateBarGraph( bill_data , graph_class, graph_title, parent_container_class , color_scheme_type){
 		
 		//  Create the svg w/class name
 		d3.select("." + parent_container_class)
 			.append("svg")
-			.attr("class", graph_class) //"analysis-senate-graph-" + bill_id)
+			.attr("class", graph_class) 
 			.attr("width", 300)
 			.attr("height", 300);
 			
 			
 		// select fields from svg
-		var svg = d3.select("." + graph_class),
-            width = svg.attr("width"),
-            height = svg.attr("height"),
-            radius = Math.min(width, height) / 2;
-        
+		var svg 	= d3.select("." + graph_class),
+            width 	= svg.attr("width"),
+            height 	= svg.attr("height"),
+            radius 	= Math.min(width, height) / 4,
+			labelOffset = radius * 1.4;
+			
         var g = svg.append("g")
-                   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+				.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-        var color = d3.scaleOrdinal(['#4daf4a','#377eb8','#ff7f00','#984ea3','#e41a1c']);
 
+		// Color Schemes
+		var color_schemes = {};						
+		color_schemes["neutral"] = d3.scaleOrdinal(['#3bcb58','#ab2e2e','#ff7f00','#984ea3','#e41a1c']);
+													// Blue Yea, Blue Nay, Red Yea, Red Nay
+		color_schemes["partisan"] = d3.scaleOrdinal(['#4671f2', '#1e405e','#ef2e2e','#771c0e','#984ea3','#e41a1c']);
+		
+
+		// Pie
         var pie = d3.pie().value(function(d) { 
                 return d.vote_count; 
             });
 
+		// Path
         var path = d3.arc()
-                     .outerRadius(radius - 10)
-                     .innerRadius(0);
+				.outerRadius(radius - 10)
+				.innerRadius(0);
 
+		// Label
         var label = d3.arc()
-                      .outerRadius(radius)
-                      .innerRadius(radius - 80);
+				.outerRadius(labelOffset)
+				.innerRadius(labelOffset);
 
-        
+        // Arc
 		var arc = g.selectAll(".arc")
 				   .data(pie(bill_data))
 				   .enter().append("g")
 				   .attr("class", "arc");
 
+		// Path
 		arc.append("path")
 		   .attr("d", path)
-		   .attr("fill", function(d) { return color(d.data.field); });
-	
-		// console.log(arc)
+		   .attr("fill", function(d) { return  color_schemes[color_scheme_type](d.data.field); });
+		   
 	
 		arc.append("text")
-		   .attr("transform", function(d) { 
+			.attr("transform", function(d) { 
 					return "translate(" + label.centroid(d) + ")"; 
 			})
-		   .text(function(d) { return d.data.field + " : " + d.data.vote_count ; });
+			.style('text-anchor', 'middle')
+			.style('alignment-baseline', 'middle')
+			.style('font-size', '12px')
+		    .text(function(d) { return d.data.field + " : " + d.data.vote_count ; });
 
 		svg.append("g")
-		   .attr("transform", "translate(" + (width / 2 - 120) + "," + 20 + ")")
+		   .attr("transform", "translate(" + ( width / 2 - 120 ) + "," + 20 + ")")
 		   .append("text")
 		   .text(graph_title)
 		   .attr("class", "title");
 	}
 	
 	loadBillAnalysis(bill_json){
-		console.log(bill_json);
+		// console.log(bill_json);
 		var self = this;
-
-
-		
-
 		
 		var container_class = "";
 		var graph_title = "";
@@ -222,7 +231,7 @@ class ProfileUI extends UI{
 		//////////////////////HOUSE VOTES/////////////////////////
 		//////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////
-		if(bill_json["HouseYea"]){
+		if( bill_json["HouseYea"] ){
 			
 			var house_votes = [
 				{"field": "Yeas" , "vote_count" : bill_json["HouseYea"]},
@@ -240,7 +249,7 @@ class ProfileUI extends UI{
 				.append("div")
 				.attr("class", container_class);
 			
-			self.generateBarGraph(house_votes, graph_class, graph_title, container_class);
+			self.generateBarGraph(house_votes, graph_class, graph_title, container_class, "neutral");
 		}
 		
 		//////////////////////////////////////////////////////////
@@ -250,7 +259,7 @@ class ProfileUI extends UI{
 		//////////////////////////////////////////////////////////
 		if(bill_json["SenateYea"]){
 			
-			var senate_votes= [
+			var senate_votes = [
 				{"field": "Yeas" , "vote_count" : bill_json["SenateYea"]},
 				{"field": "Nays",  "vote_count" : bill_json["SenateNay"]},
 			];
@@ -264,7 +273,35 @@ class ProfileUI extends UI{
 				.append("div")
 				.attr("class", container_class);
 				
-			self.generateBarGraph(senate_votes, graph_class, graph_title, container_class);
+			self.generateBarGraph(senate_votes, graph_class, graph_title, container_class, "neutral");
+		}
+		
+		//////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////
+		///////////////////SENATE PARTISAN VOTES//////////////////
+		//////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////
+		if(bill_json["SenateDemocratYea"]){
+			console.log(bill_json);
+			var senate_partisan_votes = [
+				{"field": "Democrat Yeas" 	, "vote_count" : bill_json["SenateDemocratYea"]},
+				{"field": "Democrat Nays"	, "vote_count" : bill_json["SenateDemocratNay"]},
+				{"field": "Republican Yeas" , "vote_count" : bill_json["SenateRepublicanYea"]},
+				{"field": "Republican Nays" , "vote_count" : bill_json["SenateRepublicanNay"]},
+			];
+			
+			
+			// Set the senate votes item
+			container_class = "source-list-bill-analysis-senate-partisan-votes-" + bill_json['VoteSmartBillID'];
+			graph_class = "analysis-senate-partisan-graph-" + bill_json['VoteSmartBillID']
+			graph_title = "Senate Votes Partisan Lines";
+				
+			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID'])
+				.append("div")
+				.attr("class", container_class);
+				
+			self.generateBarGraph(senate_partisan_votes, graph_class, graph_title, container_class, "partisan");
+			
 		}
 	
 	}
