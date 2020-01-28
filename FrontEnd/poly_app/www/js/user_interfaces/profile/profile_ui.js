@@ -145,8 +145,10 @@ class ProfileUI extends UI{
 	}
 	
 	
-	generateBarGraph( bill_data , graph_class, graph_title, parent_container_class , color_scheme_type){
+	generateBarGraph( bill_data , graph_class, graph_title, parent_container_class){
 		
+		
+		bill_data = bill_data.filter(function(d){ return d.vote_count != 0;});
 		//  Create the svg w/class name
 		d3.select("." + parent_container_class)
 			.append("svg")
@@ -167,10 +169,8 @@ class ProfileUI extends UI{
 
 
 		// Color Schemes
-		var color_schemes = {};						
-		color_schemes["neutral"] = d3.scaleOrdinal(['#3bcb58','#ab2e2e','#ff7f00','#984ea3','#e41a1c']);
-													// Blue Yea, Blue Nay, Red Yea, Red Nay
-		color_schemes["partisan"] = d3.scaleOrdinal(['#4671f2', '#1e405e','#ef2e2e','#771c0e','#984ea3','#e41a1c']);
+													// // Blue Yea, Blue Nay, Red Yea, Red Nay
+		// color_schemes["partisan"] = d3.scaleOrdinal(['#4671f2', '#1e405e','#ef2e2e','#771c0e','#984ea3','#e41a1c']);
 		
 
 		// Pie
@@ -197,17 +197,22 @@ class ProfileUI extends UI{
 		// Path
 		arc.append("path")
 		   .attr("d", path)
-		   .attr("fill", function(d) { return  color_schemes[color_scheme_type](d.data.field); });
+		   .attr("fill", function(d) { return  d.data.color; });
 		   
-	
-		arc.append("text")
-			.attr("transform", function(d) { 
-					return "translate(" + label.centroid(d) + ")"; 
+		arc.append("foreignObject")
+			.attr("x", function(d) {
+					return (label.centroid(d)[0]-45);
 			})
+			.attr("y", function(d) {
+					return (label.centroid(d)[1]-15);
+			})
+			.attr("width", 70)
+			.attr("height", 30)
 			.style('text-anchor', 'middle')
 			.style('alignment-baseline', 'middle')
 			.style('font-size', '12px')
 		    .text(function(d) { return d.data.field + " : " + d.data.vote_count ; });
+
 
 		svg.append("g")
 		   .attr("transform", "translate(" + ( width / 2 - 120 ) + "," + 20 + ")")
@@ -217,25 +222,78 @@ class ProfileUI extends UI{
 	}
 	
 	loadBillAnalysis(bill_json){
-		// console.log(bill_json);
+		
 		var self = this;
 		
 		var container_class = "";
 		var graph_title = "";
 		var graph_class = "";
-		// var senate_class = "";
 		
 		if (bill_json["HouseYea"] || bill_json["SenateYea"]){d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID']).html("");}
+		
+		
+		//////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////
+		//////////////////////SENATE VOTES////////////////////////
+		//////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////
+		if(bill_json["SenateYea"]!=null){
+			
+			var senate_votes = [
+				{"field": "Yeas" , "vote_count" : bill_json["SenateYea"], "color": "#3bcb58"},
+				{"field": "Nays",  "vote_count" : bill_json["SenateNay"], "color": "#ab2e2e"},
+			];
+		
+			// Set the senate votes item
+			container_class = "source-list-bill-analysis-senate-votes-" + bill_json['VoteSmartBillID'];
+			graph_class = "analysis-senate-graph-" + bill_json['VoteSmartBillID']
+			graph_title = "Senate Votes";
+				
+			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID'])
+				.append("div")
+				.attr("class", container_class);
+				
+			self.generateBarGraph(senate_votes, graph_class, graph_title, container_class);
+		}
+		
+		//////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////
+		///////////////////SENATE PARTISAN VOTES//////////////////
+		//////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////
+		if(bill_json["SenateDemocratYea"]!=null){
+			console.log(bill_json);
+			var senate_partisan_votes = [
+				{"field": "Democrat Nays"	, "vote_count" : bill_json["SenateDemocratNay"], "color":"#1e405e"},
+				{"field": "Democrat Yeas" 	, "vote_count" : bill_json["SenateDemocratYea"], "color":"#4671f2"},
+				{"field": "Republican Yeas" , "vote_count" : bill_json["SenateRepublicanYea"], "color":"#ef2e2e"},
+				{"field": "Republican Nays" , "vote_count" : bill_json["SenateRepublicanNay"], "color":"#771c0e"},
+			];
+			
+			
+			// Set the senate votes item
+			container_class = "source-list-bill-analysis-senate-partisan-votes-" + bill_json['VoteSmartBillID'];
+			graph_class = "analysis-senate-partisan-graph-" + bill_json['VoteSmartBillID']
+			graph_title = "Senate Votes Partisan Lines";
+				
+			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID'])
+				.append("div")
+				.attr("class", container_class);
+				
+			self.generateBarGraph(senate_partisan_votes, graph_class, graph_title, container_class);
+		}
+		
+		
 		//////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////
 		//////////////////////HOUSE VOTES/////////////////////////
 		//////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////
-		if( bill_json["HouseYea"] ){
+		if( bill_json["HouseYea"] != null){
 			
 			var house_votes = [
-				{"field": "Yeas" , "vote_count" : bill_json["HouseYea"]},
-				{"field": "Nays",  "vote_count" : bill_json["HouseNay"]},
+				{"field": "Yeas" , "vote_count" : bill_json["HouseYea"], "color": "#3bcb58"},
+				{"field": "Nays",  "vote_count" : bill_json["HouseNay"], "color": "#ab2e2e"},
 			];
 		
 			// Set the house votes item
@@ -249,58 +307,34 @@ class ProfileUI extends UI{
 				.append("div")
 				.attr("class", container_class);
 			
-			self.generateBarGraph(house_votes, graph_class, graph_title, container_class, "neutral");
+			self.generateBarGraph(house_votes, graph_class, graph_title, container_class);
 		}
 		
 		//////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////
-		//////////////////////SENATE VOTES////////////////////////
+		///////////////////HOUSE PARTISAN VOTES//////////////////
 		//////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////
-		if(bill_json["SenateYea"]){
-			
-			var senate_votes = [
-				{"field": "Yeas" , "vote_count" : bill_json["SenateYea"]},
-				{"field": "Nays",  "vote_count" : bill_json["SenateNay"]},
-			];
-		
-			// Set the senate votes item
-			container_class = "source-list-bill-analysis-senate-votes-" + bill_json['VoteSmartBillID'];
-			graph_class = "analysis-senate-graph-" + bill_json['VoteSmartBillID']
-			graph_title = "Senate Votes";
-				
-			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID'])
-				.append("div")
-				.attr("class", container_class);
-				
-			self.generateBarGraph(senate_votes, graph_class, graph_title, container_class, "neutral");
-		}
-		
-		//////////////////////////////////////////////////////////
-		//////////////////////////////////////////////////////////
-		///////////////////SENATE PARTISAN VOTES//////////////////
-		//////////////////////////////////////////////////////////
-		//////////////////////////////////////////////////////////
-		if(bill_json["SenateDemocratYea"]){
+		if(bill_json["HouseDemocratYea"]!=null){
 			console.log(bill_json);
-			var senate_partisan_votes = [
-				{"field": "Democrat Yeas" 	, "vote_count" : bill_json["SenateDemocratYea"]},
-				{"field": "Democrat Nays"	, "vote_count" : bill_json["SenateDemocratNay"]},
-				{"field": "Republican Yeas" , "vote_count" : bill_json["SenateRepublicanYea"]},
-				{"field": "Republican Nays" , "vote_count" : bill_json["SenateRepublicanNay"]},
+			var house_partisan_votes = [
+				{"field": "Democrat Nays"	, "vote_count" : bill_json["HouseDemocratNay"], "color":"#1e405e"},
+				{"field": "Democrat Yeas" 	, "vote_count" : bill_json["HouseDemocratYea"], "color":"#4671f2"},
+				{"field": "Republican Yeas" , "vote_count" : bill_json["HouseRepublicanYea"], "color":"#ef2e2e"},
+				{"field": "Republican Nays" , "vote_count" : bill_json["HouseRepublicanNay"], "color":"#771c0e"},
 			];
 			
 			
 			// Set the senate votes item
-			container_class = "source-list-bill-analysis-senate-partisan-votes-" + bill_json['VoteSmartBillID'];
-			graph_class = "analysis-senate-partisan-graph-" + bill_json['VoteSmartBillID']
-			graph_title = "Senate Votes Partisan Lines";
+			container_class = "source-list-bill-analysis-house-partisan-votes-" + bill_json['VoteSmartBillID'];
+			graph_class = "analysis-house-partisan-graph-" + bill_json['VoteSmartBillID']
+			graph_title = "House Votes Partisan Lines";
 				
 			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID'])
 				.append("div")
 				.attr("class", container_class);
 				
-			self.generateBarGraph(senate_partisan_votes, graph_class, graph_title, container_class, "partisan");
+			self.generateBarGraph(house_partisan_votes, graph_class, graph_title, container_class);
 			
 		}
 	
@@ -377,10 +411,7 @@ class ProfileUI extends UI{
 				$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-synopsis").html(json_response[i]['BillSynopsis']);
 			}
 			
-			// Bill Analysis
-			// if( i == 0) {				
 			self.loadBillAnalysis(json_response[i]);
-			// }
 			
 		}
 		
@@ -410,8 +441,6 @@ class ProfileUI extends UI{
 			"Health-Care": [38, 91]
 		}
 		
-		// this.topics_list = ["Abortion", "Guns", "Economics", "Education", "Environment", "Health Care"]
-       
 	    for ( var key in self.vs_topic_dict ){
 			
 			// Iterate through each potential category id in the category
