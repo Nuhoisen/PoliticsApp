@@ -5,6 +5,10 @@
 .profile-page{
     height: 90%;
     overflow-y:scroll;
+
     /* top: 8%; */
     position: sticky;
 }
+
+
+    /* overflow-x:hidden; */
