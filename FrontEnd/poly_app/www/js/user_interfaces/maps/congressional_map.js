@@ -32,7 +32,7 @@ class CongressionalMapTemplate extends MapTemplate{
             self.previous_scale = 0;
             self.ui.removeUI();    //interface screen
             self.ui.applyUI(self.selected_state_id);
-            // self.creator.applyUI(self.selected_state_id);  
+            
         }    
         
         //save previous scale
@@ -115,6 +115,22 @@ class CongressionalMapTemplate extends MapTemplate{
           .translateExtent( [ [ minX, minY ], [ maxX, maxY ] ] );
     }
     
+	
+	// This function checks if the senator party classification
+	// list has been cached. If so , it executes statePartisanClassifier
+	// if not, it makes a URL call to request the information.
+    generatePartisanList(){
+        var self = this;
+        var args = "role=US Senator&district_type=State";
+        if (self.us_senator_partisan_list){
+            self.statePartisanClassifier(self.us_senator_partisan_list);
+        }
+        else{
+            get_us_senator_partisanships(args, self.statePartisanClassifier.bind(this));
+        }   
+    }
+
+	
   
     // Sets opacity to zero before removing congressional district paths
     removeMapPaths()
@@ -214,6 +230,7 @@ class CongressionalMapTemplate extends MapTemplate{
         this.selected_state = null;
         this.selected_state_data = null;
         this.selected_state_id = null;
+		
         
     }
     

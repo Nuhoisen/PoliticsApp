@@ -127,53 +127,66 @@ class MapTemplate extends UI {
     }
     
     generatePartisanList(){
-        
+        console.log("Parent");
     }
     
+	
+	// This function opens passed topo json file
+	// and generates a map of the contents
     generateMapPaths(file_name){
         var self = this;
         self.map_file_name = file_name;
         self.path_ids = [];
-        return d3.json(this.map_file_name).then(function( us) {
+		
+		$.ajax({
+		  url: this.map_file_name,
+		  async: false,
+		  dataType: 'json',
+		  success: function (us) {
+			// do stuff with response.
+		  
+
+		
+        // return d3.json(this.map_file_name).then(function( us) {
            
             // Draw states
-            self.countriesGroup.selectAll("path")
-                .data(topojson.feature(us, self.access_hook(us)).features)
-                .enter().append("path")
-                .attr("d", self.path)
-                .attr("class", "state-neutral")
-                .attr("id", function(d, i) {
-                   var path_id = self.selectedExtractID(d).split(" ").join("-"); 
-                    self.path_ids.push(path_id);
-                    return path_id;
-                })
-                .on("click", function(d, i){
-                    self.selectedClickListener(d, i);
-                });
-                
-              // Draw state border paths
-            self.bordersGroup = self.svg.append("path")
-                .attr("class", self.map_border_class)
-                .attr("d", self.path( self.meshFunction( self, us ) ) );
-                
-                
-            // Reset the view
-            self.initiateZoom();
-            // Apply on scroll listener
-            self.svg.call(self.zoom);
-            // On window resize
-            $(window).resize(function() {
-                self.svg
-                  .attr("width", $("#map-holder").width())
-                  .attr("height", $("#map-holder").height())
-                ;
-                self.initiateZoom();
-            });  
-            
-            
-            // Call to CLIENT
-            self.generatePartisanList();
-        })
+				self.countriesGroup.selectAll("path")
+					.data(topojson.feature(us, self.access_hook(us)).features)
+					.enter().append("path")
+					.attr("d", self.path)
+					.attr("class", "state-neutral")
+					.attr("id", function(d, i) {
+					   var path_id = self.selectedExtractID(d).split(" ").join("-"); 
+						self.path_ids.push(path_id);
+						return path_id;
+					})
+					.on("click", function(d, i){
+						self.selectedClickListener(d, i);
+					});
+					
+				  // Draw state border paths
+				self.bordersGroup = self.svg.append("path")
+					.attr("class", self.map_border_class)
+					.attr("d", self.path( self.meshFunction( self, us ) ) );
+					
+					
+				// Reset the view
+				self.initiateZoom();
+				// Apply on scroll listener
+				self.svg.call(self.zoom);
+				// On window resize
+				$(window).resize(function() {
+					self.svg
+					  .attr("width", $("#map-holder").width())
+					  .attr("height", $("#map-holder").height())
+					;
+					self.initiateZoom();
+				});  
+            }
+		});    
+		
+		self.generatePartisanList();
+        
     }
     
     
@@ -291,7 +304,12 @@ class MapTemplate extends UI {
         this.previous_scale  = 0;
         this.path_ids = [];
         this.ui = NaN;
-        this.partisan_list = false;
+		// Partisan lists, representatives for states and for counties
+		// senators for states and counties
+        this.us_senator_partisan_list = false;
+        this.us_representative_partisan_list = false;
+		this.state_senator_partisan_list = false;
+		this.state_representative_partisan_list = false;
         var self = this;
         
         // DEFINE FUNCTIONS/OBJECTS

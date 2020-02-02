@@ -28,48 +28,56 @@ class USMap extends MapTemplate {
     }
     
     
-     
+    // This function checks if the senator party classification
+	// list has been cached. If so , it executes statePartisanClassifier
+	// if not, it makes a URL call to request the information.
     generatePartisanList(){
         var self = this;
         var args = "role=US Senator&district_type=State";
-        if (self.partisan_list){
-            self.statePartisanClassifier(self.partisan_list);
+        if (self.us_senator_partisan_list){
+            self.statePartisanClassifier(self.us_senator_partisan_list);
         }
         else{
-            args = ""
-            get_state_partisanships("", self.statePartisanClassifier.bind(this));
+            get_us_senator_partisanships(args, self.statePartisanClassifier.bind(this));
         }   
     }
     
+	
+	// This applies state color affects based on whether
+	// The state is republican, democrat, or mixed,
+	// Senator majority
     statePartisanClassifier (response_text){
         var self = this;
         var response_json;
-        console.log("In the child");
-        self.partisan_list = response_text;
-        response_json = JSON.parse(self.partisan_list);
+        self.us_senator_partisan_list = response_text;
+        response_json = JSON.parse(self.us_senator_partisan_list);
         
         
         for (var key in response_json) {
             // self.selected_state_id =  //id;
             if(response_json[key].includes('RR')) // RED
             {
-               
                 d3.select("#" + key.replace(" ", "-"))
-                    .style("fill", "url(#republicans)");
+                    .style("fill", "#ff4a4a");
             }
             else if(response_json[key].includes('DD')) // BLUE
             {
                 d3.select("#" + key.replace(" ", "-"))
-                    .style("fill", "url(#democrats)");
+                    .style("fill", "#7676e3");
             }
             else if(response_json[key].includes('DR') || response_json[key].includes('RD')) // PURPLE
             {
                 d3.select("#" + key.replace(" ", "-"))
-                    .style("fill", "url(#mixed)");
+					.style("fill", "#b75696");
+					// .style("fill", "url(#mixed)");
             }
-            
         }
     }
+	
+	
+	
+	
+	
      // Function that calculates zoom/pan limits and sets zoom to default value 
     initiateZoom() {
         var self = this;
