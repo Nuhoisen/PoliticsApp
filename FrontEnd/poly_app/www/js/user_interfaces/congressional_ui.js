@@ -9,7 +9,7 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
         // var img_url = this.src;
         self.creator.creator.creator.creator.profile_page.loadPoliticianInfo(profile);
         self.creator.creator.creator.creator.toggleActivePage("news");
-        // self.removeUI();
+        
     }
      
     // Load the politician's image
@@ -79,22 +79,13 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
         }
     }
   
-  
-    // This sets the state. Does not change the district
-    // setStateInfo(id){
-        // var self = this;
-        // self.selected_state_id = id.replace(/-/g, " "); 
-    // }
-    // // This sets the district. It does not change the state
-    // setDistrictInfo(id){
-        // var self = this;
-        // self.selected_district = id.replace(/-/g, " "); 
-    // }
+ 
     // Override!
     setLocationInfo(id){
         var self = this;
         self.setDistrictInfo(id);
     }
+	
      // Modifies the title label.
     addLabel(id=this.selected_district){
         var self = this;
@@ -176,9 +167,11 @@ class CongressionalUI extends ImageMapUI{//extends StateUI {
         d3.select(".congressional-exit-button")
             .on("click", function(){
                 self.selected_role = "State Senator";   //reset role
+				
                 // Calling zoomout, reapplies UI, so need to remove the UI once it finishes
                 self.creator.zoomOut().on("end", function(){
                     self.removeUI();
+					self.creator.accumulative_state_level_partisan_list = null;
                     self.creator.removeMapPaths();
                     self.creator.creator.creator.generateMapPaths(us_map_url); //us_map.generateMapPaths
                 });

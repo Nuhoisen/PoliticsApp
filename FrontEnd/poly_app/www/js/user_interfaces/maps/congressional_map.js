@@ -115,19 +115,58 @@ class CongressionalMapTemplate extends MapTemplate{
           .translateExtent( [ [ minX, minY ], [ maxX, maxY ] ] );
     }
     
+	// This applies state color affects based on whether
+	// The state is republican, democrat, or mixed,
+	// Senator majority
+    statePartisanClassifier (response_json){
+        var self = this;
+        
+        response_json = JSON.parse(response_json);
+        for (var key in response_json) {
+			
+            if(response_json[key].includes('R')) // RED
+            {
+                d3.select("#" + key.replace(/ /g, "-"))
+                    .style("fill", "#ff4a4a");
+            }
+            else if(response_json[key].includes('D')) // BLUE
+            {
+                d3.select("#" + key.replace(/ /g, "-"))
+                    .style("fill", "#7676e3");
+            }
+            else //PURPLE
+            {
+                d3.select("#" + key.replace(/ /g, "-"))
+					.style("fill", "#b75696");
+            }
+        }
+    }
 	
-	// This function checks if the senator party classification
-	// list has been cached. If so , it executes statePartisanClassifier
-	// if not, it makes a URL call to request the information.
+	
+	
+	// This function checks if each role-type list has been cached.
+	// if so, it applies 
+	// If not , it executes makes a call to the server to retrieve this information.
     generatePartisanList(){
         var self = this;
-        var args = "role=US Senator&district_type=State";
-        if (self.us_senator_partisan_list){
-            self.statePartisanClassifier(self.us_senator_partisan_list);
-        }
-        else{
-            get_us_senator_partisanships(args, self.statePartisanClassifier.bind(this));
-        }   
+		
+		var args = "";
+		
+		// If the list doesn't exist make a request to the server to retrieve it.
+		if(!self.accumulative_state_level_partisan_list){
+			args = "state=" + self.selected_state_id;
+			get_state_partisanships(args, function(response_text){
+				self.accumulative_state_level_partisan_list = response_text;
+				
+				// Apply the call back only to the state senators 
+				self.statePartisanClassifier(self.accumulative_state_level_partisan_list);
+			});
+		}
+		// Otherwise, just apply it to the make
+		else{
+			self.statePartisanClassifier(self.accumulative_state_level_partisan_list);
+		}
+		
     }
 
 	
@@ -159,9 +198,6 @@ class CongressionalMapTemplate extends MapTemplate{
         self.ui.setDistrictInfo(id);
         self.ui.addLabel(); 
         self.ui.retrievePoliticianImages(id);
-        // self.ui.removeUI();
-        // self.ui.applyUI(id);
-        // self.ui.addLabel(id);
     }
     
     selectedExtractID(d){
@@ -169,6 +205,9 @@ class CongressionalMapTemplate extends MapTemplate{
     }
     
     // Sets up function overrides for US vs State Reps/Sens
+	// Function overrides are going to mainly affect
+	// the generation of ID retrieval on a map basis in order to 
+	// avoid any null error
     overrideClassFunctions(subClassName="State Senator"){
         var self = this;
         switch(subClassName){
@@ -212,10 +251,12 @@ class CongressionalMapTemplate extends MapTemplate{
                 self.countriesGroup.selectAll("path").remove();
                 self.svg.select("path.state-borders").remove();
                 self.svg.select("path.state-senate-borders").remove();
-                self.generateMapPaths(self.map_file_name).then(function(){                    
+                self.generateMapPaths(self.map_file_name)
+				.then(function(){                    
                     self.svg.style("opacity", "1");
                     self.ui.setStateInfo(self.selected_state_id);
                     self.ui.applyUI();
+					
                 });
             });
             
@@ -231,6 +272,8 @@ class CongressionalMapTemplate extends MapTemplate{
         this.selected_state_data = null;
         this.selected_state_id = null;
 		
+		// Partisan list for state senators, representives, and US representives
+		this.accumulative_state_level_partisan_list = null;
         
     }
     

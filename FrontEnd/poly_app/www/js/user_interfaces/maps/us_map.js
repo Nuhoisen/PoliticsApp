@@ -117,6 +117,9 @@ class USMap extends MapTemplate {
     constructor(class_name, creator, attr){
         super(class_name, creator, attr);
         this.ui = new StateUI("state-ui", this);
+		
+		// Partisan list for US Senators
+		this.us_senator_partisan_list = null;
     }
     
 };

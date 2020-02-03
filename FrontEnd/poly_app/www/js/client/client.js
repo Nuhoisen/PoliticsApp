@@ -77,11 +77,20 @@ function get_politician_bills(args, call_Back){
 	// let localHttpRequest = new XMLHttpRequest();
 	
 	// localHttpRequest.onreadystatechange = acceptFile.bind(this, callback, localHttpRequest);
-    // localHttpRequest.open('GET', profile_url +'/request_state_partisanships?' + args, true);
+    // localHttpRequest.open('GET', profile_url +'/request_us_senator_partisanships?' + args, true);
     // localHttpRequest.send();
 // }
 
 function get_us_senator_partisanships(args, callback){
+	let localHttpRequest = new XMLHttpRequest();
+	
+	localHttpRequest.onreadystatechange = acceptFile.bind(this, callback, localHttpRequest);
+    localHttpRequest.open('GET', profile_url +'/request_us_senator_partisanships?' + args, true);
+    localHttpRequest.send();
+}
+
+
+function get_state_partisanships(args, callback){
 	let localHttpRequest = new XMLHttpRequest();
 	
 	localHttpRequest.onreadystatechange = acceptFile.bind(this, callback, localHttpRequest);

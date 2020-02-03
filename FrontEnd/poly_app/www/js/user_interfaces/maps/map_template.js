@@ -125,11 +125,7 @@ class MapTemplate extends UI {
     statePartisanClassifier(response_text){
         console.log(response_text)
     }
-    
-    generatePartisanList(){
-        console.log("Parent");
-    }
-    
+        
 	
 	// This function opens passed topo json file
 	// and generates a map of the contents
@@ -138,16 +134,7 @@ class MapTemplate extends UI {
         self.map_file_name = file_name;
         self.path_ids = [];
 		
-		$.ajax({
-		  url: this.map_file_name,
-		  async: false,
-		  dataType: 'json',
-		  success: function (us) {
-			// do stuff with response.
-		  
-
-		
-        // return d3.json(this.map_file_name).then(function( us) {
+        return d3.json(this.map_file_name).then(function( us) {
            
             // Draw states
 				self.countriesGroup.selectAll("path")
@@ -169,11 +156,12 @@ class MapTemplate extends UI {
 					.attr("class", self.map_border_class)
 					.attr("d", self.path( self.meshFunction( self, us ) ) );
 					
-					
 				// Reset the view
 				self.initiateZoom();
+				
 				// Apply on scroll listener
 				self.svg.call(self.zoom);
+				
 				// On window resize
 				$(window).resize(function() {
 					self.svg
@@ -181,12 +169,10 @@ class MapTemplate extends UI {
 					  .attr("height", $("#map-holder").height())
 					;
 					self.initiateZoom();
-				});  
-            }
-		});    
-		
-		self.generatePartisanList();
-        
+				}); 
+
+				self.generatePartisanList();
+			});    
     }
     
     
@@ -304,12 +290,11 @@ class MapTemplate extends UI {
         this.previous_scale  = 0;
         this.path_ids = [];
         this.ui = NaN;
-		// Partisan lists, representatives for states and for counties
-		// senators for states and counties
-        this.us_senator_partisan_list = false;
-        this.us_representative_partisan_list = false;
-		this.state_senator_partisan_list = false;
-		this.state_representative_partisan_list = false;
+
+		
+        // this.us_representative_partisan_list = false;
+		// this.state_senator_partisan_list = false;
+		// this.state_representative_partisan_list = false;
         var self = this;
         
         // DEFINE FUNCTIONS/OBJECTS
