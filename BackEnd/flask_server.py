@@ -86,10 +86,7 @@ def request_state_politician_profile():
     sql_type.set_up_connection()
     
     response    = sql_type.retrieve_politician_profile(state, role, district)
-
-    
     prof_list   = convert_politician_response_2_dict(response)
-    
     
     return json.dumps(prof_list)
 
@@ -105,24 +102,50 @@ def request_wildcard_match():
     return json.dumps(prof_list)
     
     
-@app.route('/request_state_partisanships/', methods=['GET'])
-def request_state_partisanship():
-    query = ""
-    sql_type = SqlRetriever(politician_sql_db_name, politician_sql_table_name)
-    sql_type.set_up_connection()
-    response = sql_type.retrieve_state_partisanships(query)
+@app.route('/request_us_senator_partisanships/', methods=['GET'])
+def request_us_senator_partisanships():
+    role = request.args.get('role')
+    # print(role)
+    query_dict = {"Role" : role}# "US Senator"}
+    
     partisan_dict = {}
+    # Retrieve state partisanships
+    state_partisanships_retriever = SqlStorer(db_name=politician_sql_db_name, table_name=politician_sql_table_name)
+    state_partisanships_retriever.set_up_connection()
+   
+    response = state_partisanships_retriever.retrieve_by_wildcard_and(query_dict, verbose= True)
     
     for row in response:
         if row.State not in partisan_dict.keys():
             partisan_dict[row.State] = ""
         partisan_dict[row.State] += row.PartyAffiliation
         
-        
+    
     return json.dumps(partisan_dict)
 
 
-
+@app.route('/request_state_partisanships/', methods=['GET'])
+def request_state_partisanships():
+    # role = request.args.get('role')
+    state =  request.args.get('state')
+    
+    partisan_dict = {}
+    # Retrieve state partisanships
+    state_partisanships_retriever = SqlStorer(db_name=politician_sql_db_name, table_name=politician_sql_table_name)
+    state_partisanships_retriever.set_up_connection()
+   
+    # Define the raw query, targeting the database and table name
+    raw_query = "SELECT * FROM %s.%s WHERE State LIKE '%s' AND InOffice='Yes' and Role NOT LIKE 'US Senator'" % (politician_sql_db_name, politician_sql_table_name, state)
+   
+    response = state_partisanships_retriever.execute_raw_query(raw_query, verbose= True)
+    
+    for row in response:
+        if row.District not in partisan_dict.keys():
+            partisan_dict[row.District] = ""
+        partisan_dict[row.District] += row.PartyAffiliation
+        
+    
+    return json.dumps(partisan_dict)
 
 # ------------------------------------------------
 # ------------------------------------------------
@@ -377,4 +400,4 @@ def request_state_senate(state_id):
 # ------------------------------------------------
 
 # Remove when run with gunicorn    
-app.run(host='0.0.0.0', threaded=True)    
+# app.run(host='0.0.0.0', threaded=True)    
