@@ -215,6 +215,19 @@
 	display: inline-block;
 }
 
+.topic-source-list-bill-vote.Yea{
+	background: #44d737;
+}
+
+.topic-source-list-bill-vote.Nay{
+	background: #d73a3a;
+}
+
+.topic-source-list-bill-vote.Did-Not-Vote{
+	background: Yellow;
+}
+
+
 
 .topic-source-list-bill-analysis-tab{
 	padding-left: 10px;

@@ -168,10 +168,6 @@ class ProfileUI extends UI{
 				.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
 
-		// Color Schemes
-													// // Blue Yea, Blue Nay, Red Yea, Red Nay
-		// color_schemes["partisan"] = d3.scaleOrdinal(['#4671f2', '#1e405e','#ef2e2e','#771c0e','#984ea3','#e41a1c']);
-		
 
 		// Pie
         var pie = d3.pie().value(function(d) { 
@@ -199,6 +195,7 @@ class ProfileUI extends UI{
 		   .attr("d", path)
 		   .attr("fill", function(d) { return  d.data.color; });
 		   
+		// Append the over-all vote labels
 		arc.append("foreignObject")
 			.attr("x", function(d) {
 					return (label.centroid(d)[0]-45);
@@ -212,6 +209,21 @@ class ProfileUI extends UI{
 			.style('alignment-baseline', 'middle')
 			.style('font-size', '12px')
 		    .text(function(d) { return d.data.field + " : " + d.data.vote_count ; });
+
+		// Append the candidates specific vote label
+		// arc.append("foreignObject")
+			// .attr("x", function(d) {
+					// return (label.centroid(d)[0]-45);
+			// })
+			// .attr("y", function(d) {
+					// return (label.centroid(d)[1]-15);
+			// })
+			// .attr("width", 70)
+			// .attr("height", 30)
+			// .style('text-anchor', 'middle')
+			// .style('alignment-baseline', 'middle')
+			// .style('font-size', '12px')
+		    // .text(function(d) { return d.data.field + " : " + d.data.vote_count ; });
 
 
 		svg.append("g")
@@ -361,7 +373,7 @@ class ProfileUI extends UI{
 		   	html_text = "	<div class='topic-source-list-bill replace replace-source-list-bill'> \
 								<div class='topic-source-list-bill-number replace replace-source-list-bill-number'> \
 								</div> \
-								<div class='topic-source-list-bill-vote replace replace-source-list-bill-vote'> \
+								<div class='topic-source-list-bill-vote replace replace-source-list-bill-vote source-list-bill-vote-replace'> \
 									Yea \
 								</div> \
 								<div class='topic-source-list-bill-details replace replace-source-list-bill-details source-list-bill-details-replace'> \
@@ -394,14 +406,38 @@ class ProfileUI extends UI{
 			html_text = html_text.replace(/replace/g, json_response[i]['VoteSmartBillID']);
 			
 			// Add all the text
-			$("." + category + "-source-list").append(html_text);
+			$("." + category + "-source-list")
+				.append(html_text);
 			
-			// Fill in the fields
-			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-title").html("Title: " + json_response[i]['BillTitle']);
-			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-vote").html(json_response[i]['PoliticianVote']);
-			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-number").html(json_response[i]['BillNumber']);
 			
+			///////////////////////
+			// Fill in the fields//
+			///////////////////////
+			
+			///////////////////////
+			// Bill Title
+			///////////////////////
+			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-title")
+				.html("Title: " + json_response[i]['BillTitle']);
+			
+			///////////////////////
+			// Politician Vote 
+			///////////////////////
+			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-vote")
+				.html(json_response[i]['PoliticianVote']);
+			
+			d3.select(".source-list-bill-vote-"+ json_response[i]['VoteSmartBillID'])
+				.classed(json_response[i]['PoliticianVote'].replace(/ /g,'-') , true);
+		
+			///////////////////////
+			// Bill Number
+			///////////////////////
+			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-number")
+				.html(json_response[i]['BillNumber']);
+			
+			///////////////////////
 			// Bill Highlights
+			///////////////////////
 			if ( json_response[i]['BillHighlights'] != null ) {
 				$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-highlights").html("Highlights: " + json_response[i]['BillHighlights']);
 			}
@@ -410,7 +446,7 @@ class ProfileUI extends UI{
 			if ( json_response[i]['BillSynopsis'] != null ) {
 				$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-synopsis").html(json_response[i]['BillSynopsis']);
 			}
-			
+			console.log(json_response[i]);
 			self.loadBillAnalysis(json_response[i]);
 			
 		}
@@ -466,7 +502,26 @@ class ProfileUI extends UI{
 	
     loadPoliticianInfo(profile){
         var self = this;
-        
+        self.loaded_profile  = profile;
+		
+		/////////////////////////
+		// Generate the BIO 
+		/////////////////////////
+		var bio =  profile['Bio'];
+        var modified_bio = "";
+        bio = bio.split("<br/>");
+        bio.forEach( function( sentence, index ) {
+           modified_bio  = modified_bio + sentence + "<br/><br/>" 
+        });
+
+        d3.selectAll(".profile-bio-container").html(modified_bio);
+		/////////////////////////
+		
+		
+		
+		/////////////////////////
+		// Generate the rest
+		/////////////////////////
         d3.selectAll(".profile-picture")
             .attr("src", profile['ImageURL']);
             
@@ -485,17 +540,10 @@ class ProfileUI extends UI{
         self.requestRelatedArticles(profile['Name']);
     
 		self.requestRelatedBills(profile['VoteSmartID']);
+		/////////////////////////
 	
       
-        var bio =  profile['Bio'];
-        var modified_bio = "";
-        bio = bio.split("<br/>");
-        bio.forEach( function( sentence, index ) {
-           modified_bio  = modified_bio + sentence + "<br/><br/>" 
-        });
-        // var bio_html = "<span id='lblBio'>BORN-<br/>December 16, 1949 <br/>    EDUCATION- <br/>B.S. St. Thomas Aquinas College (Social Science/Criminal Justice)<br/>M.A. Seton Hall University (Administration and Supervision)<br/>U.S. Army Command and General Staff College <br/>    OCCUPATION- <br/>Independent Consultant<br/>    PUBLIC/PARTY SERVICE- <br/>Bergen County, Undersheriff 2002-05, 1999-2001, Sheriff 2001-02<br/>    MILITARY SERVICE- <br/>U.S. Army Reserve, Major<br/>    LEGISLATIVE SERVICE- General Assembly 2002-present, Deputy Speaker 2014-present, Majority Conference Leader 2012-13, Deputy Conference Leader 2010-11</span>";                
-        // $(".profile-bio-container").append(bio_html);
-        d3.selectAll(".profile-bio-container").html(modified_bio);
+
  
     }
     
@@ -686,45 +734,7 @@ class ProfileUI extends UI{
                             </div> \
                         </div>";
        
-       // var body_html = "<div class='profile-body'> \
-                            // <div class='profile-stances-tab-container profile-subject-tab-container'> \
-                                // <div class='profile-stances-tab profile-subject-tab'> \
-                                    // <div class='profile-stances-tab-text profile-subject-tab-text'> \
-                                        // Stances \
-                                    // </div> \
-                                    // <div class='profile-stances-tab-img-div profile-subject-tab-img-div'> \
-                                        // <img  class='profile-subject-tab-img' src='img/cutouts/stances.png' alt=/> \
-                                    // </div> \
-                                // </div> \
-                                // <div class='profile-stances-container profile-subject-container subject-display-block'> \
-                                // </div> \
-                            // </div> \
-                            // <div class='profile-bio-tab-container profile-subject-tab-container'> \
-                                // <div class='profile-bio-tab profile-subject-tab'> \
-                                    // <div class='profile-bio-tab-text profile-subject-tab-text'> \
-                                        // Bio \
-                                    // </div> \
-                                    // <div class='profile-bio-tab-img-div profile-subject-tab-img-div'> \
-                                        // <img  class='profile-subject-tab-img' src='img/cutouts/bio.png' alt=/>  \
-                                    // </div> \
-                                // </div> \
-                                // <div class=' profile-bio-container profile-subject-container subject-display-block'> \
-                                // </div> \
-                            // </div> \
-                            // \
-                            // <div class='profile-news-tab-container profile-subject-tab-container'> \
-                                    // <div class='profile-news-tab profile-subject-tab'> \
-                                        // <div class='profile-news-tab-text profile-subject-tab-text'> \
-                                            // News \
-                                        // </div> \
-                                        // <div class='profile-News-tab-img-div profile-subject-tab-img-div'> \
-                                            // <img  class='profile-subject-tab-img' src='img/cutouts/news.png' alt=/>  \
-                                        // </div> \
-                                    // </div> \
-                                    // <div class='profile-news-container profile-subject-container subject-display-block'> \
-                                    // </div> \
-                            // </div> \
-                        // </div>";
+      
         $(".profile-page").append(body_html);
        
    }
@@ -856,6 +866,9 @@ class ProfileUI extends UI{
                                 "Right": "Market Based"
                             }
                         ];
+		// Loaded Profile will contain reference to 
+		// loaded politician information through out class
+		this.loaded_profile = null;
     }
     
 }
