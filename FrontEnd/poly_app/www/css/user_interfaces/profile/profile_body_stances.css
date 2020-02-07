@@ -35,6 +35,7 @@
 }
 
 .topic-body{
+	padding: 10px;
     display: none;
     /* height: 10%; */
     /* height needs to be set to a proportional percentage */
@@ -161,17 +162,26 @@
 	display: none;
 }
 
+.topic-source-list-bill-date-introduced-header {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	padding: 10px;
+	font-weight:bold;
+	border-top-left-radius: 10px;
+	display: inline-block;
+	margin-right: -4px;
+	width: 47%;
+	border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
 
 .topic-source-list-bill-title-header {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 	padding: 10px;
 	font-weight:bold;
-	/* margin: 10px; */
-	/* border-radius: 10px; */
-	border-top-left-radius: 10px;
 	display: inline-block;
-	margin-right: -3px;
-	width: 39%;
+	/* margin-right: -3px; */
+	width: 32%;
+	border-right: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 
@@ -184,7 +194,8 @@
 	/* margin: 10px; */
 	border-top-right-radius: 10px;
 	display: inline-block;
-	width: 59%;
+	width: 21%;
+	float: right;
 }
 
 .topic-source-list-bill{
@@ -207,12 +218,12 @@
 
 
 .topic-source-list-bill-vote{
-	/* border-bottom-left-radius: 10px; */
-	/* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
-	/* border-bottom-right-radius: 10px; */
+
 	padding: 10px;
-	width: 59%;	
+	width: 21%;	
 	display: inline-block;
+	border-top-right-radius: 10px;
+	float: right;
 }
 
 .topic-source-list-bill-vote.Yea{
@@ -282,16 +293,20 @@
 	display: block;	
 }
 
-/* .topic-source-list-bill-number{ */
-	/* padding: 10px; */
-	/* border-top: 1px solid #bfbfbf; */
-/* } */
+.topic-source-list-bill-date-introduced{	
+	
+	border-right: 1px solid rgba(0, 0, 0, 0.2);
+	padding: 10px;
+	width: 47%;
+	margin-right: -3px;
+	display: inline-block;
+}
 
 .topic-source-list-bill-number{	
 	
 	border-right: 1px solid rgba(0, 0, 0, 0.2);
 	padding: 10px;
-	width: 39%;
+	width: 32%;
 	margin-right: -3px;
 	display: inline-block;
 }

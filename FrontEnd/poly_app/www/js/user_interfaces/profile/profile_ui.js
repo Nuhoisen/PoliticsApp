@@ -371,10 +371,14 @@ class ProfileUI extends UI{
 		for(var i = 0; i < json_response.length; i++)
         {			
 		   	html_text = "	<div class='topic-source-list-bill replace replace-source-list-bill'> \
-								<div class='topic-source-list-bill-number replace replace-source-list-bill-number'> \
-								</div> \
-								<div class='topic-source-list-bill-vote replace replace-source-list-bill-vote source-list-bill-vote-replace'> \
-									Yea \
+								<div class='topic-source-list-bill-number-vote-container replace replace-source-list-bill-number-vote-container'> \
+									<div class='topic-source-list-bill-date-introduced replace replace-source-list-bill-date-introduced'> \
+										</div> \
+									<div class='topic-source-list-bill-number replace replace-source-list-bill-number'> \
+									</div> \
+									<div class='topic-source-list-bill-vote replace replace-source-list-bill-vote source-list-bill-vote-replace'> \
+										Yea \
+									</div> \
 								</div> \
 								<div class='topic-source-list-bill-details replace replace-source-list-bill-details source-list-bill-details-replace'> \
 									<div class='topic-source-list-bill-title replace replace-source-list-bill-title'> \
@@ -419,6 +423,13 @@ class ProfileUI extends UI{
 			///////////////////////
 			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-title")
 				.html("Title: " + json_response[i]['BillTitle']);
+			
+			///////////////////////
+			// Date Introduced
+			///////////////////////
+			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-date-introduced")
+				.html(json_response[i]['DateIntroduced']);
+			
 			
 			///////////////////////
 			// Politician Vote 
@@ -769,11 +780,16 @@ class ProfileUI extends UI{
                                                     Sources \
                                                 </div> \
 												<div class='topic-source-list replace replace-source-list'> \
-													<div class='topic-source-list-bill-title-header replace replace-source-list-bill-title-header'> \
-														Title:  \
-													</div> \
-													<div class='topic-source-list-bill-vote-header replace replace-source-list-bill-vote-header'> \
-														Vote:  \
+													<div class='topic-source-list-bill-title-vote-header-container replace replace-source-list-bill-title-vote-header-container'> \
+														<div class='topic-source-list-bill-date-introduced-header replace replace-source-list-bill-date-introduced-header'> \
+															Date Introduced:  \
+														</div> \
+														<div class='topic-source-list-bill-title-header replace replace-source-list-bill-title-header'> \
+															Title:  \
+														</div> \
+														<div class='topic-source-list-bill-vote-header replace replace-source-list-bill-vote-header'> \
+															Vote:  \
+														</div> \
 													</div> \
 												</div>\
 										</div> \
