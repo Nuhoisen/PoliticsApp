@@ -1,0 +1,17 @@
+
+the ML model needs to construct a dataset based on
+strongly partisan spliting bills.
+
+Any bill that has an inordinate amount of Yeas in one party,
+while the other party has an opposing matched amount of Nays 
+is ideal.
+
+
+
+
+Test SQL Query to Retrieve Information:
+        SELECT * FROM BillInfoDB.ml_bill_info_table 
+                                where ( ( ( RepublicanYea/RepublicanNay )>1 ) AND ( ( DemocratYea/DemocratNay)<.20 ) ) 
+				or    ( RepublicanYea=0 and RepublicanNay!=0 )
+                                or    ( DemocratYea=0 and DemocratNay!=0);
+

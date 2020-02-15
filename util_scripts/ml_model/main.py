@@ -8,9 +8,16 @@ import os
 import sys
 import numpy as np
 
-from util_scripts.ml_model.dataset_utils import (
-    get_tf_datasets, create_raw_dataset
+from dataset_utils import (
+    get_tf_datasets, prime_raw_dataset_from_sql
 )
+
+
+###########################
+#### HAVE A GENERIC TOPIC
+#### OPTION
+###########################
+TOPIC = "abortion"
 
 np.random.seed(123)  # Allows repeatable runs
 
@@ -52,6 +59,8 @@ def run_saved_model(model, train_x_set, train_y_set, ckpt_path=None):
     return results
 
 
+
+
 if __name__ == '__main__':
     ########################################
     # User-defined stuff
@@ -70,8 +79,8 @@ if __name__ == '__main__':
     # Using sys-args to determine what to do
     ########################################
     
-    arg = sys.argv  # Make the assumption that it's just one arg
-
+    arg = sys.argv[1]  # Make the assumption that it's just one arg
+    
     if arg == "-h":
         print("Tensor Flow: main.py")
         print("\tmain.py")
@@ -80,34 +89,41 @@ if __name__ == '__main__':
         print("\t\t 2 : load_saved_model")
         print("\t\t 3 : load_saved_model_no_weights")
         sys.exit(0)
-    raw_train, raw_test, encoded_entry_list, label_list, encoder = create_raw_dataset()
-    tf_train_data, tf_test_data = get_tf_datasets(
-        encoded_entry_list,
-        label_list,
-        train_size=TRAIN_RATIO,
-        test_size=TEST_RATIO
-    )
+        
+    
+    else:   
+        #############################
+        ######GET RESULTS READY######
+        #############################
+        raw_train, raw_test, encoded_entry_list, label_list, encoder = prime_raw_dataset_from_sql(topic_name=TOPIC)
+        
+        tf_train_data, tf_test_data = get_tf_datasets(
+            encoded_entry_list,
+            label_list,
+            train_size=TRAIN_RATIO,
+            test_size=TEST_RATIO
+        )
 
-    model=create_model(encoder.vocab_size, tf_train_data[0].shape[1])
+        model=create_model(encoder.vocab_size, tf_train_data[0].shape[1])
 
-    if arg == "1":
-        model=fit_new_model(model,
+        if arg == "1":
+            model=fit_new_model(model,
+                                train_x_set=tf_train_data[0],
+                                train_y_set=tf_train_data[1],
+                                train_kwargs=TRAIN_KWARGS
+                                )
+
+        elif arg == "2":
+            run_saved_model(model,
                             train_x_set=tf_train_data[0],
-                            train_y_set=tf_train_data[1],
-                            train_kwargs=TRAIN_KWARGS
+                            train_y_set=tf_train_data[1]
                             )
 
-    elif arg == "2":
-        run_saved_model(model,
-                        train_x_set=tf_train_data[0],
-                        train_y_set=tf_train_data[1]
-                        )
+        elif arg == "3":
+            run_saved_model(model, train_x_set=tf_train_data,
+                            train_y_set=tf_train_data[1], ckpt_path=CHECKPOINT_PATH
+                            )
 
-    elif arg == "3":
-        run_saved_model(model, train_x_set=tf_train_data,
-                        train_y_set=tf_train_data[1], ckpt_path=CHECKPOINT_PATH
-                        )
-
-    else:
-        print("Invalid argument provided: {}".format(arg))
-        sys.exit(1)
+        else:
+            print("Invalid argument provided: {}".format(arg))
+            sys.exit(1)
