@@ -1,6 +1,7 @@
 import os
 import urllib3
 import json
+
 http = urllib3.PoolManager()
 
 PWD= os.getcwd()
@@ -8,6 +9,10 @@ PWD= os.getcwd()
 vote_file_name = "votes.json"
 
 API_KEY = "8QYsbZrHwSYJj51VBNwSLhrGz6JtYLZwrObeOzTH"
+API_KEY = "rspx4ARofsfOsbjnLR9xKOJqbXAfGBIAtN8GSqF3"
+API_KEY = "8FueXrAO7DUbLSncfKCQ0SBs4mypOvtXhNS3i6b5"
+API_KEY = "jvpZSewC0gzkkk6L3XLjZNbXdY8PLp8pwEdeYTVg"
+API_KEY = "AMIyBzd2EtkxPYsVvUNas97BEj5F3YzuD05Mb4IJ"
 count = 0
 with open("vote_dump_paths.txt") as fp:
     lines = fp.readlines()
