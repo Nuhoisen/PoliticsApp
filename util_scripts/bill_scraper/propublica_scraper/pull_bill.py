@@ -2,14 +2,16 @@ import os
 
 bill_types = ["s", "hr", "hconres", "hjres", "hres", "sconres", "sjres", "sres" ]
 
-congress_nums = 104
+# API_KEY = "rspx4ARofsfOsbjnLR9xKOJqbXAfGBIAtN8GSqF3"
+# API_KEY = "8QYsbZrHwSYJj51VBNwSLhrGz6JtYLZwrObeOzTH"
+API_KEY = "8FueXrAO7DUbLSncfKCQ0SBs4mypOvtXhNS3i6b5"
 
 
-
-for i in range (104, 112):
-        for bill_type in bill_types:
-                for bill_num in range(0 , 1000):
-                        res = os.system("sh /root/PoliticsApp/util_scripts/bill_scraper/propublica_scraper/scrape.sh " +  str(i) + " " + bill_type + " " + str(bill_num) )
-
-
-
+for i in range (106, 116):
+    for bill_type in bill_types:
+        # TODO - Increase bill range to 4000
+        for bill_num in range(1001 , 5000):
+            res = os.system("sh /root/PoliticsApp/util_scripts/bill_scraper/propublica_scraper/scrape.sh " +  str(i) + " " + bill_type + " " + str(bill_num)+ " " + API_KEY )
+            
+        break
+    break
