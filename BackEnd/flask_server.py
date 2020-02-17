@@ -22,36 +22,62 @@ news_sql_table_name = "politician_based_newsarticlestable"
 
 
 
-    
+
 # ------------------------------------------------
 # ------------------------------------------------
 # ---------------- POLITICIAN DATA ---------------
 # ------------------------------------------------
 # ------------------------------------------------
+
+
+state_partisanships_retriever = SqlStorer(db_name=politician_sql_db_name, table_name=politician_sql_table_name)
+state_partisanships_retriever.set_up_connection()   
+
+
+
+# --------------------------------
+# --------------------------------
+# -----------DEPRECATED-----------
+# --------------------------------
+# --------------------------------
 @app.route('/request_senator_profile_img/', methods=['GET'])    
 def request_senator_profile_img():
     state = request.args.get('state')
     role = request.args.get('role')
     
-    sql_type = SqlRetriever(politician_sql_db_name, politician_sql_table_name)
-    sql_type.set_up_connection()
+    query_dict = {  "State": state ,
+                    "Role": role}
     
-    response = sql_type.retrieve_senators_img_url(state, role)
+    # sql_type = SqlRetriever(politician_sql_db_name, politician_sql_table_name)
+    # sql_type.set_up_connection()
     
-    return response
+    res = state_partisanships_retriever.retrieve_by_wildcard_and(query_dict);
+    # response = sql_type.retrieve_senators_img_url(state, role)
     
+    return res
 
+# --------------------------------
+# --------------------------------
+# -----------DEPRECATED-----------
+# --------------------------------
+# --------------------------------
 @app.route('/request_state_politician_profile_img/', methods=['GET'])    
 def request_state_politician_profile_img():
     state = request.args.get('state')
     role = request.args.get('role')
     district = request.args.get('district')
-    sql_type = SqlRetriever(politician_sql_db_name, politician_sql_table_name)
-    sql_type.set_up_connection()
     
-    response = sql_type.retrieve_state_politician_img_url(state, role, district)
+    query_dict = {  "State": state ,
+                    "Role": role,
+                    "District": district}
     
-    return response
+    res = state_partisanships_retriever.retrieve_by_wildcard_and(query_dict);
+    # sql_type = SqlRetriever(politician_sql_db_name, politician_sql_table_name)
+    # sql_type.set_up_connection()
+    
+    # response = sql_type.retrieve_state_politician_img_url(state, role, district)
+    
+    return res
 
 
 # This function is used to convert 
@@ -74,6 +100,7 @@ def convert_politician_response_2_dict(res):
         prof_dict["Email"] = row.EmailAddress
         prof_dict["Bio"] = row.Bio
         prof_dict["VoteSmartID"] =  row.VoteSmartID
+        prof_dict["PartyAffiliation"] = row.PartyAffiliation
         prof_list.append(prof_dict)
     return prof_list
         
@@ -82,10 +109,12 @@ def request_state_politician_profile():
     state       = request.args.get('state')
     role        = request.args.get('role')
     district    = request.args.get('district')
-    sql_type    = SqlRetriever(politician_sql_db_name, politician_sql_table_name)
-    sql_type.set_up_connection()
-    
-    response    = sql_type.retrieve_politician_profile(state, role, district)
+    query_dict = {  "State"     : state,
+                    "Role"      : role,
+                    "District"  : district}
+                    
+    response = state_partisanships_retriever.retrieve_by_wildcard_and(query_dict)
+   
     prof_list   = convert_politician_response_2_dict(response)
     
     return json.dumps(prof_list)
@@ -100,18 +129,20 @@ def request_wildcard_match():
     response = sql_type.retrieve_wildcard(query)
     prof_list = convert_politician_response_2_dict(response)
     return json.dumps(prof_list)
-    
+
+ 
     
 @app.route('/request_us_senator_partisanships/', methods=['GET'])
 def request_us_senator_partisanships():
+    print("In MODIFIED request_us_senator_partisanships")
     role = request.args.get('role')
     # print(role)
     query_dict = {"Role" : role}# "US Senator"}
     
     partisan_dict = {}
     # Retrieve state partisanships
-    state_partisanships_retriever = SqlStorer(db_name=politician_sql_db_name, table_name=politician_sql_table_name)
-    state_partisanships_retriever.set_up_connection()
+    # state_partisanships_retriever = SqlStorer(db_name=politician_sql_db_name, table_name=politician_sql_table_name)
+    # state_partisanships_retriever.set_up_connection()
    
     response = state_partisanships_retriever.retrieve_by_wildcard_and(query_dict, verbose= True)
     
@@ -126,13 +157,14 @@ def request_us_senator_partisanships():
 
 @app.route('/request_state_partisanships/', methods=['GET'])
 def request_state_partisanships():
+    print("In MODIFIED request_state_partisanships")
     # role = request.args.get('role')
     state =  request.args.get('state')
     
     partisan_dict = {}
     # Retrieve state partisanships
-    state_partisanships_retriever = SqlStorer(db_name=politician_sql_db_name, table_name=politician_sql_table_name)
-    state_partisanships_retriever.set_up_connection()
+    # state_partisanships_retriever = SqlStorer(db_name=politician_sql_db_name, table_name=politician_sql_table_name)
+    # state_partisanships_retriever.set_up_connection()
    
     # Define the raw query, targeting the database and table name
     raw_query = "SELECT * FROM %s.%s WHERE State LIKE '%s' AND InOffice='Yes' and Role NOT LIKE 'US Senator'" % (politician_sql_db_name, politician_sql_table_name, state)
@@ -152,19 +184,7 @@ def request_state_partisanships():
 # ---------------- BILL DATA ---------------------       
 # ------------------------------------------------
 # ------------------------------------------------
-# cand_bills_db_name = "PoliticianInfo"
-# cand_bills_table_name = "politician_voting_record_table"
 
-# bill_info_table_name = "bill_info_table"
-
-
-# # SQL Retriever
-# poly_voting_record_sql_retriever = SqlStorer(db_name=cand_bills_db_name, table_name=cand_bills_table_name)
-# poly_voting_record_sql_retriever.set_up_connection()
-
-# bill_info_sql_retriever = SqlStorer(db_name=cand_bills_db_name, table_name=bill_info_table_name)
-# bill_info_sql_retriever.set_up_connection() 
- 
  
 def convert_bills_response_2_detailed_dict(cand_bill_record_res):
     
@@ -181,6 +201,7 @@ def convert_bills_response_2_detailed_dict(cand_bill_record_res):
     ##### ever voted on ########################################
     ############################################################
     for cand_bill_record_row in cand_bill_record_res:
+        
         ################################################
         ######## Enter immediately known fields ########
         ################################################
@@ -269,14 +290,17 @@ def request_candidates_bills():
     raw_query = "   SELECT  B.*,V.* FROM    PoliticianInfo.bill_info_table B \
                     inner join              PoliticianInfo.politician_voting_record_table V ON \
                     B.VoteSmartBillId = V.VoteSmartBillId \
-                    where V.VoteSmartCandID='%s' and B.VoteSmartPrimaryCategoryId='%s' " % (cand_id, category_id);  
+                    where V.VoteSmartCandID='%s' and B.VoteSmartPrimaryCategoryId='%s' ORDER BY `DateIntroduced`" % (cand_id, category_id);  
     
     response = poly_voting_record_sql_retriever.execute_raw_query(raw_query, verbose=False)
     
     if response:
         bills_list = convert_bills_response_2_detailed_dict(response)
     
-    return json.dumps(bills_list, default = myconverter)
+    # return json.dumps(bills_list, default = myconverter)
+    # Fixed date formatting issue using following source:
+    # https://stackoverflow.com/questions/11875770/how-to-overcome-datetime-datetime-not-json-serializable/36142844#36142844
+    return json.dumps(bills_list, indent=4, sort_keys=True, default=str)
     
     
 
@@ -400,4 +424,4 @@ def request_state_senate(state_id):
 # ------------------------------------------------
 
 # Remove when run with gunicorn    
-# app.run(host='0.0.0.0', threaded=True)    
+app.run(host='0.0.0.0', threaded=True)    
