@@ -274,7 +274,6 @@ class ProfileUI extends UI{
 		//////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////
 		if(bill_json["SenateDemocratYea"]!=null){
-			console.log(bill_json);
 			var senate_partisan_votes = [
 				{"field": "Democrat Nays"	, "vote_count" : bill_json["SenateDemocratNay"], "color":"#1e405e"},
 				{"field": "Democrat Yeas" 	, "vote_count" : bill_json["SenateDemocratYea"], "color":"#4671f2"},
@@ -328,7 +327,6 @@ class ProfileUI extends UI{
 		//////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////
 		if(bill_json["HouseDemocratYea"]!=null){
-			console.log(bill_json);
 			var house_partisan_votes = [
 				{"field": "Democrat Nays"	, "vote_count" : bill_json["HouseDemocratNay"], "color":"#1e405e"},
 				{"field": "Democrat Yeas" 	, "vote_count" : bill_json["HouseDemocratYea"], "color":"#4671f2"},
@@ -352,8 +350,96 @@ class ProfileUI extends UI{
 	
 	}
 	
-	
-	
+	// This function sets up the liberal conservative 
+	// weight for each category that a politician votes
+	// on. Sets where the politician falls on the 
+	// politic spectrum
+	setPartisanBias(category, json_response){
+
+		var self = this;
+		
+		
+		console.log(category);
+		console.log(json_response);
+		console.log(self.loaded_profile);
+		
+		// Take yeas, nays, 
+		// and politicans of each party
+		var total_republican_yeas = 0;
+		var total_republican_nays = 0;
+		var total_republican = 0;
+		
+		var total_democrat_yeas = 0 ; 
+		var total_democrat_nays = 0 ; 
+		var total_democrat = 0 ; 
+
+		// Set up the ratios
+		var dem_yea_ratio = 0;
+		var dem_nay_ratio = 0;
+		var rep_yea_ratio = 0;
+		var rep_nay_ratio = 0;
+
+		var acculmulative_partisan_rating = 0 ;
+		
+		for( var i = 0; i < json_response.length; i++) {
+			total_republican_yeas = 0;
+			total_republican_nays = 0;
+			total_republican = 0;
+			
+			total_democrat_yeas = 0 ; 
+			total_democrat_nays = 0 ; 
+			total_democrat = 0 ; 
+
+			// Set up the ratios
+			dem_yea_ratio = 0;
+			dem_nay_ratio = 0;
+			rep_yea_ratio = 0;
+			rep_nay_ratio = 0;
+
+			acculmulative_partisan_rating = 0 ;
+		
+			if(json_response[i]['HouseYea'] || json_response[i]['HouseNay'] ){
+				
+				total_republican_yeas += json_response[i]['HouseRepublicanYea'];
+				total_republican_nays += json_response[i]['HouseRepublicanNay'];
+				
+				total_democrat_yeas += json_response[i]['HouseDemocratYea'];
+				total_democrat_nays += json_response[i]['HouseDemocratNay'];	
+			}
+			
+			
+			if(json_response[i]['SenateYea'] || json_response[i]['SenateNay']){
+				
+				total_republican_yeas += json_response[i]['SenateRepublicanYea'];
+				total_republican_nays += json_response[i]['SenateRepublicanNay'];
+				
+				total_democrat_yeas += json_response[i]['SenateDemocratYea'];
+				total_democrat_nays += json_response[i]['SenateDemocratNay'];	
+			}
+			// Calculate the total politicians per party to vote
+			total_republican = total_republican_yeas + total_republican_nays;
+			total_democrat =   total_democrat_yeas   + total_democrat_nays;
+			
+			// Calculate the ratio
+			
+			// The republican yea ratio will be opposite of the democratic nay ratio.
+			// This way the weights will cancel out.
+			dem_yea_ratio = total_democrat_yeas / total_democrat;
+			dem_nay_ratio = (total_democrat_nays / total_democrat) * -1;
+			
+			
+			// Calculate the ratio
+			rep_yea_ratio = (total_republican_yeas / total_republican) * -1;
+			rep_nay_ratio = total_republican_nays / total_republican;
+			
+			acculmulative_partisan_rating = dem_yea_ratio + dem_nay_ratio + rep_yea_ratio + rep_nay_ratio;
+			console.log(acculmulative_partisan_rating);
+		}
+		
+		
+		d3.select("." + category + "-slider")
+			.attr("value", "");
+	}
 	
 	////////////////////////////////////////////////
 	// This function retrieves bill information ////
@@ -457,7 +543,7 @@ class ProfileUI extends UI{
 			if ( json_response[i]['BillSynopsis'] != null ) {
 				$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-synopsis").html(json_response[i]['BillSynopsis']);
 			}
-			console.log(json_response[i]);
+			// console.log(json_response[i]);
 			self.loadBillAnalysis(json_response[i]);
 			
 		}
@@ -465,6 +551,9 @@ class ProfileUI extends UI{
 		// Bill event listeners
 		self.addBillEventListeners();
 		
+		
+		
+		self.setPartisanBias(category, json_response);
 	}
 	
 	
@@ -662,7 +751,6 @@ class ProfileUI extends UI{
                         
                     })
                 var self = d3.select(this);
-                console.log(self.attr("class"));
             })
 	   
    }
