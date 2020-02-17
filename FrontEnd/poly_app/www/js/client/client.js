@@ -66,7 +66,7 @@ function get_politician_news_articles(args, callback){
 
 function get_politician_bills(args, call_Back){
 	let localHttpRequest = new XMLHttpRequest();
-	
+	console.log(args);
 	localHttpRequest.onreadystatechange = acceptFile.bind(this, call_Back, localHttpRequest);
 	localHttpRequest.open('GET', profile_url +'/request_candidates_bills?' + args, true);
 	localHttpRequest.send();	

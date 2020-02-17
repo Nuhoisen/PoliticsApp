@@ -359,10 +359,6 @@ class ProfileUI extends UI{
 		var self = this;
 		
 		
-		console.log(category);
-		console.log(json_response);
-		console.log(self.loaded_profile);
-		
 		// Take yeas, nays, 
 		// and politicans of each party
 		var total_republican_yeas = 0;
@@ -379,7 +375,11 @@ class ProfileUI extends UI{
 		var rep_yea_ratio = 0;
 		var rep_nay_ratio = 0;
 
-		var acculmulative_partisan_rating = 0 ;
+		// Acculmulative partisan rating- ranges -1 to 1 (conservative to liberal)
+		var bills_acculmulative_partisan_rating = 0 ;
+		// Aggregated value of politicians votes in accordance w/their party
+		var politician_partisan_rating = 0;
+		var normalized_politician_partisan_rating = 0;
 		
 		for( var i = 0; i < json_response.length; i++) {
 			total_republican_yeas = 0;
@@ -396,7 +396,7 @@ class ProfileUI extends UI{
 			rep_yea_ratio = 0;
 			rep_nay_ratio = 0;
 
-			acculmulative_partisan_rating = 0 ;
+			bills_acculmulative_partisan_rating = 0 ;
 		
 			if(json_response[i]['HouseYea'] || json_response[i]['HouseNay'] ){
 				
@@ -407,7 +407,7 @@ class ProfileUI extends UI{
 				total_democrat_nays += json_response[i]['HouseDemocratNay'];	
 			}
 			
-			
+		
 			if(json_response[i]['SenateYea'] || json_response[i]['SenateNay']){
 				
 				total_republican_yeas += json_response[i]['SenateRepublicanYea'];
@@ -424,21 +424,88 @@ class ProfileUI extends UI{
 			
 			// The republican yea ratio will be opposite of the democratic nay ratio.
 			// This way the weights will cancel out.
-			dem_yea_ratio = total_democrat_yeas / total_democrat;
-			dem_nay_ratio = (total_democrat_nays / total_democrat) * -1;
+			dem_yea_ratio = (total_democrat_yeas / total_democrat) * -1;
+			dem_nay_ratio = (total_democrat_nays / total_democrat) ;
 			
 			
 			// Calculate the ratio
-			rep_yea_ratio = (total_republican_yeas / total_republican) * -1;
-			rep_nay_ratio = total_republican_nays / total_republican;
+			rep_yea_ratio = (total_republican_yeas / total_republican) ;
+			rep_nay_ratio = (total_republican_nays / total_republican) * -1;
 			
-			acculmulative_partisan_rating = dem_yea_ratio + dem_nay_ratio + rep_yea_ratio + rep_nay_ratio;
-			console.log(acculmulative_partisan_rating);
+			bills_acculmulative_partisan_rating = dem_yea_ratio + dem_nay_ratio + rep_yea_ratio + rep_nay_ratio;
+			// Normalize the acculmulative ratio
+			bills_acculmulative_partisan_rating = bills_acculmulative_partisan_rating / 2;
+			
+			// politician_partisan_rating
+			// console.log("Legistlation:" + json_response[i]["BillNumber"] + " Conservative-Liberal Rating:" + bills_acculmulative_partisan_rating);
+			
+			
+			///////////////////////////////////////////////////
+			/////////////////////DEMOCRATS/////////////////////
+			///////////////////////////////////////////////////
+			if(self.loaded_profile["PartyAffiliation"] == "D"){
+				if(json_response[i]["PoliticianVote"] == "Yea"){
+					// Simply add one if the politicians vote:yea is 
+					// in accord with their party majority
+					if (bills_acculmulative_partisan_rating < 0) {
+						politician_partisan_rating += -1;
+					}
+					// Otherwise, add the opposing party's
+					// bill weight to the total
+					else {// bill rating is positive- towards the dem-nay, rep-yea
+						politician_partisan_rating += bills_acculmulative_partisan_rating * 1;
+					}	
+				}
+				else if(json_response[i]["PoliticianVote"] == "Nay"){
+					// Simply add one if the politicians vote:nay is 
+					// in accord with their party majority
+					if (bills_acculmulative_partisan_rating > 0){
+						politician_partisan_rating += -1;
+					}
+					// Otherwise, add the opposing party's 
+					// bill weight to the total
+					else{// bill rating is negative + torwards the dem-yea
+						politician_partisan_rating += bills_acculmulative_partisan_rating * -1;
+					}
+				}
+			}
+			///////////////////////////////////////////////////
+			/////////////////////REPUBLICANS///////////////////
+			///////////////////////////////////////////////////
+			else if(self.loaded_profile["PartyAffiliation"] == "R"){
+				if(json_response[i]["PoliticianVote"] == "Yea"){
+					// Simply sub one, if the politicians vote:nay is 
+					// in accord with their party majority
+					if (bills_acculmulative_partisan_rating > 0){
+						politician_partisan_rating += 1;
+					}
+					// Otherwise, add the opposing party's 
+					// bill weight to the total
+					else{// bill rating negative- towards rep-nay, dem-yea
+						politician_partisan_rating += bills_acculmulative_partisan_rating * 1;
+					}
+				}
+				else if(json_response[i]["PoliticianVote"] == "Nay")
+					// Simply sub one, if the politicians vote:nay is 
+					// in accord with their party majority
+					if(bills_acculmulative_partisan_rating < 0){
+						politician_partisan_rating += 1;
+					}
+					// Otherwise, add the opposing party's 
+					// bill weight to the total
+					else{//bill rating postive- towards rep-yea, dem-nay
+						politician_partisan_rating += bills_acculmulative_partisan_rating * -1;
+					}
+				
+			}
 		}
+		normalized_politician_partisan_rating = politician_partisan_rating/json_response.length;
+		console.log("Politicians Acculmulative rating: " + (normalized_politician_partisan_rating) + " On subject " + category);
+		
 		
 		
 		d3.select("." + category + "-slider")
-			.attr("value", "");
+			.attr("value", (normalized_politician_partisan_rating*100) );
 	}
 	
 	////////////////////////////////////////////////
@@ -551,9 +618,9 @@ class ProfileUI extends UI{
 		// Bill event listeners
 		self.addBillEventListeners();
 		
-		
-		
-		self.setPartisanBias(category, json_response);
+		// console.log(json_response);
+		if(json_response.length)
+			self.setPartisanBias(category, json_response);
 	}
 	
 	
@@ -858,7 +925,7 @@ class ProfileUI extends UI{
                                             There \
                                         </div> \
                                         <div class='topic-slide-container replace replace-slide-container'> \
-                                            <input type='range' min='1' max='100' value='50' class='topic-slider replace replace-slider'> \
+                                            <input type='range' min='-100' max='100' value='0' class='topic-slider replace replace-slider'> \
                                         </div> \
 										 <div class='topic-perceived-stance replace replace-perceived-stance'> \
                                             Perceived Stance \
