@@ -284,13 +284,30 @@ def request_candidates_bills():
     cand_id =       request.args.get("VoteSmartCandID")
     category_id =   request.args.get("VoteSmartPrimaryCategoryId")
     print("Candidate ID: %s " % cand_id)
-    print("Category ID: %s "  % category_id)
+    categories = category_id.strip(',').split(',')
+    print("Category ID: %s "  % categories)
     
     # Specialized raw request query
+    # raw_query = "   SELECT  B.*,V.* FROM    PoliticianInfo.bill_info_table B \
+                    # inner join              PoliticianInfo.politician_voting_record_table V ON \
+                    # B.VoteSmartBillId = V.VoteSmartBillId \
+                    # where V.VoteSmartCandID='%s' and B.VoteSmartPrimaryCategoryId='%s' ORDER BY `DateIntroduced`" % (cand_id, category_id);  
     raw_query = "   SELECT  B.*,V.* FROM    PoliticianInfo.bill_info_table B \
                     inner join              PoliticianInfo.politician_voting_record_table V ON \
                     B.VoteSmartBillId = V.VoteSmartBillId \
-                    where V.VoteSmartCandID='%s' and B.VoteSmartPrimaryCategoryId='%s' ORDER BY `DateIntroduced`" % (cand_id, category_id);  
+                    where V.VoteSmartCandID='%s' and (" % ( cand_id)
+    # Iterate through category
+    # options appending each to query.
+    for i in range(0, len(categories)):
+        category = categories[i]
+        raw_query += "B.VoteSmartPrimaryCategoryId='%s'" % category
+        if i == ( len(categories) - 1 ):
+            raw_query += ") "
+            break
+        raw_query += " OR "
+    
+    raw_query +="ORDER BY `DateIntroduced`"
+    
     
     response = poly_voting_record_sql_retriever.execute_raw_query(raw_query, verbose=False)
     
