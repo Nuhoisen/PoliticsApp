@@ -193,7 +193,9 @@ class ProfileUI extends UI{
 		// Path
 		arc.append("path")
 		   .attr("d", path)
-		   .attr("fill", function(d) { return  d.data.color; });
+		   .attr("fill", function(d) {
+			   return  d.data.color; 
+		   });
 		   
 		// Append the over-all vote labels
 		arc.append("foreignObject")
@@ -645,15 +647,15 @@ class ProfileUI extends UI{
 		}
 		
 	    for ( var key in self.vs_topic_dict ){
-			
+			args = "VoteSmartCandID=" + voteSmartId + "&VoteSmartPrimaryCategoryId=";
 			// Iterate through each potential category id in the category
 			for ( var i = 0 ; i < self.vs_topic_dict[key].length; i += 1){
 				
-				args = "VoteSmartCandID=" + voteSmartId + "&VoteSmartPrimaryCategoryId=" +  self.vs_topic_dict[key][i];
+				args += self.vs_topic_dict[key][i] + ",";
 				
 				// Pass the argument into the bound callback function
-				get_politician_bills(args, self.loadRelatedBills.bind(self, key));
 			}	
+			get_politician_bills(args, self.loadRelatedBills.bind(self, key));
 		}
 	}
 	
