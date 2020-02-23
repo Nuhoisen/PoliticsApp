@@ -115,13 +115,17 @@ class ProfileUI extends UI{
 		// ---------------------------------------------
 		d3.selectAll(".topic-source-list-bill-expand-highlights-tab")
 			.on("click", function(){
-				var highlights_class_id = this.classList[1].split('-')[0];
+				// The second class of every div in this set will always be the vs id itself
+				var highlights_class_id = this.classList[1];
+				var highlights_tab_class_id = ".source-list-bill-expand-highlights-tab-" + highlights_class_id;
 				highlights_class_id = ".source-list-bill-highlights-" + highlights_class_id;
 				
+				// Expand/Collapse the body pane
 				var highlights_pane = d3.select(highlights_class_id);
 					highlights_pane.classed("active", !highlights_pane.classed("active"));
 					
-				var highlights_tab = d3.select(this);
+				// Deactivate the tab(s) style
+				var highlights_tab = d3.selectAll(highlights_tab_class_id);
 					highlights_tab.classed("active", !highlights_tab.classed("active"));
 			});	
 			
@@ -132,13 +136,17 @@ class ProfileUI extends UI{
 		// ---------------------------------------------
 		d3.selectAll(".topic-source-list-bill-analysis-tab")
 			.on("click", function(){
-				var analysis_class_id = this.classList[1].split('-')[0];
+				// The second class of every div in this set will always be the vs id itself
+				var analysis_class_id = this.classList[1];
+				var analysis_tab_class_id = ".source-list-bill-analysis-tab-" + analysis_class_id;
 				analysis_class_id = ".source-list-bill-analysis-" + analysis_class_id;
 				
-				var analysis_pane = d3.select(analysis_class_id);
+				// Expand/Collapse the body pane
+				var analysis_pane = d3.selectAll(analysis_class_id);
 					analysis_pane.classed("active", !analysis_pane.classed("active"));
 					
-				var analysis_tab = d3.select(this);
+				// De/activate the tab(s) style
+				var analysis_tab = d3.selectAll(analysis_tab_class_id);
 					analysis_tab.classed("active", !analysis_tab.classed("active"));
 			});	
 		
@@ -212,21 +220,6 @@ class ProfileUI extends UI{
 			.style('font-size', '12px')
 		    .text(function(d) { return d.data.field + " : " + d.data.vote_count ; });
 
-		// Append the candidates specific vote label
-		// arc.append("foreignObject")
-			// .attr("x", function(d) {
-					// return (label.centroid(d)[0]-45);
-			// })
-			// .attr("y", function(d) {
-					// return (label.centroid(d)[1]-15);
-			// })
-			// .attr("width", 70)
-			// .attr("height", 30)
-			// .style('text-anchor', 'middle')
-			// .style('alignment-baseline', 'middle')
-			// .style('font-size', '12px')
-		    // .text(function(d) { return d.data.field + " : " + d.data.vote_count ; });
-
 
 		svg.append("g")
 		   .attr("transform", "translate(" + ( width / 2 - 120 ) + "," + 20 + ")")
@@ -243,7 +236,16 @@ class ProfileUI extends UI{
 		var graph_title = "";
 		var graph_class = "";
 		
-		if (bill_json["HouseYea"] || bill_json["SenateYea"]){d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID']).html("");}
+		
+		// If any Votes found in the bill's json. Clear the existing HTML
+		// Add an additional tab to make collapsing the body pane easier
+		if (bill_json["HouseYea"] || bill_json["SenateYea"]){
+			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID']).html("")
+				.append("div")
+				.attr("class", "topic-source-list-bill-analysis-tab " + bill_json["VoteSmartBillID"] + " source-list-bill-analysis-tab-" + bill_json["VoteSmartBillID"])
+				
+				.text("Analysis");
+		}
 		
 		
 		//////////////////////////////////////////////////////////
@@ -291,7 +293,7 @@ class ProfileUI extends UI{
 				
 			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID'])
 				.append("div")
-				.attr("class", container_class);
+					.attr("class", container_class);
 				
 			self.generateBarGraph(senate_partisan_votes, graph_class, graph_title, container_class);
 		}
@@ -352,6 +354,15 @@ class ProfileUI extends UI{
 	
 	}
 	
+	
+	// Add a function to highlight the bill
+	// if its politician votes out of party lines.
+	flagPoliticianBill(voteSmartBillId){
+		
+		d3.select(".source-list-bill-"+ voteSmartBillId)
+			.classed("stand-out", true);	
+	}
+	
 	// This function sets up the liberal conservative 
 	// weight for each category that a politician votes
 	// on. Sets where the politician falls on the 
@@ -384,6 +395,8 @@ class ProfileUI extends UI{
 		var normalized_politician_partisan_rating = 0;
 		
 		for( var i = 0; i < json_response.length; i++) {
+			
+			
 			total_republican_yeas = 0;
 			total_republican_nays = 0;
 			total_republican = 0;
@@ -456,6 +469,8 @@ class ProfileUI extends UI{
 					// bill weight to the total
 					else {// bill rating is positive- towards the dem-nay, rep-yea
 						politician_partisan_rating += bills_acculmulative_partisan_rating * 1;
+						console.log("Flag political bill");
+						self.flagPoliticianBill(json_response[i]["VoteSmartBillID"]);
 					}	
 				}
 				else if(json_response[i]["PoliticianVote"] == "Nay"){
@@ -468,6 +483,8 @@ class ProfileUI extends UI{
 					// bill weight to the total
 					else{// bill rating is negative + torwards the dem-yea
 						politician_partisan_rating += bills_acculmulative_partisan_rating * -1;
+						console.log("Flag political bill");
+						self.flagPoliticianBill(json_response[i]["VoteSmartBillID"]);
 					}
 				}
 			}
@@ -485,6 +502,8 @@ class ProfileUI extends UI{
 					// bill weight to the total
 					else{// bill rating negative- towards rep-nay, dem-yea
 						politician_partisan_rating += bills_acculmulative_partisan_rating * 1;
+						console.log("Flag political bill");
+						self.flagPoliticianBill(json_response[i]["VoteSmartBillID"]);
 					}
 				}
 				else if(json_response[i]["PoliticianVote"] == "Nay")
@@ -497,6 +516,8 @@ class ProfileUI extends UI{
 					// bill weight to the total
 					else{//bill rating postive- towards rep-yea, dem-nay
 						politician_partisan_rating += bills_acculmulative_partisan_rating * -1;
+						console.log("Flag political bill");
+						self.flagPoliticianBill(json_response[i]["VoteSmartBillID"]);
 					}
 				
 			}
@@ -525,12 +546,12 @@ class ProfileUI extends UI{
 		
 		for(var i = 0; i < json_response.length; i++)
         {			
-		   	html_text = "	<div class='topic-source-list-bill replace replace-source-list-bill'> \
+		   	html_text = "	<div class='topic-source-list-bill replace replace-source-list-bill source-list-bill-replace'> \
 								<div class='topic-source-list-bill-number-vote-container replace replace-source-list-bill-number-vote-container'> \
-									<div class='topic-source-list-bill-date-introduced replace replace-source-list-bill-date-introduced'> \
-										</div> \
 									<div class='topic-source-list-bill-number replace replace-source-list-bill-number'> \
 									</div> \
+									<div class='topic-source-list-bill-date-introduced replace replace-source-list-bill-date-introduced'> \
+										</div> \
 									<div class='topic-source-list-bill-vote replace replace-source-list-bill-vote source-list-bill-vote-replace'> \
 										Yea \
 									</div> \
@@ -543,15 +564,14 @@ class ProfileUI extends UI{
 										Bill Synopsis: See Highlights\
 									</div> \
 									<div class='topic-source-list-bill-highlights replace replace-source-list-bill-highlights source-list-bill-highlights-replace'> \
-										No Bill Highlights \
 									</div> \
-									<div class='topic-source-list-bill-expand-highlights-tab replace replace-source-list-bill-expand-highlights-tab'> \
+									<div class='topic-source-list-bill-expand-highlights-tab replace replace-source-list-bill-expand-highlights-tab source-list-bill-expand-highlights-tab-replace'> \
 										Bill Highlights \
 									</div> \
 									<div class='topic-source-list-bill-analysis replace replace-source-list-bill-analysis source-list-bill-analysis-replace'> \
 										No Analysis Available \
 									</div> \
-									<div class='topic-source-list-bill-analysis-tab replace replace-source-list-bill-analysis-tab'> \
+									<div class='topic-source-list-bill-analysis-tab replace replace-source-list-bill-analysis-tab source-list-bill-analysis-tab-replace'> \
 										Analysis \
 									</div> \
 								</div> \
@@ -605,7 +625,14 @@ class ProfileUI extends UI{
 			// Bill Highlights
 			///////////////////////
 			if ( json_response[i]['BillHighlights'] != null ) {
-				$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-highlights").html("Highlights: " + json_response[i]['BillHighlights']);
+				d3.select(".source-list-bill-highlights-" +json_response[i]['VoteSmartBillID'])
+					.append("div")
+					.attr("class", "topic-source-list-bill-expand-highlights-tab " +json_response[i]['VoteSmartBillID'] + "  source-list-bill-expand-highlights-tab-"+json_response[i]['VoteSmartBillID'])
+					.text("Bill Highlights");
+				d3.select(".source-list-bill-highlights-" +json_response[i]['VoteSmartBillID'])
+					.append("div")
+					.attr("class", "source-list-bill-highlights-content-"+json_response[i]['VoteSmartBillID'])
+					.html(json_response[i]['BillHighlights']);
 			}
 			
 			// Bill Synopsis
@@ -938,11 +965,11 @@ class ProfileUI extends UI{
                                                 </div> \
 												<div class='topic-source-list replace replace-source-list'> \
 													<div class='topic-source-list-bill-title-vote-header-container replace replace-source-list-bill-title-vote-header-container'> \
-														<div class='topic-source-list-bill-date-introduced-header replace replace-source-list-bill-date-introduced-header'> \
-															Date Introduced:  \
-														</div> \
 														<div class='topic-source-list-bill-title-header replace replace-source-list-bill-title-header'> \
 															Title:  \
+														</div> \
+														<div class='topic-source-list-bill-date-introduced-header replace replace-source-list-bill-date-introduced-header'> \
+															Date Introduced:  \
 														</div> \
 														<div class='topic-source-list-bill-vote-header replace replace-source-list-bill-vote-header'> \
 															Vote:  \
