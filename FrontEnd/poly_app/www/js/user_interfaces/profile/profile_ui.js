@@ -38,7 +38,7 @@ class ProfileUI extends UI{
         var html_text = "";
         
         var json_response = JSON.parse(response);
-        
+        console.log("LOADING RELATED ARTICLES");
 
          d3.selectAll(".profile-news-container")   
             .html("");
@@ -363,10 +363,12 @@ class ProfileUI extends UI{
 			.classed("stand-out", true);	
 	}
 	
-	// This function sets up the liberal conservative 
-	// weight for each category that a politician votes
-	// on. Sets where the politician falls on the 
-	// politic spectrum
+	/////////////////////////////////////////////////////
+	// This function sets up the liberal conservative  //
+	// weight for each category that a politician votes//
+	// on. Sets where the politician falls on the      //
+	// politic spectrum								   //
+	/////////////////////////////////////////////////////
 	setPartisanBias(category, json_response){
 
 		var self = this;
@@ -469,7 +471,6 @@ class ProfileUI extends UI{
 					// bill weight to the total
 					else {// bill rating is positive- towards the dem-nay, rep-yea
 						politician_partisan_rating += bills_acculmulative_partisan_rating * 1;
-						console.log("Flag political bill");
 						self.flagPoliticianBill(json_response[i]["VoteSmartBillID"]);
 					}	
 				}
@@ -523,7 +524,7 @@ class ProfileUI extends UI{
 			}
 		}
 		normalized_politician_partisan_rating = politician_partisan_rating/json_response.length;
-		console.log("Politicians Acculmulative rating: " + (normalized_politician_partisan_rating) + " On subject " + category);
+		// console.log("Politicians Acculmulative rating: " + (normalized_politician_partisan_rating) + " On subject " + category);
 		
 		
 		
@@ -534,7 +535,10 @@ class ProfileUI extends UI{
 	////////////////////////////////////////////////
 	// This function retrieves bill information ////
 	// from the server and loads it into the 	////
-	// HTML										////
+	// HTML.                                    ////
+	// Current a new request is made everytime  ////
+	// meaning that ALL of the bill content     ////
+	// on the page here must be reloaded.       ////
 	////////////////////////////////////////////////
 	loadRelatedBills(category, response){
 
@@ -542,8 +546,10 @@ class ProfileUI extends UI{
 		var html_text  = ""
         
         var json_response = JSON.parse(response);
-		
-		
+		// Add all the text
+		d3.select("." + category + "-source-list")
+			.html("");
+
 		for(var i = 0; i < json_response.length; i++)
         {			
 		   	html_text = "	<div class='topic-source-list-bill replace replace-source-list-bill source-list-bill-replace'> \
@@ -585,9 +591,10 @@ class ProfileUI extends UI{
 			html_text = html_text.replace(/replace/g, json_response[i]['VoteSmartBillID']);
 			
 			// Add all the text
+			// d3.select("." + category + "-source-list")
+				// .html(html_text);
 			$("." + category + "-source-list")
 				.append(html_text);
-			
 			
 			///////////////////////
 			// Fill in the fields//
@@ -726,7 +733,19 @@ class ProfileUI extends UI{
  
         d3.selectAll(".profile-position")
             .html(profile['District']);
- 
+			
+		d3.selectAll(".profile-political-party")
+			.html(
+			function(){
+					if (profile["PartyAffiliation"] == 'D') return "Democrat";
+					if (profile["PartyAffiliation"] == 'R') return "Republican";
+					if (profile["PartyAffiliation"] == 'I') return "Independent";
+					if (profile["PartyAffiliation"] == 'G') return "Green Party";
+					if (profile["PartyAffiliation"] == 'L') return "Liberatarian";
+			}
+			
+			);
+		
         d3.selectAll(".profile-header-twitter-img-div")
             .attr("href", profile['Twitter']);
         
@@ -885,6 +904,9 @@ class ProfileUI extends UI{
                                     <div class='profile-position'> \
                                         Senator \
                                     </div> \
+									<div class='profile-political-party'> \
+                                        Democrat \
+                                    </div> \
                                 </div>\
                             </div>";
        
@@ -979,12 +1001,6 @@ class ProfileUI extends UI{
 										</div> \
                                     </div>  \
                                 </div>";
-            
-            
-            
-            
-           
-            
 			
 			
 

@@ -9,7 +9,7 @@ class StateUI extends ImageMapUI{
         // var img_url = this.src;
         self.creator.creator.profile_page.loadPoliticianInfo(profile);
         self.creator.creator.toggleActivePage("news");
-        // self.removeUI();
+        
     }
     
     // Load senator images and add click listeners
