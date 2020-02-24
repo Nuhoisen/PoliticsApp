@@ -670,15 +670,16 @@ class ProfileUI extends UI{
 		var self = this;
 		var args = "";
 		
-		self.vs_topic_dict = {
-			"Abortion" : [75, 2],
-			"Guns" : [37],
-			"Drugs" : [25],
-			"Education": [27, 93, 98],
-			"Environment": [30],
-			"Economics": [11],
-			"Health-Care": [38, 91]
-		}
+		// self.vs_topic_dict = {
+			// "Abortion" : [75, 2],
+			// "Guns" : [37],
+			// "Drugs" : [25],
+			// "Education": [27, 93, 98],
+			// "Environment": [30],
+			// "Economics": [11],
+			// "Health-Care": [38, 91],
+			// "Labor-Unions": [43]
+		// }
 		
 	    for ( var key in self.vs_topic_dict ){
 			args = "VoteSmartCandID=" + voteSmartId + "&VoteSmartPrimaryCategoryId=";
@@ -1046,7 +1047,7 @@ class ProfileUI extends UI{
     constructor(ui_class_name, creator, attr=null){
         super(ui_class_name, creator, attr);
         
-        this.topics_list = ["Abortion", "Guns", "Economics", "Education", "Environment", "Health Care"]
+        // this.topics_list = ["Abortion", "Guns", "Economics", "Education", "Environment", "Health-Care", "Labor Unions"]
         
 		// This is used to map votesmart category ID numbers
 		// to topics
@@ -1080,8 +1081,31 @@ class ProfileUI extends UI{
                             {   "Topic": "Health-Care",
                                 "Left": "Government Backed",
                                 "Right": "Market Based"
-                            }
+                            },
+							{
+								"Topic": "Labor-Unions",
+								"Left" : "Pro-Union",
+								"Right": "Anti-Union"	
+							},
+							
+							{
+								"Topic": "Immigration",
+								"Left" : "Pro-Immigration",
+								"Right": "Pro-Nativist"	
+							}
                         ];
+						
+		this.vs_topic_dict = {
+			"Abortion" : [75, 2],
+			"Guns" : [37],
+			"Drugs" : [25],
+			"Education": [27, 93, 98],
+			"Environment": [30],
+			"Economics": [11],
+			"Health-Care": [38, 91],
+			"Labor-Unions": [43],
+			"Immigration" : [40]
+		}
 		// Loaded Profile will contain reference to 
 		// loaded politician information through out class
 		this.loaded_profile = null;
