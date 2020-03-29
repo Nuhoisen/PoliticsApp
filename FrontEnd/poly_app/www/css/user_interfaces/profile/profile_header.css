@@ -43,7 +43,8 @@
 
 .profile-name{
     /* padding-left: 6px; */
-    font: 7vw Arial;
+    /* font: 7vw Arial; */
+    font: 4vh Arial;
     color: black;
     display: inline-block;
     width: 67%;
