@@ -12,19 +12,15 @@ news_ind = 1
 # Add source here
 news_dict = {  
                         
-                                "arizona_central" : "https://www.azcentral.com/",
+                "arizona_central" : "https://www.azcentral.com/",
 				"seattle_times" : "https://www.seattletimes.com/",
-				"yahoo_news" : "https://www.yahoo.com/",
-				"new_yorker" : "https://www.newyorker.com/",
 				"los_angeles_times": "https://www.latimes.com/",
 				"miami_herald": "https://www.miamiherald.com/",
 				"fox_news": "https://www.foxnews.com/", 
                 "politico": "https://www.politico.com/" , 
                 "washington_post": "https://www.washingtonpost.com/",
                 "npr": "https://www.npr.org/",
-                "cnn":"https://www.cnn.com/",
                 "breitbart" :"https://www.breitbart.com/",
-                "wall_street_journal" : "https://www.wsj.com/",
                 "new_york_times" : "https://www.nytimes.com/",
 				"oregon_live": "https://www.oregonlive.com/",
 				"new_jersey_com" : "https://www.nj.com/news/",
@@ -36,7 +32,8 @@ news_dict = {
 				"chicago_tribune" : "https://www.chicagotribune.com/",
 				"kansas_city_star" : "https://www.kansascity.com/",
 				"las_vegas_sun" : "https://lasvegassun.com/",
-				"houston_chronicle" : "https://www.chron.com/"
+				"houston_chronicle" : "https://www.chron.com/",
+                "wosu_Ohio_Public_Media" : "https://wosu.org/"
 				}
 
 

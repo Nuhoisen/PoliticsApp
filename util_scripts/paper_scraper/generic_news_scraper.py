@@ -85,7 +85,6 @@ class GenericNewsScraper:
                 self.art_obj.add(article.url)
         
         return self.art_obj        
-        # self.art_obj = self.dump_articles(self.art_obj)
         
     
     def entry_exists(self, url):
@@ -144,9 +143,7 @@ class GenericNewsScraper:
                                 dbstore.add_formatted_entry(sql_dict)
 
                     
-                    # Add list to dicts
-                        # sql_dict["Keywords"] = key_words
-                        # dbstore.add_formatted_entry(sql_dict)
+                  
                     
                     sleep(random.random())
                 else:

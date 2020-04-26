@@ -36,9 +36,35 @@ class NewsDBStorer:
         self.c_cnxn.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
         self.c_cnxn.setencoding(encoding='utf-8')
     
-	
-    # ADD ENTRY
+    
+    # Commit Query:
+    # Used to commit any sql command
+    # including select and post.
+    # Detects connection failures and attempts to reconnect.
+    #
+    # Returns cursor for further poss. operations
+    def commit_query_return_cursor(self, query):
+        cursor = None
+        try:
+            cursor = self.c_cnxn.cursor()
+            cursor.execute(query)
+            self.c_cnxn.commit()
+        except pyodbc.OperationalError as e:
+            print(str(e))
+            # Reset connection in case it failed
+            self.set_up_connection()
+            # Retry commit
+            cursor = self.c_cnxn.cursor()
+            cursor.execute(self.c_query)
+            self.c_cnxn.commit()
+        return cursor
+    
+    # Add Formatted Entry
+    # This function parses dictionary entry into
+    # a SQL query. This query is then executed on SQL
+    # side. 
     def add_formatted_entry(self, entry):
+        print("Adding Article entry to the News Data Base, associated by politician")
         date_added = time.strftime("%Y-%m-%d")
         formatted_entry = (self.c_db_name +"."+ self.c_table_name, entry["News Company"], entry["Politician Name"], entry["Article URL"], entry["Article Title"], entry["Article Img URL"],  entry["Keywords"][0], \
                             entry["Keywords"][1], entry["Keywords"][2], entry["Keywords"][3], entry["Keywords"][4], \
@@ -49,17 +75,20 @@ class NewsDBStorer:
                                         VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');" % formatted_entry 
         print(self.c_query)
         rows = None
-        cursor = self.c_cnxn.cursor()
-        cursor.execute(self.c_query)
-        self.c_cnxn.commit()
-
-        # Once committed, pull the same to test it was inserted        
-        #try:
-
-        #        print(self.retrieve_entry(entry["Article URL"]))
-        #except Exception as e:
-        #        print(str(e))
-        #        print("SOMETHING HAPPENED")
+        
+        self.commit_query_return_cursor(self.c_query)
+        # try:
+            # cursor = self.c_cnxn.cursor()
+            # cursor.execute(self.c_query)
+            # self.c_cnxn.commit()
+        # except pyodbc.OperationalError as e:
+            # print(str(e))
+            # # Reset connection in case it failed
+            # self.set_up_connection()
+            # # Retry commit
+            # cursor = self.c_cnxn.cursor()
+            # cursor.execute(self.c_query)
+            # self.c_cnxn.commit()
 
 
     
@@ -69,6 +98,7 @@ class NewsDBStorer:
         
         else:
             return text
+            
     # Returns profile info when provided specific
     # state, role, and district
     def retrieve_entry(self, url):
@@ -76,9 +106,13 @@ class NewsDBStorer:
         url = self.remove_prefix(url, "https://")
         condition = (self.c_table_name, url)
         command = "SELECT * from %s WHERE ArticleURL LIKE '%%%s%%'" %condition
-        cursor = self.c_cnxn.cursor()
-        cursor.execute(command)
+        
+        # Commit the command
+        cursor = self.commit_query_return_cursor(command)
         row_response = cursor.fetchall()
+        
+        # cursor = self.c_cnxn.cursor()
+        # cursor.execute(command)
         
         return row_response    
         
@@ -99,9 +133,12 @@ class NewsDBStorer:
         
         command = "SELECT ArticleURL from %s WHERE NewsCompany like '%%%s%%' AND (Keyword_1 like '%%%s%%' OR  Keyword_2 like '%%%s%%' OR  Keyword_3 like '%%%s%%' OR  Keyword_4 like '%%%s%%' OR  Keyword_5 like '%%%s%%' OR Keyword_6 like '%%%s%%' OR  Keyword_7 like '%%%s%%')" % condition
         
-        cursor = self.c_cnxn.cursor()
-        cursor.execute(command)
+        
+        
+        cursor = self.commit_query_return_cursor(command)
         row_response = cursor.fetchall()
+        # cursor = self.c_cnxn.cursor()
+        # cursor.execute(command)
         
         return row_response    
 
