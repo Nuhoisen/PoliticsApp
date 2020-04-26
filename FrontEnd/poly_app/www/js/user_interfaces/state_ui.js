@@ -150,7 +150,7 @@ class StateUI extends ImageMapUI{
         d3.select(".state-districts-button")
             .on("click", function(){
                 // var file_name = "./map_data/congressional_borders/" + self.selected_state_id + "/state_senate/topo_quantize.json";
-                var file_name = server_ip + ":5000/request_state_senate/" + self.selected_state_id;
+                var file_name = node_url + "/request_state_senate/" + self.selected_state_id;
                 self.removeUI();
                 self.generateCongressionalMap(file_name);
             });
