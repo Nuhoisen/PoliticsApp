@@ -8,7 +8,7 @@ function acceptFile(callBack, invokedRequest){
     if(invokedRequest.readyState === XMLHttpRequest.DONE){//done
         if(invokedRequest.status === 200){
             console.log("Successful Response!");
-			console.log(invokedRequest.responseText);
+		
             callBack(invokedRequest.responseText);
         }
         else{
@@ -44,7 +44,7 @@ function get_state_politician_prof_img(args, callback){
 function get_state_politician_profile(args, callback){
 	let localHttpRequest = new XMLHttpRequest();
     localHttpRequest.onreadystatechange = acceptFile.bind(this, callback, localHttpRequest);
-    localHttpRequest.open('GET', profile_url +'/request_state_politician_profile?'+ args, true);
+    localHttpRequest.open('GET', node_url +'/request_state_politician_profile?'+ args, true);
     localHttpRequest.send();    
 }
 
@@ -68,7 +68,7 @@ function get_politician_bills(args, call_Back){
 	let localHttpRequest = new XMLHttpRequest();
 	console.log(args);
 	localHttpRequest.onreadystatechange = acceptFile.bind(this, call_Back, localHttpRequest);
-	localHttpRequest.open('GET', profile_url +'/request_candidates_bills?' + args, true);
+	localHttpRequest.open('GET', node_url +'/request_candidates_bills?' + args, true);
 	localHttpRequest.send();	
 	
 }
@@ -79,7 +79,7 @@ function get_us_senator_partisanships(args, callback){
 	let localHttpRequest = new XMLHttpRequest();
 	
 	localHttpRequest.onreadystatechange = acceptFile.bind(this, callback, localHttpRequest);
-    localHttpRequest.open('GET', profile_url +'/request_us_senator_partisanships?' + args, true);
+    localHttpRequest.open('GET', node_url +'/request_us_senator_partisanships?' + args, true);
     localHttpRequest.send();
 }
 
@@ -88,6 +88,6 @@ function get_state_partisanships(args, callback){
 	let localHttpRequest = new XMLHttpRequest();
 	
 	localHttpRequest.onreadystatechange = acceptFile.bind(this, callback, localHttpRequest);
-    localHttpRequest.open('GET', profile_url +'/request_state_partisanships?' + args, true);
+    localHttpRequest.open('GET', node_url +'/request_state_partisanships?' + args, true);
     localHttpRequest.send();
 }

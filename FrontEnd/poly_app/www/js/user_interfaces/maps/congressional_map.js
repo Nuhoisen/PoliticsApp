@@ -122,21 +122,23 @@ class CongressionalMapTemplate extends MapTemplate{
         var self = this;
         
         response_json = JSON.parse(response_json);
-        for (var key in response_json) {
+		for (var i = 0 ; i < response_json.length; i = i +1 ) {
+			var subject_district = response_json[i];
+		// for (var key in response_json) {
 			
-            if(response_json[key].includes('R')) // RED
+            if(subject_district["PartyAffiliation"].includes('R')) // RED
             {
-                d3.select("#" + key.replace(/ /g, "-"))
+                d3.select("#" + subject_district["District"].replace(/ /g, "-"))
                     .style("fill", "#ff4a4a");
             }
-            else if(response_json[key].includes('D')) // BLUE
+            else if(subject_district["PartyAffiliation"].includes('D')) // BLUE
             {
-                d3.select("#" + key.replace(/ /g, "-"))
+                d3.select("#" + subject_district["District"].replace(/ /g, "-"))
                     .style("fill", "#7676e3");
             }
             else //PURPLE
             {
-                d3.select("#" + key.replace(/ /g, "-"))
+                d3.select("#" + subject_district["District"].replace(/ /g, "-"))
 					.style("fill", "#b75696");
             }
         }

@@ -81,7 +81,7 @@ class ProfileUI extends UI{
         var self = this;
         
         var last_name = name.split(" ")[1];
-        var args = "keyword=" + name;
+        var args = "politician_name=" + name;
         
         get_politician_news_articles(args,self.loadRelatedArticles.bind(self));
     }
@@ -240,9 +240,9 @@ class ProfileUI extends UI{
 		// If any Votes found in the bill's json. Clear the existing HTML
 		// Add an additional tab to make collapsing the body pane easier
 		if (bill_json["HouseYea"] || bill_json["SenateYea"]){
-			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID']).html("")
+			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillId']).html("")
 				.append("div")
-				.attr("class", "topic-source-list-bill-analysis-tab " + bill_json["VoteSmartBillID"] + " source-list-bill-analysis-tab-" + bill_json["VoteSmartBillID"])
+				.attr("class", "topic-source-list-bill-analysis-tab " + bill_json["VoteSmartBillId"] + " source-list-bill-analysis-tab-" + bill_json["VoteSmartBillId"])
 				
 				.text("Analysis");
 		}
@@ -261,11 +261,11 @@ class ProfileUI extends UI{
 			];
 		
 			// Set the senate votes item
-			container_class = "source-list-bill-analysis-senate-votes-" + bill_json['VoteSmartBillID'];
-			graph_class = "analysis-senate-graph-" + bill_json['VoteSmartBillID']
+			container_class = "source-list-bill-analysis-senate-votes-" + bill_json['VoteSmartBillId'];
+			graph_class = "analysis-senate-graph-" + bill_json['VoteSmartBillId']
 			graph_title = "Senate Votes";
 				
-			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID'])
+			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillId'])
 				.append("div")
 				.attr("class", container_class);
 				
@@ -287,11 +287,11 @@ class ProfileUI extends UI{
 			
 			
 			// Set the senate votes item
-			container_class = "source-list-bill-analysis-senate-partisan-votes-" + bill_json['VoteSmartBillID'];
-			graph_class = "analysis-senate-partisan-graph-" + bill_json['VoteSmartBillID']
+			container_class = "source-list-bill-analysis-senate-partisan-votes-" + bill_json['VoteSmartBillId'];
+			graph_class = "analysis-senate-partisan-graph-" + bill_json['VoteSmartBillId']
 			graph_title = "Senate Votes Partisan Lines";
 				
-			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID'])
+			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillId'])
 				.append("div")
 					.attr("class", container_class);
 				
@@ -312,13 +312,13 @@ class ProfileUI extends UI{
 			];
 		
 			// Set the house votes item
-			container_class = "source-list-bill-analysis-house-votes-" + bill_json['VoteSmartBillID'];
-			graph_class = "analysis-house-graph-" + bill_json['VoteSmartBillID'];
+			container_class = "source-list-bill-analysis-house-votes-" + bill_json['VoteSmartBillId'];
+			graph_class = "analysis-house-graph-" + bill_json['VoteSmartBillId'];
 			graph_title = "House Votes";
 			
 
 			// Append the div to the selector
-			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID'])
+			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillId'])
 				.append("div")
 				.attr("class", container_class);
 			
@@ -340,11 +340,11 @@ class ProfileUI extends UI{
 			
 			
 			// Set the senate votes item
-			container_class = "source-list-bill-analysis-house-partisan-votes-" + bill_json['VoteSmartBillID'];
-			graph_class = "analysis-house-partisan-graph-" + bill_json['VoteSmartBillID']
+			container_class = "source-list-bill-analysis-house-partisan-votes-" + bill_json['VoteSmartBillId'];
+			graph_class = "analysis-house-partisan-graph-" + bill_json['VoteSmartBillId']
 			graph_title = "House Votes Partisan Lines";
 				
-			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillID'])
+			d3.select(".source-list-bill-analysis-"+ bill_json['VoteSmartBillId'])
 				.append("div")
 				.attr("class", container_class);
 				
@@ -461,7 +461,7 @@ class ProfileUI extends UI{
 			/////////////////////DEMOCRATS/////////////////////
 			///////////////////////////////////////////////////
 			if(self.loaded_profile["PartyAffiliation"] == "D"){
-				if(json_response[i]["PoliticianVote"] == "Yea"){
+				if(json_response[i]["Vote"] == "Yea"){
 					// Simply add one if the politicians vote:yea is 
 					// in accord with their party majority
 					if (bills_acculmulative_partisan_rating < 0) {
@@ -471,10 +471,10 @@ class ProfileUI extends UI{
 					// bill weight to the total
 					else {// bill rating is positive- towards the dem-nay, rep-yea
 						politician_partisan_rating += bills_acculmulative_partisan_rating * 1;
-						self.flagPoliticianBill(json_response[i]["VoteSmartBillID"]);
+						self.flagPoliticianBill(json_response[i]["VoteSmartBillId"]);
 					}	
 				}
-				else if(json_response[i]["PoliticianVote"] == "Nay"){
+				else if(json_response[i]["Vote"] == "Nay"){
 					// Simply add one if the politicians vote:nay is 
 					// in accord with their party majority
 					if (bills_acculmulative_partisan_rating > 0){
@@ -485,7 +485,7 @@ class ProfileUI extends UI{
 					else{// bill rating is negative + torwards the dem-yea
 						politician_partisan_rating += bills_acculmulative_partisan_rating * -1;
 						console.log("Flag political bill");
-						self.flagPoliticianBill(json_response[i]["VoteSmartBillID"]);
+						self.flagPoliticianBill(json_response[i]["VoteSmartBillId"]);
 					}
 				}
 			}
@@ -493,7 +493,7 @@ class ProfileUI extends UI{
 			/////////////////////REPUBLICANS///////////////////
 			///////////////////////////////////////////////////
 			else if(self.loaded_profile["PartyAffiliation"] == "R"){
-				if(json_response[i]["PoliticianVote"] == "Yea"){
+				if(json_response[i]["Vote"] == "Yea"){
 					// Simply sub one, if the politicians vote:nay is 
 					// in accord with their party majority
 					if (bills_acculmulative_partisan_rating > 0){
@@ -504,10 +504,10 @@ class ProfileUI extends UI{
 					else{// bill rating negative- towards rep-nay, dem-yea
 						politician_partisan_rating += bills_acculmulative_partisan_rating * 1;
 						console.log("Flag political bill");
-						self.flagPoliticianBill(json_response[i]["VoteSmartBillID"]);
+						self.flagPoliticianBill(json_response[i]["VoteSmartBillId"]);
 					}
 				}
-				else if(json_response[i]["PoliticianVote"] == "Nay")
+				else if(json_response[i]["Vote"] == "Nay")
 					// Simply sub one, if the politicians vote:nay is 
 					// in accord with their party majority
 					if(bills_acculmulative_partisan_rating < 0){
@@ -518,7 +518,7 @@ class ProfileUI extends UI{
 					else{//bill rating postive- towards rep-yea, dem-nay
 						politician_partisan_rating += bills_acculmulative_partisan_rating * -1;
 						console.log("Flag political bill");
-						self.flagPoliticianBill(json_response[i]["VoteSmartBillID"]);
+						self.flagPoliticianBill(json_response[i]["VoteSmartBillId"]);
 					}
 				
 			}
@@ -588,7 +588,7 @@ class ProfileUI extends UI{
 
 			
 							
-			html_text = html_text.replace(/replace/g, json_response[i]['VoteSmartBillID']);
+			html_text = html_text.replace(/replace/g, json_response[i]['VoteSmartBillId']);
 			
 			// Add all the text
 			// d3.select("." + category + "-source-list")
@@ -603,48 +603,48 @@ class ProfileUI extends UI{
 			///////////////////////
 			// Bill Title
 			///////////////////////
-			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-title")
+			$("." + json_response[i]['VoteSmartBillId'] + "-source-list-bill-title")
 				.html("Title: " + json_response[i]['BillTitle']);
 			
 			///////////////////////
 			// Date Introduced
 			///////////////////////
-			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-date-introduced")
+			$("." + json_response[i]['VoteSmartBillId'] + "-source-list-bill-date-introduced")
 				.html(json_response[i]['DateIntroduced']);
 			
 			
 			///////////////////////
 			// Politician Vote 
 			///////////////////////
-			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-vote")
-				.html(json_response[i]['PoliticianVote']);
+			$("." + json_response[i]['VoteSmartBillId'] + "-source-list-bill-vote")
+				.html(json_response[i]['Vote']);
 			
-			d3.select(".source-list-bill-vote-"+ json_response[i]['VoteSmartBillID'])
-				.classed(json_response[i]['PoliticianVote'].replace(/ /g,'-') , true);
+			d3.select(".source-list-bill-vote-"+ json_response[i]['VoteSmartBillId'])
+				.classed(json_response[i]['Vote'].replace(/ /g,'-') , true);
 		
 			///////////////////////
 			// Bill Number
 			///////////////////////
-			$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-number")
+			$("." + json_response[i]['VoteSmartBillId'] + "-source-list-bill-number")
 				.html(json_response[i]['BillNumber']);
 			
 			///////////////////////
 			// Bill Highlights
 			///////////////////////
 			if ( json_response[i]['BillHighlights'] != null ) {
-				d3.select(".source-list-bill-highlights-" +json_response[i]['VoteSmartBillID'])
+				d3.select(".source-list-bill-highlights-" +json_response[i]['VoteSmartBillId'])
 					.append("div")
-					.attr("class", "topic-source-list-bill-expand-highlights-tab " +json_response[i]['VoteSmartBillID'] + "  source-list-bill-expand-highlights-tab-"+json_response[i]['VoteSmartBillID'])
+					.attr("class", "topic-source-list-bill-expand-highlights-tab " +json_response[i]['VoteSmartBillId'] + "  source-list-bill-expand-highlights-tab-"+json_response[i]['VoteSmartBillId'])
 					.text("Bill Highlights");
-				d3.select(".source-list-bill-highlights-" +json_response[i]['VoteSmartBillID'])
+				d3.select(".source-list-bill-highlights-" +json_response[i]['VoteSmartBillId'])
 					.append("div")
-					.attr("class", "source-list-bill-highlights-content-"+json_response[i]['VoteSmartBillID'])
+					.attr("class", "source-list-bill-highlights-content-"+json_response[i]['VoteSmartBillId'])
 					.html(json_response[i]['BillHighlights']);
 			}
 			
 			// Bill Synopsis
 			if ( json_response[i]['BillSynopsis'] != null ) {
-				$("." + json_response[i]['VoteSmartBillID'] + "-source-list-bill-synopsis").html(json_response[i]['BillSynopsis']);
+				$("." + json_response[i]['VoteSmartBillId'] + "-source-list-bill-synopsis").html(json_response[i]['BillSynopsis']);
 			}
 			// console.log(json_response[i]);
 			self.loadBillAnalysis(json_response[i]);
@@ -683,13 +683,9 @@ class ProfileUI extends UI{
 		
 	    for ( var key in self.vs_topic_dict ){
 			args = "VoteSmartCandID=" + voteSmartId + "&VoteSmartPrimaryCategoryId=";
-			// Iterate through each potential category id in the category
-			for ( var i = 0 ; i < self.vs_topic_dict[key].length; i += 1){
-				
-				args += self.vs_topic_dict[key][i] + ",";
-				
-				// Pass the argument into the bound callback function
-			}	
+			// Concentenate items in list into comma delimited string. Add this to args.
+			args += self.vs_topic_dict[key].join(",")
+	
 			get_politician_bills(args, self.loadRelatedBills.bind(self, key));
 		}
 	}
