@@ -9,6 +9,8 @@ var mysql       = require('mysql');
 // Local rsequires
 var poly_data	= require('./poly_data/poly_data.js');
 var bill_data	= require('./bill_data/bill_data.js');
+var map_data	= require('./map_data/map_data.js');
+// SQL DB API
 var SQL_Handler = require('./sql_handler/sql_handler.js').SQL_Handler
 
 // ----------------------------------------------
@@ -32,15 +34,32 @@ app.get('/', function (req, res) {
 })
 
 // --------------POLITICIAN REQUESTS -------------------
-app.get('/request_state_partisanships', poly_data.request_state_partisanship);
+app.get('/request_state_partisanships', 
+		poly_data.request_state_partisanship);
 
-app.get('/request_us_senator_partisanships', poly_data.request_us_senator_partisanships);
+app.get('/request_us_senator_partisanships', 
+		poly_data.request_us_senator_partisanships);
 
-app.get('/request_state_politician_profile', poly_data.request_state_politician_profile);
+app.get('/request_state_politician_profile', 
+		poly_data.request_state_politician_profile);
 // -----------------------------------------------------
 
 // ----------------- BILL REQUESTS ---------------------
-app.get('/request_candidates_bills', bill_data.request_candidates_bills);
+app.get('/request_candidates_bills', 
+		bill_data.request_candidates_bills);
+// -----------------------------------------------------
 
+// ------------------ MAP REQUESTS ---------------------
+app.get('/request_map/:map_name',
+		map_data.request_map);
+		
+app.get('/request_us_house/:state_id',
+		map_data.request_us_house);
+		
+app.get('/request_state_house/:state_id',
+		map_data.request_state_house);
+		
+app.get('/request_state_senate/:state_id',
+		map_data.request_state_senate);
 // -----------------------------------------------------
 app.listen(8080);

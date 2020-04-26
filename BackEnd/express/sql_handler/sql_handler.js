@@ -39,10 +39,8 @@ class SQL_Handler{
 			query_str, 
 			function(err, results, fields)
 			{
-				// if (err)  throw err;
-				// console.log(results);
 				callback(err, results);
-				// console.log(results);
+				
 			}		
 		);
 	}
@@ -60,7 +58,7 @@ class SQL_Handler{
 		for (var key in wildcard_json) { 
 			var value = wildcard_json[key];
 			var form_key = key;
-			console.log(key)
+			
 			
 			var temp  = form_key + " like '%" + value + "%'";
 			
@@ -73,16 +71,13 @@ class SQL_Handler{
 			}
 			query_str += " AND " ;
 		}
-		console.log(query_str);
+		
 		
 		this.db_connection.query(
 			query_str, 
 			function(err, results, fields)
 			{
-				// if (err)  throw err;
-				// console.log(results);
-				callback(err, results);
-				// console.log(results);
+				callback(err, results);	
 			}		
 		);
 	}
@@ -99,7 +94,6 @@ class SQL_Handler{
 		for (var key in wildcard_json) { 
 			var value = wildcard_json[key];
 			var form_key = key;
-			console.log(key)
 			
 			var temp  = form_key + " like '%" + value + "%'";
 			
@@ -112,16 +106,12 @@ class SQL_Handler{
 			}
 			query_str += " AND " ;
 		}
-		console.log(query_str);
 		
 		this.db_connection.query(
 			query_str, 
 			function(err, results, fields)
 			{
-				// if (err)  throw err;
-				console.log(results);
 				callback(err, results);
-				// console.log(results);
 			}		
 		);
 	}
