@@ -60,7 +60,7 @@ function get_politician_news_articles(args, callback){
 	let localHttpRequest = new XMLHttpRequest();
 	
     localHttpRequest.onreadystatechange = acceptFile.bind(this, callback, localHttpRequest);
-    localHttpRequest.open('GET', profile_url +'/request_articles?' + args, true);
+    localHttpRequest.open('GET', node_url +'/request_articles?' + args, true);
     localHttpRequest.send();
 }
 
